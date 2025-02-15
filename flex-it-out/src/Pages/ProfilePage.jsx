@@ -24,6 +24,8 @@ const ProfilePage = () => {
         });
         
         setUser(res.data);
+        console.log(res.data);
+        
         
       } catch (err) {
         setError("Failed to load profile. Try again later.");
@@ -47,7 +49,7 @@ const ProfilePage = () => {
         <p className="error-message">{error}</p>
       ) : (
         <div className="profile-card">
-          <img className="profile-pic" src={user.profilePic || "/default-avatar.png"} alt="Profile" />
+          <img className="profile-pic" src={user.avatar || "/default-avatar.png"} alt="Profile" />
           <h2>{user.name}</h2>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Joined:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
