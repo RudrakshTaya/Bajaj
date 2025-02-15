@@ -19,7 +19,7 @@ html, body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 20px;
+  /* padding: 20px; */
   width: 100%;
 }
 
@@ -35,6 +35,15 @@ html, body {
   padding: 20px;
   text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
 }
+.hero-bg{
+  background-image:url(./src/assets/flex.jpg);
+  background-size: cover;
+  background-position: center;
+  /* height:200px; */
+  width:2000px;
+  /* filter: opacity(0.2); */
+}
+
 
 .hero h1 {
   font-size: 3rem;

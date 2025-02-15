@@ -10,6 +10,7 @@ const HomePage = () => {
 
   return (
     <div className="home-container">
+      <div className="hero-bg">
       <section className="hero">
         <h1>Transform Your Body, Transform Your Life</h1>
         <p>Join the best fitness community and achieve your goals today!</p>
@@ -20,6 +21,7 @@ const HomePage = () => {
           Get Started
         </button>
       </section>
+      </div>
 
       <section className="features">
         <div className="feature-card">
