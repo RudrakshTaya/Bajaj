@@ -13,21 +13,21 @@ if (!fs.existsSync(uploadDir)) {
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    fs.access(uploadDir, fs.constants.W_OK, (err) => {
-      if (err) {
-        console.error("No write access to the directory:", uploadDir);
-        return cb(new Error("No write access"), null);
-      }
-      console.log("Write access confirmed for directory:", uploadDir);
-      cb(null, uploadDir);
-    });
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   }
 });
 
-// Export upload middleware
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limit to 5MB
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+    if (allowedTypes.includes(file.mimetype)) cb(null, true);
+    else cb(new Error("Only .jpg, .jpeg, .png files are allowed"));
+  }
+});
 
 module.exports = { upload };
