@@ -1,14 +1,20 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from "./Pages/HomePage";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./Components/Navbar";
+import Home from "./Pages/HomePage";
+import SignIn from "./Components/Signin";
+import SignUp from "./Components/Signup";
 
 function App() {
   return (
-        <Router>
-            <Routes>
-                <Route path="/home" element={<HomePage />} />
-            </Routes>
-        </Router>
-    )
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+    </>
+  );
 }
 
-export default App
+export default App;
