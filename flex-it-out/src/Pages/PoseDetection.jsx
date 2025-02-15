@@ -10,8 +10,11 @@
 //   const [loading, setLoading] = useState(true);
 //   const [squatCount, setSquatCount] = useState(0);
 //   const [pushupCount, setPushupCount] = useState(0);
+//   const [highKneeCount, setHighKneeCount] = useState(0);
+  
 //   let isSquatting = false;
 //   let isPushingUp = false;
+//   let isRaisingKnee = false;
 
 //   useEffect(() => {
 //     const initializeTF = async () => {
@@ -50,6 +53,7 @@
 //       if (poses.length > 0) {
 //         detectSquat(poses[0].keypoints);
 //         detectPushup(poses[0].keypoints);
+//         detectHighKnees(poses[0].keypoints);
 //       }
 
 //       requestAnimationFrame(() => detect(detector));
@@ -99,6 +103,30 @@
 //     }
 //   };
 
+//   const detectHighKnees = (keypoints) => {
+//     const leftHip = keypoints.find((kp) => kp.name === "left_hip") || {};
+//     const rightHip = keypoints.find((kp) => kp.name === "right_hip") || {};
+//     const leftKnee = keypoints.find((kp) => kp.name === "left_knee") || {};
+//     const rightKnee = keypoints.find((kp) => kp.name === "right_knee") || {};
+
+//     if (
+//       leftHip.score > 0.5 &&
+//       rightHip.score > 0.5 &&
+//       leftKnee.score > 0.5 &&
+//       rightKnee.score > 0.5
+//     ) {
+//       if ((leftKnee.y < leftHip.y || rightKnee.y < rightHip.y) && !isRaisingKnee) {
+//         setHighKneeCount((prev) => prev + 1);
+//         isRaisingKnee = true;
+//       } else if (leftKnee.y > leftHip.y && rightKnee.y > rightHip.y) {
+//         isRaisingKnee = false;
+//       }
+//     }
+//   };
+  
+
+  
+
 //   const drawResults = (poses) => {
 //     const canvas = canvasRef.current;
 //     const ctx = canvas.getContext("2d");
@@ -139,18 +167,6 @@
 //     });
 //   };
 
-//   // return (
-//   //   <div className="pose-container">
-//   //     <h1>Pose Detection</h1>
-//   //     {loading && <p>Loading AI Model...</p>}
-//   //     <h2>Squats: {squatCount} | Push-ups: {pushupCount}</h2>
-//   //     <div className="video-container">
-//   //       <video ref={videoRef} className="video" />
-//   //       <canvas ref={canvasRef} className="canvas" width="640" height="480" />
-//   //     </div>
-//   //     <p className="loading-text">AI is analyzing your movement...</p>
-//   //   </div>
-//   // );
 //   return (
 //     <div className="pose-container">
 //       <header className="pose-header">
@@ -161,6 +177,7 @@
 //         <div className="stats-container">
 //           <h2>🔥 Squats: {squatCount}</h2>
 //           <h2>💪 Push-ups: {pushupCount}</h2>
+//           <h2>🏃 High Knees: {highKneeCount}</h2>
 //         </div>
   
 //         <div className="video-container">
@@ -172,7 +189,6 @@
 //       {loading && <p className="loading-text">Loading AI Model...</p>}
 //     </div>
 //   );
-  
 // };
 
 // export default PoseDetection;
@@ -191,10 +207,12 @@ const PoseDetection = () => {
   const [squatCount, setSquatCount] = useState(0);
   const [pushupCount, setPushupCount] = useState(0);
   const [highKneeCount, setHighKneeCount] = useState(0);
-  
+  const [calfRaiseCount, setCalfRaiseCount] = useState(0);
+
   let isSquatting = false;
   let isPushingUp = false;
   let isRaisingKnee = false;
+  let isRaisingHeel = false;
 
   useEffect(() => {
     const initializeTF = async () => {
@@ -234,6 +252,7 @@ const PoseDetection = () => {
         detectSquat(poses[0].keypoints);
         detectPushup(poses[0].keypoints);
         detectHighKnees(poses[0].keypoints);
+        detectCalfRaises(poses[0].keypoints);
       }
 
       requestAnimationFrame(() => detect(detector));
@@ -304,66 +323,87 @@ const PoseDetection = () => {
     }
   };
 
+  const detectCalfRaises = (keypoints) => {
+    const leftAnkle = keypoints.find((kp) => kp.name === "left_ankle") || {};
+    const rightAnkle = keypoints.find((kp) => kp.name === "right_ankle") || {};
+    const leftKnee = keypoints.find((kp) => kp.name === "left_knee") || {};
+    const rightKnee = keypoints.find((kp) => kp.name === "right_knee") || {};
+
+    if (
+      leftAnkle.score > 0.5 &&
+      rightAnkle.score > 0.5 &&
+      leftKnee.score > 0.5 &&
+      rightKnee.score > 0.5
+    ) {
+      if (leftAnkle.y < leftKnee.y - 10 && rightAnkle.y < rightKnee.y - 10 && !isRaisingHeel) {
+        isRaisingHeel = true;
+      } else if (leftAnkle.y >= leftKnee.y - 5 && rightAnkle.y >= rightKnee.y - 5 && isRaisingHeel) {
+        setCalfRaiseCount((prev) => prev + 1);
+        isRaisingHeel = false;
+      }
+    }
+  };
+
   const drawResults = (poses) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    poses.forEach((pose) => {
-      drawKeypoints(pose.keypoints, ctx);
-      drawSkeleton(pose.keypoints, ctx);
-    });
-  };
-
-  const drawKeypoints = (keypoints, ctx) => {
-    keypoints.forEach(({ x, y, score }) => {
-      if (score > 0.5) {
-        ctx.fillStyle = "red";
-        ctx.beginPath();
-        ctx.arc(x, y, 6, 0, 2 * Math.PI);
-        ctx.fill();
-      }
-    });
-  };
-
-  const drawSkeleton = (keypoints, ctx) => {
-    const adjacentPairs = poseDetection.util.getAdjacentPairs(poseDetection.SupportedModels.MoveNet);
-    ctx.strokeStyle = "blue";
-    ctx.lineWidth = 3;
-
-    adjacentPairs.forEach(([i, j]) => {
-      const kp1 = keypoints[i];
-      const kp2 = keypoints[j];
-
-      if (kp1?.score > 0.5 && kp2?.score > 0.5) {
-        ctx.beginPath();
-        ctx.moveTo(kp1.x, kp1.y);
-        ctx.lineTo(kp2.x, kp2.y);
-        ctx.stroke();
-      }
-    });
-  };
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+        poses.forEach((pose) => {
+          drawKeypoints(pose.keypoints, ctx);
+          drawSkeleton(pose.keypoints, ctx);
+        });
+      };
+    
+      const drawKeypoints = (keypoints, ctx) => {
+        keypoints.forEach(({ x, y, score }) => {
+          if (score > 0.5) {
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(x, y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+          }
+        });
+      };
+    
+      const drawSkeleton = (keypoints, ctx) => {
+        const adjacentPairs = poseDetection.util.getAdjacentPairs(poseDetection.SupportedModels.MoveNet);
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 3;
+    
+        adjacentPairs.forEach(([i, j]) => {
+          const kp1 = keypoints[i];
+          const kp2 = keypoints[j];
+    
+          if (kp1?.score > 0.5 && kp2?.score > 0.5) {
+            ctx.beginPath();
+            ctx.moveTo(kp1.x, kp1.y);
+            ctx.lineTo(kp2.x, kp2.y);
+            ctx.stroke();
+          }
+        });
+      };
+    
 
   return (
     <div className="pose-container">
       <header className="pose-header">
-        <h1>Pose Detection</h1>
+        <h1>Pose Detection 🏋️</h1>
       </header>
-      
-      <div className="main-content">
-        <div className="stats-container">
-          <h2>🔥 Squats: {squatCount}</h2>
-          <h2>💪 Push-ups: {pushupCount}</h2>
-          <h2>🏃 High Knees: {highKneeCount}</h2>
-        </div>
-  
-        <div className="video-container">
-          <video ref={videoRef} className="video" />
-          <canvas ref={canvasRef} className="canvas" width="640" height="480" />
-        </div>
+
+      <div className="stats-container">
+        <h2>🔥 Squats: {squatCount}</h2>
+        <h2>💪 Push-ups: {pushupCount}</h2>
+        <h2>🏃 High Knees: {highKneeCount}</h2>
+        <h2>🦵 Calf Raises: {calfRaiseCount}</h2>
       </div>
-  
-      {loading && <p className="loading-text">Loading AI Model...</p>}
+
+      <div className="video-container">
+        <video ref={videoRef} className="video" />
+        <canvas ref={canvasRef} className="canvas" width="640" height="480" />
+      </div>
+
+      {loading && <p className="loading-text">⏳ Loading AI Model...</p>}
     </div>
   );
 };
