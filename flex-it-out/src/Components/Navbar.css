@@ -1,71 +1,79 @@
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .navbar .logo a {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-  }
-  
-  .nav-links {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .nav-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.3s;
-  }
-  
-  .nav-links a:hover {
-    color: #ffcc00;
-  }
-  
-  /* Mobile Menu Icon */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #1E1E1E; /* Dark Gray Background */
+  color: white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); /* Blue Glow Effect */
+}
+
+.navbar .logo a {
+  color: #3B82F6; /* Bright Blue */
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.navbar .logo a:hover {
+  color: #60A5FA; /* Lighter Blue Accent */
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #E5E7EB; /* Light Gray */
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease-in-out;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: #3B82F6; /* Bright Blue */
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+}
+
+/* Mobile Menu Icon */
+.menu-icon {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .menu-icon {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: white;
-    cursor: pointer;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .menu-icon {
       display: block;
-    }
-  
-    .nav-links {
+  }
+
+  .nav-links {
       position: absolute;
       top: 60px;
       right: 0;
       width: 50%;
       height: auto;
       flex-direction: column;
-      background-color: #007bff;
+      background-color: #1E293B; /* Darker Gray-Blue */
       display: none;
-    }
-  
-    .nav-links.open {
+      box-shadow: -2px 4px 10px rgba(59, 130, 246, 0.3);
+  }
+
+  .nav-links.open {
       display: flex;
       padding: 15px 0;
-    }
-  
-    .nav-links a {
+  }
+
+  .nav-links a {
       padding: 10px;
       text-align: center;
       display: block;
-    }
   }
-  
+}
