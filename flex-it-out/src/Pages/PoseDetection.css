@@ -89,20 +89,25 @@
   flex-direction: column;
   align-items: center;
   height: 100vh;
-  background: #121212;
+  background: linear-gradient(to right, #0f0f0f, #1c1c1c);
   color: white;
   font-family: "Poppins", sans-serif;
   padding: 20px;
 }
 
+/* Header Styling */
 .pose-header {
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  color: #00c896;
+  color: #0700c8;
+  text-transform: uppercase;
   margin-bottom: 20px;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 10px rgba(13, 0, 200, 0.8);
 }
 
+/* Layout Styling */
 .main-content {
   display: flex;
   align-items: center;
@@ -110,36 +115,58 @@
   width: 100%;
 }
 
+/* Stats Box Styling */
 .stats-container {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-right: 30px;
-  text-align: left;
+  align-items: flex-start;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  width: 250px;
+  border-left: 5px solid #0003c8;
+  box-shadow: 4px 4px 12px rgba(27, 0, 200, 0.5);
 }
 
 .stats-container h2 {
-  background: #222;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 1.2rem;
+  font-size: 22px;
+  margin: 10px 0;
+  color: #ffcc00;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
+.stats-container h2 i {
+  margin-right: 8px;
+}
+
+/* Video Box Styling */
 .video-container {
   position: relative;
   width: 640px;
   height: 480px;
-  border-radius: 12px;
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0px 4px 10px rgba(0, 200, 150, 0.5);
+  box-shadow: 0px 5px 15px rgba(0, 10, 200, 0.6);
+  border: 3px solid #0014c8;
 }
 
 .video {
   width: 100%;
   height: 100%;
   filter: contrast(1.2);
+  border-radius: 15px;
 }
 
+/* Pose Detection Overlay */
 .canvas {
   position: absolute;
   top: 0;
@@ -149,8 +176,20 @@
   pointer-events: none;
 }
 
+/* Loading Animation */
 .loading-text {
   margin-top: 15px;
   font-size: 1.2rem;
+  font-weight: bold;
   color: #ff9800;
+  animation: fadeIn 1.5s infinite alternate;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
 }
