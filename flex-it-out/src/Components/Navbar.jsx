@@ -22,7 +22,7 @@ const Navbar = () => {
 
       <div className={`nav-links ${menuOpen ? "open" : ""}`}>
         <Link to="/">Home</Link>
-        <Link to="/profile">Profile</Link>
+         <Link to="/profile">Profile</Link>
 
         {isLoggedIn ? (
           <button onClick={handleLogout} className="logout-btn">Sign Out</button>
