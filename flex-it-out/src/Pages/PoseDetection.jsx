@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as tf from "@tensorflow/tfjs"; // Import TensorFlow.js
+import * as tf from "@tensorflow/tfjs"; // TensorFlow.js
 import * as poseDetection from "@tensorflow-models/pose-detection";
-import "@tensorflow/tfjs-backend-webgl"; // Ensure WebGL is loaded
-import "./PoseDetection.css";
+import "@tensorflow/tfjs-backend-webgl"; // WebGL Backend
+import "./PoseDetection.css"; // Import Styles
 
 const PoseDetection = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
+  const [squatCount, setSquatCount] = useState(0);
+  let isSquatting = false;
 
   useEffect(() => {
     const initializeTF = async () => {
-      await tf.setBackend("webgl"); // ✅ Set Backend to WebGL
-      await tf.ready(); // ✅ Wait for TensorFlow to be Ready
+      await tf.setBackend("webgl");
+      await tf.ready();
       console.log("✅ TensorFlow.js is ready!");
       startPoseDetection();
     };
@@ -20,8 +22,6 @@ const PoseDetection = () => {
     const startPoseDetection = async () => {
       try {
         setLoading(true);
-
-        // ✅ Setup Camera
         const video = videoRef.current;
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
@@ -29,7 +29,6 @@ const PoseDetection = () => {
         video.play();
         console.log("🎥 Camera Started");
 
-        // ✅ Load MoveNet Model
         const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
         console.log("✅ MoveNet Model Loaded");
 
@@ -44,19 +43,52 @@ const PoseDetection = () => {
       if (!videoRef.current || !canvasRef.current) return;
 
       const poses = await detector.estimatePoses(videoRef.current);
-      console.log("Detected Poses:", poses);
-
       drawResults(poses);
+
+      if (poses.length > 0) {
+        detectSquat(poses[0].keypoints);
+      }
+
       requestAnimationFrame(() => detect(detector));
     };
 
     initializeTF();
   }, []);
 
+  // ✅ Function to Calculate Knee Angle
+  const calculateAngle = (A, B, C) => {
+    const AB = Math.sqrt((B.x - A.x) * 2 + (B.y - A.y) * 2);
+    const BC = Math.sqrt((B.x - C.x) * 2 + (B.y - C.y) * 2);
+    const AC = Math.sqrt((C.x - A.x) * 2 + (C.y - A.y) * 2);
+
+    const radians = Math.acos((AB * 2 + BC * 2 - AC ** 2) / (2 * AB * BC));
+    return (radians * 180) / Math.PI; // Convert to degrees
+  };
+
+  // ✅ Function to Detect Squats
+  const detectSquat = (keypoints) => {
+    const hip = keypoints.find((kp) => kp.name === "left_hip") || {};
+    const knee = keypoints.find((kp) => kp.name === "left_knee") || {};
+    const ankle = keypoints.find((kp) => kp.name === "left_ankle") || {};
+
+    if (hip.score > 0.5 && knee.score > 0.5 && ankle.score > 0.5) {
+      const kneeAngle = calculateAngle(hip, knee, ankle);
+      console.log("Knee Angle:", kneeAngle);
+
+      if (kneeAngle < 90 && !isSquatting) {
+        isSquatting = true;
+      } else if (kneeAngle > 160 && isSquatting) {
+        setSquatCount((prev) => prev + 1);
+        isSquatting = false;
+        console.log("🔥 Squat Count:", squatCount);
+      }
+    }
+  };
+
+  // ✅ Function to Draw Keypoints & Skeleton
   const drawResults = (poses) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     poses.forEach((pose) => {
@@ -100,12 +132,14 @@ const PoseDetection = () => {
 
       {loading && <p>Loading AI Model...</p>}
 
+      <h2>Squats: {squatCount}</h2>
+
       <div className="video-container">
         <video ref={videoRef} className="video" />
         <canvas ref={canvasRef} className="canvas" width="640" height="480" />
       </div>
 
-      <p>AI is analyzing your movement...</p>
+      <p className="loading-text">AI is analyzing your movement...</p>
     </div>
   );
 };
