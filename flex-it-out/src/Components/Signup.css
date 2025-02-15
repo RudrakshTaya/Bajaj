@@ -1,0 +1,101 @@
+/* Centered Auth Container */
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+    margin: 80px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #ffffff, #f3f4f6);
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  
+  .auth-container:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Heading */
+  h2 {
+    color: #222;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  /* Form */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  /* Input Fields */
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    background: #fff;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+  }
+  
+  /* Button */
+  button {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 14px;
+    font-size: 17px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+  }
+  
+  button:hover {
+    background: linear-gradient(135deg, #0056b3, #004494);
+    transform: scale(1.03);
+  }
+  
+  /* Error Message */
+  .error {
+    color: red;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  
+  /* Text */
+  p {
+    margin-top: 15px;
+    font-size: 15px;
+    color: #444;
+  }
+  
+  /* Links */
+  a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 480px) {
+    .auth-container {
+      width: 90%;
+      padding: 20px;
+    }
+  }
+  
