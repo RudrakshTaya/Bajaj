@@ -1,29 +1,53 @@
 .pose-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-top: 20px;
-    color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+  color: white;
+}
+
+.video-container {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  border: 2px solid #ff5733;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+h2 {
+  font-size: 24px;
+  color: #ff5733;
+  font-weight: bold;
+}
+
+.loading-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: gray;
+  margin-top: 10px;
+  animation: fadeIn 1.5s infinite alternate;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.4;
   }
-  
-  .video-container {
-    position: relative;
-    width: 640px;
-    height: 480px;
+  100% {
+    opacity: 1;
   }
-  
-  .video {
-    width: 100%;
-    height: 100%;
-    border: 2px solid #ff5733;
-  }
-  
-  .canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
+}
