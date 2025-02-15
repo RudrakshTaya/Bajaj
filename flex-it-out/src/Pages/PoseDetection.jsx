@@ -9,7 +9,9 @@ const PoseDetection = () => {
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [squatCount, setSquatCount] = useState(0);
+  const [pushupCount, setPushupCount] = useState(0);
   let isSquatting = false;
+  let isPushingUp = false;
 
   useEffect(() => {
     const initializeTF = async () => {
@@ -47,6 +49,7 @@ const PoseDetection = () => {
 
       if (poses.length > 0) {
         detectSquat(poses[0].keypoints);
+        detectPushup(poses[0].keypoints);
       }
 
       requestAnimationFrame(() => detect(detector));
@@ -55,17 +58,15 @@ const PoseDetection = () => {
     initializeTF();
   }, []);
 
-  // ✅ Function to Calculate Knee Angle
   const calculateAngle = (A, B, C) => {
-    const AB = Math.sqrt((B.x - A.x) * 2 + (B.y - A.y) * 2);
-    const BC = Math.sqrt((B.x - C.x) * 2 + (B.y - C.y) * 2);
-    const AC = Math.sqrt((C.x - A.x) * 2 + (C.y - A.y) * 2);
+    const AB = Math.sqrt((B.x - A.x) ** 2 + (B.y - A.y) ** 2);
+    const BC = Math.sqrt((B.x - C.x) ** 2 + (B.y - C.y) ** 2);
+    const AC = Math.sqrt((C.x - A.x) ** 2 + (C.y - A.y) ** 2);
 
-    const radians = Math.acos((AB * 2 + BC * 2 - AC ** 2) / (2 * AB * BC));
+    const radians = Math.acos((AB ** 2 + BC ** 2 - AC ** 2) / (2 * AB * BC));
     return (radians * 180) / Math.PI; // Convert to degrees
   };
 
-  // ✅ Function to Detect Squats
   const detectSquat = (keypoints) => {
     const hip = keypoints.find((kp) => kp.name === "left_hip") || {};
     const knee = keypoints.find((kp) => kp.name === "left_knee") || {};
@@ -73,19 +74,31 @@ const PoseDetection = () => {
 
     if (hip.score > 0.5 && knee.score > 0.5 && ankle.score > 0.5) {
       const kneeAngle = calculateAngle(hip, knee, ankle);
-      console.log("Knee Angle:", kneeAngle);
-
       if (kneeAngle < 90 && !isSquatting) {
         isSquatting = true;
       } else if (kneeAngle > 160 && isSquatting) {
         setSquatCount((prev) => prev + 1);
         isSquatting = false;
-        console.log("🔥 Squat Count:", squatCount);
       }
     }
   };
 
-  // ✅ Function to Draw Keypoints & Skeleton
+  const detectPushup = (keypoints) => {
+    const shoulder = keypoints.find((kp) => kp.name === "left_shoulder") || {};
+    const elbow = keypoints.find((kp) => kp.name === "left_elbow") || {};
+    const wrist = keypoints.find((kp) => kp.name === "left_wrist") || {};
+
+    if (shoulder.score > 0.5 && elbow.score > 0.5 && wrist.score > 0.5) {
+      const elbowAngle = calculateAngle(shoulder, elbow, wrist);
+      if (elbowAngle < 90 && !isPushingUp) {
+        isPushingUp = true;
+      } else if (elbowAngle > 160 && isPushingUp) {
+        setPushupCount((prev) => prev + 1);
+        isPushingUp = false;
+      }
+    }
+  };
+
   const drawResults = (poses) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -126,22 +139,40 @@ const PoseDetection = () => {
     });
   };
 
+  // return (
+  //   <div className="pose-container">
+  //     <h1>Pose Detection</h1>
+  //     {loading && <p>Loading AI Model...</p>}
+  //     <h2>Squats: {squatCount} | Push-ups: {pushupCount}</h2>
+  //     <div className="video-container">
+  //       <video ref={videoRef} className="video" />
+  //       <canvas ref={canvasRef} className="canvas" width="640" height="480" />
+  //     </div>
+  //     <p className="loading-text">AI is analyzing your movement...</p>
+  //   </div>
+  // );
   return (
     <div className="pose-container">
-      <h1>Pose Detection</h1>
-
-      {loading && <p>Loading AI Model...</p>}
-
-      <h2>Squats: {squatCount}</h2>
-
-      <div className="video-container">
-        <video ref={videoRef} className="video" />
-        <canvas ref={canvasRef} className="canvas" width="640" height="480" />
+      <header className="pose-header">
+        <h1>Pose Detection</h1>
+      </header>
+      
+      <div className="main-content">
+        <div className="stats-container">
+          <h2>🔥 Squats: {squatCount}</h2>
+          <h2>💪 Push-ups: {pushupCount}</h2>
+        </div>
+  
+        <div className="video-container">
+          <video ref={videoRef} className="video" />
+          <canvas ref={canvasRef} className="canvas" width="640" height="480" />
+        </div>
       </div>
-
-      <p className="loading-text">AI is analyzing your movement...</p>
+  
+      {loading && <p className="loading-text">Loading AI Model...</p>}
     </div>
   );
+  
 };
 
 export default PoseDetection;
