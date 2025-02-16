@@ -5,9 +5,13 @@ const mongoose = require("./config/db");
 
 const app = express();
 
-// Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type"]
+}));
+
 
 // Routes
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -15,6 +19,7 @@ app.use("/api/activity", require("./routes/activityRoutes"));
 app.use("/api/leaderboard", require("./routes/leaderboardRoutes"));
 app.use("/api/user",require("./routes/userRoutes"))
 app.use("/api/email", require("./routes/emailchangeRoutes"))
+app.use("/api/meals", require('./routes/fetchmealsRouter'))
 
 
 

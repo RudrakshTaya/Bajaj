@@ -111,7 +111,7 @@ const EditProfile = () => {
                 <h2 onClick={() => setActiveSection(activeSection === "name" ? null : "name")}>Edit Name</h2>
                 {activeSection === "name" && (
                     <form onSubmit={(e) => handleSubmit(e, "name")}> 
-                        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                        <input type="text" name="name" placeholder={'John Doe'} onChange={handleChange} required />
                         <button type="submit">Update Name</button>
                     </form>
                 )}
