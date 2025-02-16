@@ -13,30 +13,10 @@ const emailChangeRoutes = require("./routes/emailChangeRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const pricingRoutes = require("./routes/pricingRoutes");
 const checkoutRoutes = require("./routes/createCheckoutSession"); 
-
+const workoutRoutes= require("./routes/workoutRoutes");
 dotenv.config();
 const app = express();
 
-app.use(express.json());
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-    allowedHeaders: ["Authorization", "Content-Type"]
-}));
-
-
-// Routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/activity", require("./routes/activityRoutes"));
-app.use("/api/leaderboard", require("./routes/leaderboardRoutes"));
-app.use("/api/user",require("./routes/userRoutes"))
-app.use("/api/email", require("./routes/emailchangeRoutes"))
-app.use("/api/meals", require('./routes/fetchmealsRouter'))
-
-
-
-const workoutRoutes = require("./routes/workoutRoutes");
-app.use("/api/workouts", workoutRoutes);
 // ✅ Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -56,6 +36,7 @@ app.use("/api/email", emailChangeRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/pricing", pricingRoutes);
 app.use("/api/checkout", checkoutRoutes); 
+app.use("/api/workouts",workoutRoutes);
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
