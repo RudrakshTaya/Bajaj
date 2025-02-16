@@ -13,6 +13,7 @@ import PricingPlans from "./Pages/PricingPlans";
 import PaymentPage from "./Pages/PaymentPage";  
 import Success from "./Pages/Success";
 import Cancel from "./Pages/Cancel";
+import MealPage from './Pages/MealDescription'
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
+
+        <Route path="/meal/:mealId" element={<MealPage />} />
 
       </Routes>
     </>
