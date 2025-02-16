@@ -1,25 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./WorkoutPage.css";
 
 const WorkoutPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [exercises, setExercises] = useState([
-    { id: "squat", name: "Squats", completed: false, reps: 0 },
-    { id: "pushup", name: "Push-ups", completed: false, reps: 0 },
-    { id: "highKnee", name: "High Knees", completed: false, reps: 0 },
+    { id: "squat", name: "Squats", completed: false, reps: 0, score: 0 },
+    { id: "pushup", name: "Push-ups", completed: false, reps: 0, score: 0 },
+    { id: "highKnee", name: "High Knees", completed: false, reps: 0, score: 0 },
   ]);
+
   const [leaderboard, setLeaderboard] = useState([
     { name: "Alice", score: 150 },
     { name: "Bob", score: 120 },
     { name: "Charlie", score: 100 },
   ]);
+
   const [challenges, setChallenges] = useState([
     { name: "10 Squats", completed: false },
     { name: "5 Push-ups", completed: false },
     { name: "20 High Knees", completed: false },
   ]);
+
   const [workoutHistory, setWorkoutHistory] = useState([]); // State to store workout history
+
+  // When returning from the PoseDetection page, update the corresponding exercise
+  useEffect(() => {
+    if (location.state && location.state.exerciseId) {
+      const { exerciseId, reps, score } = location.state;
+      setExercises((prevExercises) =>
+        prevExercises.map((exercise) =>
+          exercise.id === exerciseId
+            ? { ...exercise, completed: true, reps, score }
+            : exercise
+        )
+      );
+      // Clear the location state so that reloading doesn't re-trigger the update
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, location.pathname, navigate]);
 
   // Fetch workout history from the backend
   useEffect(() => {
@@ -40,10 +61,13 @@ const WorkoutPage = () => {
   // Save completed workout to the backend
   const handleCompleteWorkout = async () => {
     const workoutData = exercises.map((exercise) => ({
-      name: exercise.name,
+      exerciseId: exercise.id,
+      exerciseName: exercise.name,
       reps: exercise.reps,
-      completed: exercise.completed,
+      score: exercise.score, // Use the score provided by the PoseDetection page
     }));
+
+    const totalScore = workoutData.reduce((sum, exercise) => sum + exercise.score, 0);
 
     try {
       const response = await fetch("http://localhost:5001/api/workouts/save", {
@@ -52,6 +76,7 @@ const WorkoutPage = () => {
         body: JSON.stringify({
           userId: "user123", // Replace with actual user ID
           exercises: workoutData,
+          totalScore,
         }),
       });
 
@@ -65,24 +90,14 @@ const WorkoutPage = () => {
       console.error("Error saving workout:", error);
     }
 
-    // Reset exercises state
+    // Reset exercises state after saving
     setExercises((prevExercises) =>
       prevExercises.map((exercise) => ({
         ...exercise,
         completed: false,
         reps: 0,
+        score: 0,
       }))
-    );
-  };
-
-  // Mark an exercise as done
-  const markExerciseAsDone = (exerciseId, reps) => {
-    setExercises((prevExercises) =>
-      prevExercises.map((exercise) =>
-        exercise.id === exerciseId
-          ? { ...exercise, completed: true, reps }
-          : exercise
-      )
     );
   };
 
@@ -98,7 +113,9 @@ const WorkoutPage = () => {
           <div key={exercise.id} className="exercise">
             <span>{exercise.name}</span>
             {exercise.completed ? (
-              <span>✅ {exercise.reps} reps</span>
+              <span>
+                ✅ {exercise.reps} reps (Score: {exercise.score})
+              </span>
             ) : (
               <Link to={`/pose-detection/${exercise.id}`}>
                 <button className="start-button">Start</button>
@@ -146,10 +163,15 @@ const WorkoutPage = () => {
         {workoutHistory.length > 0 ? (
           workoutHistory.map((workout, index) => (
             <div key={index} className="workout-entry">
-              <span>{workout.exerciseName}</span>
-              <span>{workout.reps} reps</span>
-              <span>{workout.score} pts</span>
-              <span>{new Date(workout.date).toLocaleDateString()}</span>
+              <h3>{new Date(workout.date).toLocaleDateString()}</h3>
+              <p>Total Score: {workout.totalScore} pts</p>
+              <ul>
+                {workout.exercises.map((exercise, i) => (
+                  <li key={i}>
+                    {exercise.exerciseName}: {exercise.reps} reps ({exercise.score} pts)
+                  </li>
+                ))}
+              </ul>
             </div>
           ))
         ) : (
