@@ -11,7 +11,7 @@
 //   const [squatCount, setSquatCount] = useState(0);
 //   const [pushupCount, setPushupCount] = useState(0);
 //   const [highKneeCount, setHighKneeCount] = useState(0);
-  
+
 //   let isSquatting = false;
 //   let isPushingUp = false;
 //   let isRaisingKnee = false;
@@ -123,9 +123,6 @@
 //       }
 //     }
 //   };
-  
-
-  
 
 //   const drawResults = (poses) => {
 //     const canvas = canvasRef.current;
@@ -172,26 +169,27 @@
 //       <header className="pose-header">
 //         <h1>Pose Detection</h1>
 //       </header>
-      
+
 //       <div className="main-content">
 //         <div className="stats-container">
 //           <h2>🔥 Squats: {squatCount}</h2>
 //           <h2>💪 Push-ups: {pushupCount}</h2>
 //           <h2>🏃 High Knees: {highKneeCount}</h2>
 //         </div>
-  
+
 //         <div className="video-container">
 //           <video ref={videoRef} className="video" />
 //           <canvas ref={canvasRef} className="canvas" width="640" height="480" />
 //         </div>
 //       </div>
-  
+
 //       {loading && <p className="loading-text">Loading AI Model...</p>}
 //     </div>
 //   );
 // };
 
 // export default PoseDetection;
+
 
 
 import React, { useEffect, useRef, useState } from "react";
@@ -207,12 +205,12 @@ const PoseDetection = () => {
   const [squatCount, setSquatCount] = useState(0);
   const [pushupCount, setPushupCount] = useState(0);
   const [highKneeCount, setHighKneeCount] = useState(0);
-  const [calfRaiseCount, setCalfRaiseCount] = useState(0);
+  const [armRaiseCount, setArmRaiseCount] = useState(0);
 
   let isSquatting = false;
   let isPushingUp = false;
   let isRaisingKnee = false;
-  let isRaisingHeel = false;
+  const isRaisingArms = useRef(false);
 
   useEffect(() => {
     const initializeTF = async () => {
@@ -226,13 +224,17 @@ const PoseDetection = () => {
       try {
         setLoading(true);
         const video = videoRef.current;
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
         video.srcObject = stream;
         await new Promise((resolve) => (video.onloadedmetadata = resolve));
         video.play();
         console.log("🎥 Camera Started");
 
-        const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+        const detector = await poseDetection.createDetector(
+          poseDetection.SupportedModels.MoveNet
+        );
         console.log("✅ MoveNet Model Loaded");
 
         setLoading(false);
@@ -252,7 +254,7 @@ const PoseDetection = () => {
         detectSquat(poses[0].keypoints);
         detectPushup(poses[0].keypoints);
         detectHighKnees(poses[0].keypoints);
-        detectCalfRaises(poses[0].keypoints);
+        detectArmRaises(poses[0].keypoints);
       }
 
       requestAnimationFrame(() => detect(detector));
@@ -314,7 +316,10 @@ const PoseDetection = () => {
       leftKnee.score > 0.5 &&
       rightKnee.score > 0.5
     ) {
-      if ((leftKnee.y < leftHip.y || rightKnee.y < rightHip.y) && !isRaisingKnee) {
+      if (
+        (leftKnee.y < leftHip.y || rightKnee.y < rightHip.y) &&
+        !isRaisingKnee
+      ) {
         setHighKneeCount((prev) => prev + 1);
         isRaisingKnee = true;
       } else if (leftKnee.y > leftHip.y && rightKnee.y > rightHip.y) {
@@ -323,67 +328,78 @@ const PoseDetection = () => {
     }
   };
 
-  const detectCalfRaises = (keypoints) => {
-    const leftAnkle = keypoints.find((kp) => kp.name === "left_ankle") || {};
-    const rightAnkle = keypoints.find((kp) => kp.name === "right_ankle") || {};
-    const leftKnee = keypoints.find((kp) => kp.name === "left_knee") || {};
-    const rightKnee = keypoints.find((kp) => kp.name === "right_knee") || {};
-
+  const detectArmRaises = (keypoints) => {
+    const leftShoulder = keypoints.find((kp) => kp.name === "left_shoulder") || {};
+    const rightShoulder = keypoints.find((kp) => kp.name === "right_shoulder") || {};
+    const leftElbow = keypoints.find((kp) => kp.name === "left_elbow") || {};
+    const rightElbow = keypoints.find((kp) => kp.name === "right_elbow") || {};
+    const leftWrist = keypoints.find((kp) => kp.name === "left_wrist") || {};
+    const rightWrist = keypoints.find((kp) => kp.name === "right_wrist") || {};
+  
     if (
-      leftAnkle.score > 0.5 &&
-      rightAnkle.score > 0.5 &&
-      leftKnee.score > 0.5 &&
-      rightKnee.score > 0.5
+      leftShoulder.score > 0.5 &&
+      rightShoulder.score > 0.5 &&
+      leftElbow.score > 0.5 &&
+      rightElbow.score > 0.5 &&
+      leftWrist.score > 0.5 &&
+      rightWrist.score > 0.5
     ) {
-      if (leftAnkle.y < leftKnee.y - 10 && rightAnkle.y < rightKnee.y - 10 && !isRaisingHeel) {
-        isRaisingHeel = true;
-      } else if (leftAnkle.y >= leftKnee.y - 5 && rightAnkle.y >= rightKnee.y - 5 && isRaisingHeel) {
-        setCalfRaiseCount((prev) => prev + 1);
-        isRaisingHeel = false;
+      // Arms raised above shoulders
+      if (leftWrist.y < leftShoulder.y && rightWrist.y < rightShoulder.y) {
+        if (!isRaisingArms.current) {
+          isRaisingArms.current = true;
+        }
+      } 
+      // Arms returned to shoulder level
+      else if (leftWrist.y > leftElbow.y && rightWrist.y > rightElbow.y && isRaisingArms.current) {
+        setArmRaiseCount((prev) => prev + 1);
+        isRaisingArms.current = false;
       }
     }
   };
+  
 
   const drawResults = (poses) => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-        poses.forEach((pose) => {
-          drawKeypoints(pose.keypoints, ctx);
-          drawSkeleton(pose.keypoints, ctx);
-        });
-      };
-    
-      const drawKeypoints = (keypoints, ctx) => {
-        keypoints.forEach(({ x, y, score }) => {
-          if (score > 0.5) {
-            ctx.fillStyle = "red";
-            ctx.beginPath();
-            ctx.arc(x, y, 6, 0, 2 * Math.PI);
-            ctx.fill();
-          }
-        });
-      };
-    
-      const drawSkeleton = (keypoints, ctx) => {
-        const adjacentPairs = poseDetection.util.getAdjacentPairs(poseDetection.SupportedModels.MoveNet);
-        ctx.strokeStyle = "blue";
-        ctx.lineWidth = 3;
-    
-        adjacentPairs.forEach(([i, j]) => {
-          const kp1 = keypoints[i];
-          const kp2 = keypoints[j];
-    
-          if (kp1?.score > 0.5 && kp2?.score > 0.5) {
-            ctx.beginPath();
-            ctx.moveTo(kp1.x, kp1.y);
-            ctx.lineTo(kp2.x, kp2.y);
-            ctx.stroke();
-          }
-        });
-      };
-    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    poses.forEach((pose) => {
+      drawKeypoints(pose.keypoints, ctx);
+      drawSkeleton(pose.keypoints, ctx);
+    });
+  };
+
+  const drawKeypoints = (keypoints, ctx) => {
+    keypoints.forEach(({ x, y, score }) => {
+      if (score > 0.5) {
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    });
+  };
+
+  const drawSkeleton = (keypoints, ctx) => {
+    const adjacentPairs = poseDetection.util.getAdjacentPairs(
+      poseDetection.SupportedModels.MoveNet
+    );
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 3;
+
+    adjacentPairs.forEach(([i, j]) => {
+      const kp1 = keypoints[i];
+      const kp2 = keypoints[j];
+
+      if (kp1?.score > 0.5 && kp2?.score > 0.5) {
+        ctx.beginPath();
+        ctx.moveTo(kp1.x, kp1.y);
+        ctx.lineTo(kp2.x, kp2.y);
+        ctx.stroke();
+      }
+    });
+  };
 
   return (
     <div className="pose-container">
@@ -395,7 +411,7 @@ const PoseDetection = () => {
         <h2>🔥 Squats: {squatCount}</h2>
         <h2>💪 Push-ups: {pushupCount}</h2>
         <h2>🏃 High Knees: {highKneeCount}</h2>
-        <h2>🦵 Calf Raises: {calfRaiseCount}</h2>
+        <h2>🙆 Arm Raises: {armRaiseCount}</h2>
       </div>
 
       <div className="video-container">
