@@ -26,7 +26,7 @@ const HomePage = () => {
         </button>
       </section>
       </div>
-
+      <div className="hi">
       <section className="features">
         <div className="feature-card">
           <h3>Personalized Training</h3>
@@ -40,17 +40,18 @@ const HomePage = () => {
           <h3>Nutrition Guidance</h3>
           <p>Get diet plans that suit your fitness journey.</p>
         </div>
+
       </section>
 
       <section className="cta">
         <h2>Ready to Get Started?</h2>
 
-        <button onClick={handleRegister} className="cta-button">
+        {/* <button onClick={handleRegister} className="cta-button">
           Join Now
-        </button>
-
+        </button> */}
         <button onClick={() => window.location.href = '/pricing'}className="cta-button">Join Now</button>
       </section>
+    </div>
     </div>
   );
 };
