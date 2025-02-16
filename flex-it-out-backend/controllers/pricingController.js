@@ -1,7 +1,7 @@
-import PricingPlan from "../models/PricingPlan.js";
+const PricingPlan = require("../models/PricingPlan");
 
 // ✅ Get Pricing Plans from Database
-export const getPricingPlans = async (req, res) => {
+const getPricingPlans = async (req, res) => {
   try {
     const plans = await PricingPlan.find();
     res.json(plans);
@@ -9,3 +9,5 @@ export const getPricingPlans = async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 };
+
+module.exports = { getPricingPlans };

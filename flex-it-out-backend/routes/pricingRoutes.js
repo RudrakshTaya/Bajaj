@@ -1,14 +1,16 @@
-import express from "express";
+const express = require("express");
+const PricingPlan = require("../models/PricingPlan");
 
 const router = express.Router();
 
-const pricingPlans = [
-  { id: "basic", name: "Basic Plan", price: 100 },
-  { id: "premium", name: "Premium Plan", price: 250 }
-];
-
-router.get("/", (req, res) => {
-  res.json(pricingPlans);
+// ✅ Get Pricing Plans from Database
+router.get("/", async (req, res) => {
+  try {
+    const plans = await PricingPlan.find();
+    res.json(plans);
+  } catch (err) {
+    res.status(500).json({ error: "Server Error" });
+  }
 });
 
-export default router;
+module.exports = router;
