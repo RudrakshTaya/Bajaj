@@ -1,177 +1,344 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+:root {
+  --primary-color: #3b82f6;
+  --secondary-color: #1e3a8a;
+  --accent-color: #f59e0b;
+  --text-color: #e0e0e0;
+  --bg-color: #121212;
+  --card-bg-color: #1e1e1e;
+}
+
+html,
+body {
   height: 100%;
   width: 100%;
-  background: #121212; /* Dark Gray */
-  font-family: 'Poppins', sans-serif;
-  color: #ddd; /* Light Gray for readability */
+  background: var(--bg-color);
+  font-family: "Poppins", sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
 }
 
 .home-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  /* padding: 20px; */
   width: 100%;
 }
 
 /* Hero Section */
-.hero {
+.hero-bg {
+  background-image: url("./src/assets/flex.jpg");
+  background-size: cover;
+  background-position: center;
   width: 100%;
   height: 100vh;
+  position: relative;
+}
+
+.hero {
+  width: 100%;
+  height: 100%;
   display: flex;
-  min-height: 80vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: url("https://source.unsplash.com/1600x900/?gym,fitness") no-repeat center center/cover;
+  text-align: center;
   padding: 20px;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-.hero-bg {
-    background-image: url(./src/assets/flex.jpg);
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 100vh;
-  }
-  
 
 .hero h1 {
-  font-size: 3rem;
-  margin-bottom: 15px;
-  color: #e0e0e0; /* Light Gray for a neutral tone */
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-color);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: fadeInDown 1s ease-out;
+  color: wheat;
 }
 
 .hero p {
-  font-size: 1.4rem;
-  margin-bottom: 25px;
-  max-width: 600px;
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+  max-width: 700px;
   opacity: 0.9;
-  color: #b0b0b0; /* Softer Gray */
+  animation: fadeInUp 1s ease-out 0.5s;
+  animation-fill-mode: both;
 }
 
 /* Call-To-Action Button */
 .cta-button {
-  padding: 15px 30px;
+  padding: 15px 40px;
   font-size: 1.4rem;
-  font-weight: bold;
-  background: linear-gradient(90deg, #3B82F6, #1E3A8A);
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   border: none;
   color: #fff;
   cursor: pointer;
-  border-radius: 8px;
-  transition: 0.3s;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-  width: 200px;
-  border: 2px solid white;
-  /* justify-items: center; */
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 1s ease-out 1s;
+  animation-fill-mode: both;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.cta-button:hover {
-  background: linear-gradient(90deg, #1E3A8A, #172554);
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+.cta-button .cta-icon {
+  transition: transform 0.3s ease;
+}
+
+.cta-button:hover .cta-icon {
+  transform: translateX(5px);
 }
 
 /* Features Section */
 .features {
-  width: 100%;
   display: flex;
   justify-content: center;
   gap: 30px;
-  margin-top: 80px;
   flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
 }
 
 .feature-card {
-  background: #1c1c1c; /* Dark Gray */
-  padding: 25px;
-  border-radius: 12px;
-  width: 30%;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background-color: var(--card-bg-color);
+  padding: 40px 30px;
+  border-radius: 20px;
+  width: calc(33.333% - 20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
   text-align: center;
 }
 
 .feature-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 0 25px rgba(180, 180, 180, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: var(--accent-color);
+  margin-bottom: 20px;
 }
 
 .feature-card h3 {
   font-size: 1.8rem;
-  margin-bottom: 10px;
-  color: #d0d0d0; /* Soft Gray */
+  margin-bottom: 15px;
+  color: var(--accent-color);
 }
 
 .feature-card p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  
   opacity: 0.9;
-  color: #b0b0b0; /* Light Gray */
+  margin-bottom: 20px;
+}
+
+.feature-button {
+  padding: 10px 20px;
+  background: var(--primary-color);
+  border: none;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.feature-button:hover {
+  background: var(--secondary-color);
+}
+
+/* Testimonials Section */
+.testimonials {
+  padding: 80px 20px;
+  background: var(--card-bg-color);
+  text-align: center;
+}
+
+.testimonials h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: var(--accent-color);
+}
+
+.testimonial-carousel {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.testimonial {
+  background: var(--bg-color);
+  padding: 30px;
+  border-radius: 10px;
+  width: calc(50% - 20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial p {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.testimonial span {
+  font-size: 1rem;
+  color: var(--accent-color);
 }
 
 /* Call to Action Section */
 .cta {
   width: 100%;
   text-align: center;
-  margin-top: 100px;
+  padding: 100px 20px;
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  position: relative;
+  overflow: hidden;
 }
 
 .cta h2 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: 20px;
-  color: #d0d0d0; /* Neutral White-Gray */
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: fadeInDown 1s ease-out;
 }
 
-.hi{
-  background-color: #333;
-  width:100%;
+.cta-subtext {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+  animation: fadeInUp 1s ease-out 0.5s;
+  animation-fill-mode: both;
+}
+
+.cta-button {
+  padding: 15px 40px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  background: #fff;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cta-button .cta-icon {
+  transition: transform 0.3s ease;
+}
+
+.cta-button:hover .cta-icon {
+  transform: translateX(5px);
+}
+
+.cta-button:hover {
+  background: var(--accent-color);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Floating Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.cta-button {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
   .hero h1 {
-      font-size: 2.5rem;
+    font-size: 3rem;
   }
 
   .hero p {
-      font-size: 1.2rem;
-  }
-
-  .features {
-      flex-direction: column;
-      align-items: center;
+    font-size: 1.4rem;
   }
 
   .feature-card {
-      width: 80%;
+    width: calc(50% - 20px);
   }
 }
 
 @media (max-width: 768px) {
   .hero h1 {
-      font-size: 2rem;
+    font-size: 2.5rem;
   }
 
   .hero p {
-      font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .cta-button {
-      font-size: 1.2rem;
-      padding: 12px 25px;
-
+    font-size: 1.2rem;
+    padding: 12px 30px;
   }
 
   .feature-card {
-      width: 90%;
+    width: 100%;
+  }
+
+  .cta h2 {
+    font-size: 2.5rem;
   }
 }
