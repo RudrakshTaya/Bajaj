@@ -1,14 +1,18 @@
 import { Routes, Route } from "react-router-dom"
-import Navbar from "./Components/Navbar"
-import Home from "./Pages/HomePage"
-import SignIn from "./Components/Signin"
-import SignUp from "./Components/Signup"
-import ProfilePage from "./Pages/ProfilePage"
 
-import EditProfile from "./Pages/EditProfile"
-import PoseDetection from "./Pages/PoseDetection"
-import WorkoutPage from "./Pages/WorkOut"
+import Navbar from "./Components/Navbar";
 import NutritionPage from './Pages/NutritionGuidance'
+import Home from "./Pages/HomePage";
+import SignIn from "./Components/Signin";
+import SignUp from "./Components/Signup";
+import ProfilePage from "./Pages/ProfilePage";
+import EditProfile from "./Pages/EditProfile";
+import PoseDetection from "./Pages/PoseDetection"; 
+import WorkoutPage from "./Pages/WorkOut";
+import PricingPlans from "./Pages/PricingPlans";  
+import PaymentPage from "./Pages/PaymentPage";  
+import Success from "./Pages/Success";
+import Cancel from "./Pages/Cancel";
 
 function App() {
   return (
@@ -28,6 +32,17 @@ function App() {
         <Route path="/pose-detection/:exerciseId" element={<PoseDetection />} />
 
         <Route path="/nutrition" element={<NutritionPage/>}/>
+
+
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/pose-detection" element={<PoseDetection />} />
+        <Route path="/pose-detection/:exerciseId" element={<PoseDetection />} />
+        <Route path="/workout" element={<WorkoutPage />} />
+        <Route path="/pricing" element={<PricingPlans />} />  
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
 
       </Routes>
     </>
