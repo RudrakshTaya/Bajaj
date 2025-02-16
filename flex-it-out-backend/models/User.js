@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     avatar: { type: String, default: "" },
     score: { type: Number, default: 0 },
     calories: { type: Number,default: 0 },
+    membership: { type: String, default: "basic"},
     createdAt: { type: Date, default: Date.now },
 })
 
