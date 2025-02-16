@@ -29,6 +29,11 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
   width: 100%;
 }
 
@@ -57,6 +62,7 @@ body {
   left: 0;
 }
 
+
 .hero h1 {
   font-size: 4rem;
   font-weight: 700;
@@ -66,6 +72,26 @@ body {
   letter-spacing: 2px;
   animation: fadeInDown 1s ease-out;
   color: wheat;
+
+.hero-bg {
+  background-image: url(./src/assets/flex.jpg);
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  filter: brightness(85%);
+  transition: filter 0.5s ease-in-out;
+}
+.hero-bg:hover {
+  filter: brightness(100%);
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  color: #e0e0e0;
+  animation: fadeIn 1.5s ease-in-out;
+
 }
 
 .hero p {
@@ -73,8 +99,13 @@ body {
   margin-bottom: 30px;
   max-width: 700px;
   opacity: 0.9;
+
   animation: fadeInUp 1s ease-out 0.5s;
   animation-fill-mode: both;
+
+  color: #b0b0b0;
+  animation: slideUp 1.5s ease-in-out;
+
 }
 
 /* Call-To-Action Button */
@@ -86,6 +117,7 @@ body {
   border: none;
   color: #fff;
   cursor: pointer;
+
   border-radius: 50px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
@@ -106,6 +138,36 @@ body {
 
 .cta-button:hover .cta-icon {
   transform: translateX(5px);
+
+  border-radius: 8px;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  width: 200px;
+  border: 2px solid white;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.3s;
+}
+
+.cta-button:hover::after {
+  left: 100%;
+}
+
+.cta-button:hover {
+  background: linear-gradient(90deg, #1E3A8A, #172554);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+  transform: scale(1.05);
+
 }
 
 /* Features Section */
@@ -120,6 +182,7 @@ body {
 }
 
 .feature-card {
+
   background-color: var(--card-bg-color);
   padding: 40px 30px;
   border-radius: 20px;
@@ -128,10 +191,28 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+
+  background: rgba(28, 28, 28, 0.85);
+  padding: 25px;
+  border-radius: 12px;
+  width: 30%;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
   text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+
+
+
+
+
+
+
 .feature-card:hover {
+
   transform: translateY(-10px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
@@ -140,18 +221,32 @@ body {
   font-size: 3rem;
   color: var(--accent-color);
   margin-bottom: 20px;
+
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.7), 
+              0 0 40px rgba(59, 130, 246, 0.5), 
+              0 0 60px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease-in-out;
+
 }
+
 
 .feature-card h3 {
   font-size: 1.8rem;
+
   margin-bottom: 15px;
   color: var(--accent-color);
+
+  margin-bottom: 10px;
+  color: #d0d0d0;
+
 }
 
 .feature-card p {
   font-size: 1.1rem;
   
   opacity: 0.9;
+
   margin-bottom: 20px;
 }
 
@@ -205,6 +300,9 @@ body {
 .testimonial span {
   font-size: 1rem;
   color: var(--accent-color);
+
+  color: #b0b0b0;
+
 }
 
 /* Call to Action Section */
@@ -220,6 +318,7 @@ body {
 .cta h2 {
   font-size: 3rem;
   margin-bottom: 20px;
+
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -303,11 +402,21 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+
+  color: #d0d0d0;
 }
+
+.hi {
+  background-color: #333;
+  width: 100%;
+  padding: 50px 0;
+}
+
 
 /* Responsive Design */
 @media (max-width: 1024px) {
   .hero h1 {
+
     font-size: 3rem;
   }
 
@@ -317,11 +426,7 @@ body {
 
   .feature-card {
     width: calc(50% - 20px);
-  }
-}
 
-@media (max-width: 768px) {
-  .hero h1 {
     font-size: 2.5rem;
   }
 
@@ -329,8 +434,36 @@ body {
     font-size: 1.2rem;
   }
 
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-card {
+    width: 80%;
+
+  }
+
+@media (max-width: 768px) {
+  .hero h1 {
+
+    font-size: 2.5rem;
+  }
+
+  .hero p {
+    font-size: 1.2rem;
+
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+
+  }
+
   .cta-button {
     font-size: 1.2rem;
+
     padding: 12px 30px;
   }
 
@@ -342,3 +475,22 @@ body {
     font-size: 2.5rem;
   }
 }
+
+
+  .feature-card {
+    width: 90%;
+  }
+
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+}}
