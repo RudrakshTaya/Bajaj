@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react"
-import { loadStripe } from "@stripe/stripe-js"
-import { useSearchParams } from "react-router-dom"
-import './PaymentPage.css'
+import React, { useEffect, useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { useSearchParams } from "react-router-dom";
 
 const stripePromise = loadStripe("YOUR_STRIPE_PUBLIC_KEY");
 
@@ -28,7 +27,7 @@ const PaymentPage = () => {
   return (
     <div style={{ textAlign: "center", padding: "50px" }}>
       <h1>Complete Your Payment</h1>
-      <p>You selected: <strong>{plan?.toUpperCase()}</strong></p>
+      <p>You selected: <strong>{plan?.toUpperCase()}</strong> plan</p>
       <button onClick={handlePayment} disabled={loading}>
         {loading ? "Processing..." : "Pay Now"}
       </button>

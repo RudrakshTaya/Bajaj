@@ -14,7 +14,9 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const pricingRoutes = require("./routes/pricingRoutes");
 const checkoutRoutes = require("./routes/createCheckoutSession"); 
 const workoutRoutes= require("./routes/workoutRoutes");
-const mealsRoutes = require("./routes/fetchmealsRouter")
+const mealRoutes = require('./routes/fetchmealsRouter')
+const videoRoutes = require('./routes/videoRoutes')
+
 dotenv.config();
 const app = express();
 
@@ -38,7 +40,8 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/pricing", pricingRoutes);
 app.use("/api/checkout", checkoutRoutes); 
 app.use("/api/workouts",workoutRoutes);
-app.use("/api/meals",mealsRoutes);
+app.use("/api/meals", mealRoutes);
+app.use("/api/video", videoRoutes)
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5001;

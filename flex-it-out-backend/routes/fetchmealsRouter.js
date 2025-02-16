@@ -4,6 +4,6 @@ const { getMeals } = require('../controllers/fetchMealsController')
 
 const router = express.Router()
 
-router.get("/", authMiddleware, getMeals)
+router.get("/getmeals", authMiddleware, getMeals)
 
 module.exports = router

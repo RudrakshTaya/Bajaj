@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import "./PricingPlans.css";
+import React from "react"
+import { useNavigate } from "react-router-dom"
+import "./PricingPlans.css"
 
 const PricingPage = () => {
   const navigate = useNavigate();

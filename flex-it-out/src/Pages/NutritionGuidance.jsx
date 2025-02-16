@@ -14,7 +14,7 @@ const NutritionGuidance = () => {
     const fetchMeals = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5001/api/meals", {
+        const response = await axios.get("http://localhost:5001/api/meals/getmeals", {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log(response.data);

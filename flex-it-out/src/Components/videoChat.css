@@ -1,0 +1,61 @@
+.video-chat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #121212;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.video-chat h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.video-chat input {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.video-chat button {
+    background-color: #ff5722;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.video-chat button:hover {
+    background-color: #e64a19;
+}
+
+.video-chat .video-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.video-chat video {
+    width: 300px;
+    height: 200px;
+    background-color: black;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
+
+.video-chat .room-info {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
