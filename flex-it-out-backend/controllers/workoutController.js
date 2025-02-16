@@ -1,16 +1,14 @@
 const Workout = require("../models/workout");
 
-// Save a completed workout
+// Save a complete workout
 exports.saveWorkout = async (req, res) => {
-  const { userId, exerciseId, exerciseName, reps, score } = req.body;
+  const { userId, exercises, totalScore } = req.body;
 
   try {
     const newWorkout = new Workout({
       userId,
-      exerciseId,
-      exerciseName,
-      reps,
-      score,
+      exercises,
+      totalScore,
     });
 
     await newWorkout.save();
