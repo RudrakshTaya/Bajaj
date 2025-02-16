@@ -14,7 +14,7 @@ exports.getProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-      const { name, email } = req.body;
+      const { name } = req.body;
       let user = await User.findById(req.user.id);
       if (!user) return res.status(404).json({ message: "User not found" });
   
@@ -27,13 +27,11 @@ exports.updateProfile = async (req, res) => {
         }
       }
   
-      user.name = name || user.name;
-      user.email = email || user.email;
-      await user.save();
+        user.name = name || user.name;
+        await user.save();
   
       res.json({ message: "Profile updated", user });
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
-  };
-  
+}
