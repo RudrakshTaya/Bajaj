@@ -1,61 +1,67 @@
+/* General Styles */
 body {
     background: #121212;
     color: white;
     font-family: Arial, sans-serif;
-}
+  }
   
-.pricing-container {
-    background: #121212;
+  .pricing-container {
     text-align: center;
     padding: 50px;
-}
-
-h1 {
+  }
+  
+  h1 {
     margin-bottom: 30px;
     font-size: 2.5rem;
-}
-
-.plans {
+  }
+  
+  /* Plans Layout */
+  .plans {
     display: flex;
     justify-content: center;
     gap: 40px;
-}
+  }
   
-.plan {
+  /* Individual Plan Styling */
+  .plan {
     border: 1px solid #ccc;
     padding: 30px;
     width: 300px;
     border-radius: 10px;
     text-align: center;
-}
+  }
   
-.student-basic {
+  /* Darker backgrounds for each plan */
+  .basic {
     background: #1e1e1e;
-}
+  }
   
-.student-premium {
+  .premium {
     background: #292929;
-}
+  }
   
-.price {
+  /* Price Styling */
+  .price {
     font-size: 1.5rem;
     font-weight: bold;
     color: #4caf50;
-}
+  }
   
-ul {
+  /* Features List */
+  ul {
     list-style: none;
     padding: 0;
     text-align: left;
     margin: 20px 0;
-}
+  }
   
-li {
+  li {
     font-size: 1.1rem;
     margin-bottom: 10px;
-}
+  }
   
-button {
+  /* Buttons */
+  button {
     margin-top: 15px;
     padding: 10px 20px;
     border: none;
@@ -65,8 +71,9 @@ button {
     font-size: 1rem;
     cursor: pointer;
     transition: 0.3s;
-}
-
-button:hover {
+  }
+  
+  button:hover {
     background: #45a049;
-}
+  }
+  
