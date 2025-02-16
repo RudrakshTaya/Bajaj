@@ -1,57 +1,117 @@
-import React from "react"
-import { useNavigate } from "react-router-dom"
-import "./HomePage.css"
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaDumbbell, FaAppleAlt, FaUserFriends, FaMedal, FaArrowRight } from "react-icons/fa";
+import './HomePage.css';
 
 const HomePage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const handleRegister = () => {
-    navigate('/signup');
-  }
+    navigate("/signup");
+  };
 
   const nutritionPage = () => {
-    navigate('/nutrition')
-  }
+    navigate("/nutrition");
+  };
 
   return (
     <div className="home-container">
-      <div className="hero-bg">
-      <section className="hero">
-        <h1>CRUSH WORKOUTS, ANYTIME, ANYWHERE.</h1>
-        <p>Train like a beast, transform like a legend!</p>
-        <button 
-          className="cta-button" 
-          onClick={() => navigate("/workout")}
+      {/* Hero Section */}
+      <motion.div className="hero-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+        <section className="hero">
+          <motion.h1
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            CRUSH WORKOUTS, ANYTIME, ANYWHERE.
+          </motion.h1>
+          <motion.p
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            Train like a beast, transform like a legend!
+          </motion.p>
+          <motion.button
+            className="cta-button"
+            onClick={() => navigate("/workout")}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Get Started <FaArrowRight className="cta-icon" />
+          </motion.button>
+        </section>
+      </motion.div>
+
+      {/* Features Section */}
+      <div className="content-wrapper">
+        <section className="features">
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+            <FaDumbbell className="feature-icon" />
+            <h3>Personalized Training</h3>
+            <p>Work with expert trainers and get customized workouts.</p>
+            <button className="feature-button">Learn More</button>
+          </motion.div>
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+            <FaUserFriends className="feature-icon" />
+            <h3>Community Support</h3>
+            <p>Join a community of fitness enthusiasts and stay motivated.</p>
+            <button className="feature-button">Join Now</button>
+          </motion.div>
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }} onClick={nutritionPage}>
+            <FaAppleAlt className="feature-icon" />
+            <h3>Nutrition Guidance</h3>
+            <p>Get diet plans that suit your fitness journey.</p>
+            <button className="feature-button">Explore</button>
+          </motion.div>
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+            <FaMedal className="feature-icon" />
+            <h3>Track Progress</h3>
+            <p>Monitor your achievements and celebrate milestones.</p>
+            <button className="feature-button">View Progress</button>
+          </motion.div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="testimonials">
+          <h2>What Our Members Say</h2>
+          <div className="testimonial-carousel">
+            <div className="testimonial">
+              <p>"This app transformed my fitness journey. I've never felt better!"</p>
+              <span>- Sarah J.</span>
+            </div>
+            <div className="testimonial">
+              <p>"The personalized workouts and nutrition plans are game-changers."</p>
+              <span>- Mike R.</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Call to Action Section */}
+        <section className="cta">
+        <h2>Ready to Transform Your Fitness Journey?</h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="cta-subtext"
         >
-          Get Started
-        </button>
+          Join thousands of members achieving their goals with our premium plans.
+        </motion.p>
+        <motion.button
+        onClick={() => (window.location.href = "/pricing")}
+          className="cta-button"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+        >
+          Explore Premium Plans <FaArrowRight className="cta-icon" />
+        </motion.button>
       </section>
       </div>
-      <div className="hi">
-      <section className="features">
-        <div className="feature-card">
-          <h3>Personalized Training</h3>
-          <p>Work with expert trainers and get customized workouts.</p>
-        </div>
-        <div className="feature-card">
-          <h3>24/7 Access</h3>
-          <p>Workout anytime with our flexible gym hours.</p>
-        </div>
-        <div className="feature-card" onClick={ nutritionPage }>
-          <h3>Nutrition Guidance</h3>
-          <p>Get diet plans that suit your fitness journey.</p>
-        </div>
-
-      </section>
-
-      <section className="cta">
-        <h2>Ready to Get Started?</h2>
-
-        {/* <button onClick={handleRegister} className="cta-button">
-          Join Now
-        </button> */}
-        <button onClick={() => window.location.href = '/pricing'}className="cta-button">Join Now</button>
-      </section>
-    </div>
     </div>
   );
 };
