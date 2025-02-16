@@ -41,9 +41,7 @@ const HomePage = () => {
       <section className="cta">
         <h2>Ready to Get Started?</h2>
         {/* ✅ Keep only one Join Now button */}
-        <button onClick={handleRegister} className="cta-button">
-          Join Now
-        </button>
+        <button onClick={() => window.location.href = '/pricing'}className="cta-button">Join Now</button>
       </section>
     </div>
   );
