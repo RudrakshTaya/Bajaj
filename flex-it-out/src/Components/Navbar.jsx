@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { FaDumbbell } from "react-icons/fa"; // ✅ Import the dumbbell icon
+import { GiBiceps } from "react-icons/gi"; // ✅ Import muscle icon
 import { AuthContext } from '../Context/AuthContext';
 import './Navbar.css';
 
@@ -21,7 +21,7 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-brand">
                 <Link to="/">
-                    <FaDumbbell className="logo-icon" /> FLEX IT OUT
+                    <GiBiceps className="logo-icon" /> FLEX IT OUT
                 </Link>
             </div>
             <div className="nav-links">
