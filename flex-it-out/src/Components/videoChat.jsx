@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect, createLocalTracks } from 'twilio-video';
 import axios from 'axios';
@@ -14,7 +14,7 @@ const VideoChat = () => {
         if (!roomName) return alert('Enter a room name first!');
 
         try {
-            const response = await axios.post('http://localhost:5001/api/video/token', { room: roomName }); // ✅ Fix API request body
+            const response = await axios.post('http://localhost:5001/api/video/token', { room: roomName });
             const { token } = response.data;
 
             alert(`Room "${roomName}" created! Now users can join.`);
@@ -28,49 +28,65 @@ const VideoChat = () => {
     // ✅ Join Room with Access Token
     const handleJoinRoom = async () => {
         if (!roomName) return alert('Please enter a room name!');
-    
+
         try {
             const response = await axios.post('http://localhost:5001/api/video/token', { room: roomName });
             const { token } = response.data;
-    
-            console.log("Token from backend:", token); // Log the token
-    
-            // Create local tracks with error handling
-            const tracks = await createLocalTracks({ audio: true, video: { width: 640 } })
-                .catch(error => {
-                    console.error("Error creating local tracks:", error);
-                    throw error;
-                });
-    
-            console.log('Tracks created:', tracks); // Log the tracks
+
+            console.log("Token from backend:", token);
+
+            const tracks = await createLocalTracks({ audio: true, video: { width: 640 } });
+
+            console.log('Tracks created:', tracks);
             setLocalTracks(tracks);
-    
-            const room = await connect(token, { name: roomName, tracks: tracks });
+
+            const room = await connect(token, { name: roomName, tracks });
+
             setVideoRoom(room);
-    
-            console.log(`Joined the room: ${room.name}`);
+
+            // ✅ Listen for new participants
+            room.on('participantConnected', (participant) => {
+                console.log(`Participant ${participant.identity} joined`);
+                participant.tracks.forEach(publication => {
+                    if (publication.isSubscribed) {
+                        attachTrack(publication.track);
+                    }
+                });
+
+                participant.on('trackSubscribed', attachTrack);
+            });
+
         } catch (error) {
             console.error('Error joining room:', error);
             alert('Error joining room, please try again.');
         }
     };
 
+    // ✅ Helper function to attach tracks to the DOM safely
+    const attachTrack = (track) => {
+        if (track.kind === 'video') {
+            const videoElement = track.attach();
+            const container = document.getElementById('remote-video-container');
+            if (container) container.appendChild(videoElement);
+        }
+    };
+
     return (
         <div className="video-chat">
             <h2>Video Chat</h2>
+            <div id="remote-video-container"></div> {/* ✅ Ensure this container exists */}
+
             {videoRoom ? (
                 <div>
                     <h3>You are in room: {videoRoom.name}</h3>
                     <div>
-                    <div>
-                    {localTracks.map((track) => {
+                    {localTracks.map((track, index) => {
                         if (track.kind === 'video') {
                             const videoElement = track.attach();
-                            return <div key={track.sid} ref={(el) => el && el.appendChild(videoElement)} />;
+                            return <div key={index} ref={(el) => el && el.appendChild(videoElement)} />;
                         }
                         return null; 
                     })}
-                </div>
 
                     </div>
                     <Link to="/">Go Back</Link>

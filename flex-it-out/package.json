@@ -39,7 +39,6 @@
     "twilio": "^5.4.4",
     "twilio-video": "^2.29.0",
     "uuid": "^11.0.5"
-    "recharts": "^2.15.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
