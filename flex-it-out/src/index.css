@@ -3,3 +3,6 @@ button{
     margin:10px auto;
     text-align:center;
 }
+#root{
+    background-color: #fff;
+}
