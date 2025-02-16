@@ -8,7 +8,7 @@ const HomePage = () => {
     navigate('/signup');
   }
 
-  const nutrionPage = () => {
+  const nutritionPage = () => {
     navigate('/nutrition')
   }
 
@@ -36,7 +36,7 @@ const HomePage = () => {
           <h3>24/7 Access</h3>
           <p>Workout anytime with our flexible gym hours.</p>
         </div>
-        <div className="feature-card" onClick={ nutrionPage }>
+        <div className="feature-card" onClick={ nutritionPage }>
           <h3>Nutrition Guidance</h3>
           <p>Get diet plans that suit your fitness journey.</p>
         </div>
