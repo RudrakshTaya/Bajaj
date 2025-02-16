@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./PricingPlans.css";
 
 const PricingPage = () => {
   const navigate = useNavigate();
@@ -9,57 +10,51 @@ const PricingPage = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
+    <div className="pricing-container">
       <h1>Choose Your Plan</h1>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: "20px",
-        }}
-      >
-        <div
-          style={{ border: "1px solid #ccc", padding: "20px", flex: "1 0 20%" }}
-        >
-          <h2>Basic Membership</h2>
-          <p>$10/month</p>
-          <button onClick={() => handlePayment("basic")}>Select Plan</button>
-        </div>
-
-        <div
-          style={{ border: "1px solid #ccc", padding: "20px", flex: "1 0 20%" }}
-        >
-          <h2>Standard Membership</h2>
-          <p>$25/month</p>
-          <button onClick={() => handlePayment("standard")}>Select Plan</button>
-        </div>
-
-        <div
-          style={{ border: "1px solid #ccc", padding: "20px", flex: "1 0 20%" }}
-        >
-          <h2>Premium Membership</h2>
-          <p>$50/month</p>
-          <button onClick={() => handlePayment("premium")}>Select Plan</button>
-        </div>
-
-        <div
-          style={{ border: "1px solid #ccc", padding: "20px", flex: "1 0 20%" }}
-        >
+      <div className="plans">
+        {/* Student Plan */}
+        <div className="plan student-plan">
           <h2>Student Plan</h2>
-          <p>$21/month</p>
-          <button onClick={() => handlePayment("student")}>
+          <p className="price">$8/month</p>
+          <ul>
+            <li>✔ Access to basic workout plans</li>
+            <li>✔ Community support</li>
+            <li>✔ Limited exercise tutorials</li>
+            <li>✔ Monthly progress tracking</li>
+          </ul>
+          <button onClick={() => handlePayment("student-plan")}>
             Select Plan
           </button>
         </div>
 
-        <div
-          style={{ border: "1px solid #ccc", padding: "20px", flex: "1 0 20%" }}
-        >
-          <h2>Athlete's Plan</h2>
-          <p>$250/year</p>
-          <button onClick={() => handlePayment("athlete")}>
+        {/* Basic Plan */}
+        <div className="plan basic-plan">
+          <h2>Basic Plan</h2>
+          <p className="price">$15/month</p>
+          <ul>
+            <li>✔ Access to all standard workout plans</li>
+            <li>✔ Community support & fitness tips</li>
+            <li>✔ Video tutorials for exercises</li>
+            <li>✔ Progress tracking & goal setting</li>
+          </ul>
+          <button onClick={() => handlePayment("basic-plan")}>
+            Select Plan
+          </button>
+        </div>
+
+        {/* Premium Plan */}
+        <div className="plan premium-plan">
+          <h2>Premium Plan</h2>
+          <p className="price">$30/month</p>
+          <ul>
+            <li>✔ Unlimited access to premium workouts</li>
+            <li>✔ Personalized fitness plan</li>
+            <li>✔ Live trainer support</li>
+            <li>✔ Advanced progress tracking & analytics</li>
+          </ul>
+          <button onClick={() => handlePayment("premium-plan")}>
             Select Plan
           </button>
         </div>
