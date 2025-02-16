@@ -1,11 +1,20 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 
 body {
   font-family: "Poppins", sans-serif;
   background-color: #f0f4f8;
+
+/* Enhanced Workout Page Styling */
+body {
+  background: linear-gradient(to right, #cfd9df, #e2ebf0); /* Soft gradient */
+  font-family: 'Poppins', sans-serif;
+  color: #1e293b;
+
   margin: 0;
   padding: 0;
 }
+
 
 .workout-container {
   max-width: 1200px;
@@ -176,3 +185,182 @@ h2 svg {
   }
 }
 
+
+/* Workout Container */
+.workout-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.5); /* Glassmorphism effect */
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+/* Header */
+.workout-header {
+  font-size: 32px;
+  font-weight: bold;
+  color: #1e40af;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+}
+
+/* Cards */
+.exercises-list, .leaderboard, .challenges, .workout-history {
+  margin: 25px 0;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.exercises-list:hover, .leaderboard:hover, .challenges:hover, .workout-history:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* Exercises */
+.exercise {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  border-bottom: 2px solid #cbd5e1;
+  font-size: 18px;
+  transition: background 0.3s ease;
+}
+
+.exercise:last-child {
+  border-bottom: none;
+}
+
+.exercise:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Buttons */
+.start-button, .challenge-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Start Button */
+.start-button {
+  background: linear-gradient(45deg, #3b82f6, #1e40af);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+}
+
+.start-button:hover {
+  background: linear-gradient(45deg, #2563eb, #1e3a8a);
+  transform: scale(1.05);
+}
+
+/* Challenge Button */
+.challenge-button {
+  background: linear-gradient(45deg, #0284c7, #0369a1);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.4);
+}
+
+.challenge-button:hover {
+  background: linear-gradient(45deg, #0369a1, #064e7c);
+  transform: scale(1.05);
+}
+
+/* Challenges */
+.challenge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #cbd5e1;
+  font-size: 18px;
+  transition: background 0.3s ease;
+  min-height: 55px;
+}
+
+.challenge:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.challenge span {
+  flex: 1;
+  text-align: left;
+}
+
+.challenge-status {
+  flex-shrink: 0;
+  width: 120px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Workout History */
+.workout-entry {
+  padding: 15px;
+  background: rgba(241, 245, 249, 0.7);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.workout-entry:hover {
+  transform: scale(1.02);
+}
+
+/* Complete Workout Button */
+.complete-workout-button {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-top: 30px;
+  background: linear-gradient(45deg, #1e40af, #1e3a8a);
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 5px 15px rgba(30, 64, 175, 0.4);
+}
+
+.complete-workout-button:hover {
+  background: linear-gradient(45deg, #1e3a8a, #162d6d);
+  transform: scale(1.08);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .exercise, .leaderboard-entry, .challenge {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .start-button, .challenge-button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .complete-workout-button {
+    font-size: 18px;
+    padding: 14px;
+  }
+}
+}
