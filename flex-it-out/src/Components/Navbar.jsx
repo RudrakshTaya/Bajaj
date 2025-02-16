@@ -68,7 +68,7 @@ const Navbar = () => {
                 <Link to="/">FLEX IT OUT</Link>
             </div>
             <div className="nav-links">
-                <Link to="/menu">Menu</Link>
+                <Link to="/workout">Workout</Link>
                 <Link to="/leaderboard">Leaderboard</Link>
 
                 
