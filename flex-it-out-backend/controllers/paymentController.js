@@ -1,10 +1,10 @@
-import Stripe from "stripe";
-import PricingPlan from "../models/PricingPlan.js";
+const Stripe = require("stripe");
+const PricingPlan = require("../models/PricingPlan");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // ✅ Handle Stripe Payment
-export const processPayment = async (req, res) => {
+const processPayment = async (req, res) => {
   try {
     const { planId } = req.body;
     const plan = await PricingPlan.findById(planId);
@@ -37,3 +37,5 @@ export const processPayment = async (req, res) => {
     res.status(500).json({ error: "Payment Failed" });
   }
 };
+
+module.exports = { processPayment };

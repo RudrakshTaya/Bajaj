@@ -1,20 +1,22 @@
 const express = require("express");
 const Stripe = require("stripe");
 const dotenv = require("dotenv");
-const PricingPlan = require("../models/PricingPlan");
 
 dotenv.config();
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// ✅ Process Payment
-router.post("/", async (req, res) => {
+router.post("/create-checkout-session", async (req, res) => {
   try {
-    const { planId } = req.body;
-    const plan = await PricingPlan.findById(planId);
+    const { plan } = req.body;
 
-    if (!plan) {
-      return res.status(404).json({ error: "Plan not found" });
+    const prices = {
+      basic: 1000,
+      premium: 2500,
+    };
+
+    if (!prices[plan]) {
+      return res.status(400).json({ error: "Invalid plan selected" });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -23,8 +25,8 @@ router.post("/", async (req, res) => {
         {
           price_data: {
             currency: "usd",
-            product_data: { name: plan.name },
-            unit_amount: plan.price * 100,
+            product_data: { name: `${plan.toUpperCase()} Plan` },
+            unit_amount: prices[plan],
           },
           quantity: 1,
         },
@@ -34,9 +36,10 @@ router.post("/", async (req, res) => {
       cancel_url: "http://localhost:5173/cancel",
     });
 
-    res.json({ url: session.url });
-  } catch (err) {
-    res.status(500).json({ error: "Payment Failed" });
+    res.json({ id: session.id });
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    res.status(500).json({ error: "Payment failed" });
   }
 });
 

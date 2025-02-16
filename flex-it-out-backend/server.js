@@ -1,17 +1,18 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import bodyParser from "body-parser";
-import mongoose from "mongoose";
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 // Import Routes
-import authRoutes from "./routes/authRoutes.js";
-import activityRoutes from "./routes/activityRoutes.js";
-import leaderboardRoutes from "./routes/leaderboardRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import emailChangeRoutes from "./routes/emailChangeRoutes.js";
-import paymentRoutes from "./routes/paymentRoutes.js";
-import pricingRoutes from "./routes/pricingRoutes.js";
+const authRoutes = require("./routes/authRoutes");
+const activityRoutes = require("./routes/activityRoutes");
+const leaderboardRoutes = require("./routes/leaderboardRoutes");
+const userRoutes = require("./routes/userRoutes");
+const emailChangeRoutes = require("./routes/emailChangeRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const pricingRoutes = require("./routes/pricingRoutes");
+const checkoutRoutes = require("./routes/createCheckoutSession"); 
 
 dotenv.config();
 const app = express();
@@ -21,9 +22,10 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // ✅ Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.error("❌ MongoDB Connection Error:", err));
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
 // ✅ Routes
 app.use("/api/auth", authRoutes);
@@ -33,6 +35,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/email", emailChangeRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/pricing", pricingRoutes);
+app.use("/api/checkout", checkoutRoutes); 
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
