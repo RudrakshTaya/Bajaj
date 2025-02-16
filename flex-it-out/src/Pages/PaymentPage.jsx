@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { useSearchParams } from "react-router-dom";
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSearchParams } from "react-router-dom";
@@ -19,45 +16,25 @@ const PaymentPage = () => {
     setLoading(true);
     const stripe = await stripePromise;
 
-    console.log("Selected Plan:", plan, "Type:", typeof plan); // Debugging log
-
     try {
-      const requestBody = JSON.stringify({ plan });
-      console.log("🔹 Request Body:", requestBody); // Log the request body
-
       const response = await fetch("http://localhost:5001/api/checkout/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: requestBody,
+        body: JSON.stringify({ plan }),
       });
 
       const data = await response.json();
-      console.log("🔹 Checkout Session Response:", data); // Log the response
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create session");
-      }
-
-      if (!data.id) {
-        throw new Error("❌ No sessionId received from backend");
-      }
+      if (!response.ok || !data.id) throw new Error(data.error || "Payment session failed");
 
       await stripe.redirectToCheckout({ sessionId: data.id });
     } catch (error) {
-      console.error("❌ Payment Error:", error);
+      console.error("Payment Error:", error);
     }
 
     setLoading(false);
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
-      <h1>Complete Your Payment</h1>
-      <p>You selected: <strong>{plan?.toUpperCase()}</strong> plan</p>
-      <button onClick={handlePayment} disabled={loading}>
-        {loading ? "Processing..." : "Pay Now"}
-      </button>
-    </div>
     <motion.div
       className="payment-page-container"
       initial={{ opacity: 0 }}
@@ -65,18 +42,10 @@ const PaymentPage = () => {
       transition={{ duration: 0.8 }}
     >
       <div className="payment-page-card">
-        <motion.h1
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-        >
+        <motion.h1 initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.8 }}>
           Complete Your Payment
         </motion.h1>
-        <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-        >
+        <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4, duration: 0.8 }}>
           You selected: <strong>{plan?.toUpperCase()}</strong>
         </motion.p>
         <motion.button
@@ -88,15 +57,7 @@ const PaymentPage = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          {loading ? (
-            <>
-              <FaSpinner className="payment-page-spinner" /> Processing...
-            </>
-          ) : (
-            <>
-              <FaCreditCard /> Pay Now
-            </>
-          )}
+          {loading ? <><FaSpinner className="payment-page-spinner" /> Processing...</> : <><FaCreditCard /> Pay Now</>}
         </motion.button>
       </div>
     </motion.div>

@@ -17,6 +17,7 @@ const workoutRoutes= require("./routes/workoutRoutes");
 const mealRoutes = require('./routes/fetchmealsRouter')
 const videoRoutes = require('./routes/videoRoutes')
 
+const mealsRoutes = require("./routes/fetchmealsRouter")
 dotenv.config();
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/pricing", pricingRoutes);
 app.use("/api/checkout", checkoutRoutes); 
 app.use("/api/workouts",workoutRoutes);
+
 app.use("/api/meals", mealRoutes);
 app.use("/api/video", videoRoutes)
 
