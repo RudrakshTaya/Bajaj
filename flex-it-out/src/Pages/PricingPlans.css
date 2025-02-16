@@ -1,0 +1,86 @@
+/* General Styles */
+.pricing-container {
+    text-align: center;
+    padding: 50px;
+    background: #1c1f26; /* Dark Gray Background */
+    color: #fff;
+    min-height: 100vh;
+  }
+  
+  /* Title */
+  .pricing-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #cbd5e1; /* Light Gray Text */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Pricing Cards Layout */
+  .pricing-plans {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  /* Individual Pricing Card */
+  .pricing-card {
+    background: linear-gradient(135deg, #1e293b, #3b82f6); /* Dark Blue to Light Blue */
+    border-radius: 12px;
+    padding: 25px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 102, 255, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid #94a3b8; /* Gray Border */
+    color: white;
+  }
+  
+  .pricing-card:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); /* Blue Glow Effect */
+  }
+  
+  /* Plan Titles */
+  .pricing-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #f8fafc; /* Almost White */
+  }
+  
+  /* Price */
+  .pricing-card p {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #dbeafe; /* Light Blue */
+  }
+  
+  /* Select Plan Button */
+  .pricing-card button {
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: #3b82f6; /* Blue */
+    color: white;
+    border: 2px solid #dbeafe;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .pricing-card button:hover {
+    background: #2563eb; /* Darker Blue */
+    color: #e2e8f0; /* Lighter Text */
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    transform: translateY(-3px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .pricing-card {
+      width: 90%;
+    }
+  }
+  
