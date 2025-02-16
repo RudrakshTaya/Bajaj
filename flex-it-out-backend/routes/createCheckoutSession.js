@@ -14,10 +14,8 @@ router.post("/create-checkout-session", async (req, res) => {
 
     const prices = {
       basic: 1000,
-      standard: 2500,
       premium: 5000,
       student: 2100,
-      athlete: 25000,
     };
 
     if (!plan) {
