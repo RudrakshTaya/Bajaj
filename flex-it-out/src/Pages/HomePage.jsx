@@ -1,12 +1,12 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigation
-import "./HomePage.css";
+import React from "react"
+import { useNavigate } from "react-router-dom"
+import "./HomePage.css"
 
 const HomePage = () => {
-  const navigate = useNavigate(); // ✅ React Router navigation
+  const navigate = useNavigate()
   const handleRegister = () => {
     navigate('/signup');
-  };
+  }
 
   return (
     <div className="home-container">
@@ -16,7 +16,7 @@ const HomePage = () => {
         <p>Join the best fitness community and achieve your goals today!</p>
         <button 
           className="cta-button" 
-          onClick={() => navigate("/pose-detection")} // ✅ Navigates to PoseDetection page
+          onClick={() => navigate("/pose-detection")}
         >
           Get Started
         </button>
