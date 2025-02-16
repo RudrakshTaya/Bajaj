@@ -1,0 +1,151 @@
+/* Workout Page Styling */
+.workout-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+  }
+  
+  /* Header */
+  .workout-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  /* Exercises List */
+  .exercises-list {
+    margin: 20px 0;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .exercise {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+  }
+  
+  .exercise:last-child {
+    border-bottom: none;
+  }
+  
+  .start-button {
+    padding: 8px 15px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .start-button:hover {
+    background: #0056b3;
+  }
+  
+  /* Leaderboard */
+  .leaderboard {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .leaderboard-entry:last-child {
+    border-bottom: none;
+  }
+  
+  /* Challenges */
+  .challenges {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .challenge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+  }
+  
+  .challenge:last-child {
+    border-bottom: none;
+  }
+  
+  .challenge-button {
+    padding: 6px 12px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .challenge-button:hover {
+    background: #218838;
+  }
+  
+  /* Complete Workout Button */
+  .complete-workout-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: #ff5722;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .complete-workout-button:hover {
+    background: #e64a19;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .exercise, .leaderboard-entry, .challenge {
+      font-size: 14px;
+      padding: 8px 10px;
+    }
+  
+    .start-button, .challenge-button {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+  
+    .complete-workout-button {
+      font-size: 16px;
+      padding: 10px;
+    }
+  }
+  

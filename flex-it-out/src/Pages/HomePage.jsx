@@ -16,7 +16,7 @@ const HomePage = () => {
         <p>Join the best fitness community and achieve your goals today!</p>
         <button 
           className="cta-button" 
-          onClick={() => navigate("/pose-detection")}
+          onClick={() => navigate("/workout")}
         >
           Get Started
         </button>
