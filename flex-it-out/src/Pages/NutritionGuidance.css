@@ -1,0 +1,79 @@
+.nutrition-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh; /* Ensures the div takes full height of the viewport */
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  /* Section containing the meals */
+  .meals-section {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+  }
+  
+  /* Title Styling */
+  .section-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Meal Grid */
+  .meal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+    padding: 10px;
+  }
+  
+  /* Meal Card */
+  .meal-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .meal-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Meal Image */
+  .meal-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  /* Meal Title */
+  .meal-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #444;
+  }
+  
+  /* Meal Description */
+  .meal-description {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* Loading and Error Messages */
+  .loading, .error {
+    font-size: 18px;
+    text-align: center;
+    color: #d9534f;
+    margin-top: 20px;
+  }
+  
