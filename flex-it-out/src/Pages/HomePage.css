@@ -131,6 +131,11 @@ html, body {
   color: #d0d0d0; /* Neutral White-Gray */
 }
 
+.hi{
+  background-color: #333;
+  width:100%;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .hero h1 {
