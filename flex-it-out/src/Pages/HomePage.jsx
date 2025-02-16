@@ -12,8 +12,8 @@ const HomePage = () => {
     <div className="home-container">
       <div className="hero-bg">
       <section className="hero">
-        <h1>Transform Your Body, Transform Your Life</h1>
-        <p>Join the best fitness community and achieve your goals today!</p>
+        <h1>CRUSH WORKOUTS, ANYTIME, ANYWHERE.</h1>
+        <p>Train like a beast, transform like a legend!</p>
         <button 
           className="cta-button" 
           onClick={() => navigate("/workout")}
@@ -41,9 +41,7 @@ const HomePage = () => {
       <section className="cta">
         <h2>Ready to Get Started?</h2>
         {/* ✅ Keep only one Join Now button */}
-        <button onClick={handleRegister} className="cta-button">
-          Join Now
-        </button>
+        <button onClick={() => window.location.href = '/pricing'}className="cta-button">Join Now</button>
       </section>
     </div>
   );
