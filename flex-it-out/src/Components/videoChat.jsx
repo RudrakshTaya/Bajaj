@@ -15,15 +15,18 @@ const VideoChat = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const localVideoRef = useRef(null);
   const screenShareRef = useRef(null);
+  const [remoteParticipants, setRemoteParticipants] = useState([]);
 
   useEffect(() => {
     if (videoRoom) {
       const participantConnected = (participant) => {
+        setRemoteParticipants((prev) => [...prev, participant]);
         showSnackbar(`${participant.identity} joined the room`, "info");
         attachParticipantVideo(participant);
       };
 
       const participantDisconnected = (participant) => {
+        setRemoteParticipants((prev) => prev.filter((p) => p.identity !== participant.identity));
         showSnackbar(`${participant.identity} left the room`, "info");
         removeParticipantVideo(participant.identity);
       };
@@ -32,9 +35,7 @@ const VideoChat = () => {
       videoRoom.on("participantDisconnected", participantDisconnected);
 
       // Attach video tracks of existing participants
-      videoRoom.participants.forEach(participant => {
-        attachParticipantVideo(participant);
-      });
+      videoRoom.participants.forEach(attachParticipantVideo);
 
       return () => {
         videoRoom.off("participantConnected", participantConnected);
@@ -54,7 +55,7 @@ const VideoChat = () => {
       const roomName = "video-call-room";
 
       // Request a token from your backend
-      const response = await axios.post("http://localhost:5001/api/video/token", { room: roomName });
+      const response = await axios.post("http://localhost:5001/api/video/token", { roomId: roomName });
       const { token } = response.data;
 
       // Create local tracks (audio and video)
@@ -88,6 +89,14 @@ const VideoChat = () => {
 
   const handleLeaveRoom = () => {
     if (videoRoom) {
+      // Unpublish tracks before disconnecting
+      videoRoom.localParticipant.tracks.forEach((trackPublication) => {
+        videoRoom.localParticipant.unpublishTrack(trackPublication.track);
+        if (trackPublication.track.kind === "video") {
+          trackPublication.track.stop(); // Stop the video track when leaving
+        }
+      });
+
       videoRoom.disconnect();
       localTracks.forEach((track) => track.stop());
       setLocalTracks([]);
@@ -122,33 +131,34 @@ const VideoChat = () => {
   };
 
   const toggleVideo = () => {
-    localTracks.forEach((track) => {
-      if (track.kind === "video") {
-        if (track.isEnabled) {
-          track.disable();
-        } else {
-          track.enable();
+    setIsVideoEnabled((prev) => {
+      const newState = !prev;
+      localTracks.forEach((track) => {
+        if (track.kind === "video") {
+          if (newState) track.enable();
+          else track.disable();
         }
-        setIsVideoEnabled(!track.isEnabled);
-      }
+      });
+      return newState;
     });
   };
 
   const toggleAudio = () => {
-    localTracks.forEach((track) => {
-      if (track.kind === "audio") {
-        if (track.isEnabled) {
-          track.disable();
-        } else {
-          track.enable();
+    setIsAudioEnabled((prev) => {
+      const newState = !prev;
+      localTracks.forEach((track) => {
+        if (track.kind === "audio") {
+          if (newState) track.enable();
+          else track.disable();
         }
-        setIsAudioEnabled(!track.isEnabled);
-      }
+      });
+      return newState;
     });
   };
 
   const toggleScreenShare = async () => {
     if (isScreenSharing) {
+      // Stop screen sharing
       localTracks.forEach((track) => {
         if (track.kind === "video" && track.name === "screen") {
           track.stop();
@@ -156,8 +166,9 @@ const VideoChat = () => {
       });
       setIsScreenSharing(false);
     } else {
+      // Start screen sharing
       try {
-        const screenTrack = await createLocalTracks({ video: { width: 1280, height: 720, name: "screen" }, audio: false });
+        const screenTrack = await createLocalTracks({ video: { name: "screen", width: 1280, height: 720 }, audio: false });
         screenTrack[0].attach(screenShareRef.current);
         videoRoom.localParticipant.publishTrack(screenTrack[0]);
         setIsScreenSharing(true);
@@ -208,7 +219,7 @@ const VideoChat = () => {
         </Alert>
       </Snackbar>
     </div>
-  );
-};
+    )
+}
 
-export default VideoChat;
+export default VideoChat
