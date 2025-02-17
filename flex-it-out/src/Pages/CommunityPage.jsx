@@ -10,6 +10,7 @@ const CommunityPage = () => {
   const [error, setError] = useState(null);
   const [groupName, setGroupName] = useState("");
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId"); // Get user ID from localStorage
 
   // Fetch Groups from API
   useEffect(() => {
@@ -45,9 +46,33 @@ const CommunityPage = () => {
         }
       );
       setGroups([...groups, response.data]);
-      setGroupName(""); // Clear input after creation
+      setGroupName("");
     } catch (err) {
       alert("Failed to create group.");
+    }
+  };
+
+  // Join Group Function
+  const handleJoinGroup = async (groupId) => {
+    const group = groups.find(g => g._id === groupId);
+    
+    // Check if the user is already a member of the group
+    if (group && group.members.some(member => member._id === userId)) {
+      alert("You are already a member of this group!");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5001/api/group/${groupId}/join`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setGroups(groups.map(g => g._id === groupId ? { ...g, members: [...g.members, response.data] } : g));
+    } catch (err) {
+      alert("Failed to join group.");
     }
   };
 
@@ -79,6 +104,12 @@ const CommunityPage = () => {
             <div key={group._id} className="group-card" onClick={() => navigate(`/group/${group._id}`)}>
               <h2 className="group-name">{group.name}</h2>
               <p className="group-members">{group.members.length} members</p>
+              <button
+                className="join-group-button"
+                onClick={() => handleJoinGroup(group._id)}
+              >
+                Join Group
+              </button>
             </div>
           ))}
         </div>
@@ -88,7 +119,7 @@ const CommunityPage = () => {
         Join Video Chat
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default CommunityPage
+export default CommunityPage;

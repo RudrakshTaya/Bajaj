@@ -38,7 +38,7 @@ function App() {
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
         <Route path="/meal/:mealId" element={<MealPage />} />
-        <Route path="/video-chat" element={<VideoChat />} />
+        <Route path="/video-chat/:id" element={<VideoChat />} />
         <Route path="/track-progress" element={<TrackProgressPage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/group/:id" element={<GroupPage />} />
