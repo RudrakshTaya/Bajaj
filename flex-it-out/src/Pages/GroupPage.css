@@ -1,0 +1,145 @@
+/* GroupPage.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    background-color: #f4f4f4;
+    color: #000;
+    font-size: 16px;
+  }
+  
+  .group-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .group-title {
+    font-size: 2rem;
+    color: #000;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .join-button {
+    display: block;
+    width: 200px;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .join-button:hover {
+    background-color: #45a049;
+  }
+  
+  .members-list {
+    margin-bottom: 20px;
+  }
+  
+  .members-list h2 {
+    font-size: 1.5rem;
+    color: #000;
+    margin-bottom: 10px;
+  }
+  
+  .members-list ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .members-list li {
+    font-size: 1rem;
+    color: #333;
+    padding: 5px 0;
+  }
+  
+  .group-chat {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .group-chat h2 {
+    font-size: 1.5rem;
+    color: #000;
+    margin-bottom: 15px;
+  }
+  
+  .chat-box {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+  }
+  
+  .chat-message {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+  }
+  
+  .chat-message p {
+    font-size: 1rem;
+    color: #000;
+    margin: 0;
+  }
+  
+  .chat-message small {
+    display: block;
+    font-size: 0.8rem;
+    color: #777;
+    text-align: right;
+  }
+  
+  .message-form {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .message-form input {
+    width: 80%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .message-form button {
+    width: 18%;
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .message-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .loading-message {
+    font-size: 1.5rem;
+    color: #555;
+    text-align: center;
+  }
+  

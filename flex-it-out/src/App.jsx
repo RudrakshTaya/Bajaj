@@ -16,6 +16,8 @@ import Cancel from "./Pages/Cancel";
 import MealPage from "./Pages/MealDescription";
 import VideoChat from "./Components/VideoChat";
 import TrackProgressPage from "./Pages/TrackProgressPage";
+import CommunityPage from "./Pages/CommunityPage";
+import GroupPage from "./Pages/GroupPage";
 
 function App() {
   return (
@@ -38,7 +40,8 @@ function App() {
         <Route path="/meal/:mealId" element={<MealPage />} />
         <Route path="/video-chat" element={<VideoChat />} />
         <Route path="/track-progress" element={<TrackProgressPage />} />
-
+        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/group/:id" element={<GroupPage />} />
       </Routes>
     </>
   );

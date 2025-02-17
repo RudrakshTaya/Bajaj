@@ -6,3 +6,6 @@ button{
 #root{
     background-color: #fff;
 }
+body{
+    justify-content: center;
+}

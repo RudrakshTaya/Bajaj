@@ -1,22 +1,38 @@
 const Workout = require("../models/workout");
+const User = require("../models/User");
 
-// Save a complete workout
 exports.saveWorkout = async (req, res) => {
   const { userId, exercises, totalScore } = req.body;
+  console.log("Request body:", req.body); // Log incoming request
 
   try {
+    const user = await User.findOne({ _id: userId });
+    console.log("User found:", user); // Log user details
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const newWorkout = new Workout({
       userId,
       exercises,
       totalScore,
     });
 
+    // Update user score
+    user.score = (user.score || 0) + totalScore;
+    await user.save();
+
     await newWorkout.save();
+    console.log("Workout saved successfully!"); // Log success
+
     res.status(201).json({ message: "Workout saved successfully!", workout: newWorkout });
   } catch (error) {
+    console.error("Error saving workout:", error); // Log full error details
     res.status(500).json({ message: "Error saving workout", error });
   }
 };
+
 
 // Get all workouts for a user
 exports.getWorkouts = async (req, res) => {
