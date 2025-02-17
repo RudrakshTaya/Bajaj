@@ -7,7 +7,11 @@ const UserSchema = new mongoose.Schema({
     avatar: { type: String, default: "" },
     score: { type: Number, default: 0 },
     calories: { type: Number,default: 0 },
-    membership: { type: String, default: "basic"},
+    membership: {
+        plan: { type: String, enum: ["basic", "premium", "student"], default: "basic" },
+        expiresAt: { type: Date, default: null },
+      },
+    
     createdAt: { type: Date, default: Date.now },
 })
 

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCreditCard, FaSpinner } from "react-icons/fa";
+import { AuthContext } from "../context/AuthContext"; // Import authentication context
 import "./PaymentPage.css";
 
 const stripePromise = loadStripe("pk_test_51QrIYaP7TDcxXgwZjsg5PRmU9NAATaVt87I42XPl2gLOjSRd2Jw2qxgo1bGKMCkJbau5oKHcEHuqgeSbaoahbk2G00H4yaXvcf");
@@ -12,27 +13,42 @@ const PaymentPage = () => {
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
 
+  const { userId, isLoggedIn } = useContext(AuthContext); // Get user authentication details
+    console.log(userId);
   const handlePayment = async () => {
+    if (!isLoggedIn || !userId) {
+      alert("You must be logged in to make a payment.");
+      return;
+    }
+
     setLoading(true);
     const stripe = await stripePromise;
-
+  
     try {
       const response = await fetch("http://localhost:5001/api/checkout/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, userId }), // Send userId with the request
       });
-
-      const data = await response.json();
-      if (!response.ok || !data.id) throw new Error(data.error || "Payment session failed");
-
-      await stripe.redirectToCheckout({ sessionId: data.id });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Payment session failed");
+      }
+  
+      const { id } = await response.json();
+      if (!id) throw new Error("Invalid response from server");
+  
+      console.log("🔹 Redirecting to Stripe Checkout with session:", id);
+      await stripe.redirectToCheckout({ sessionId: id });
     } catch (error) {
-      console.error("Payment Error:", error);
+      console.error("❌ Payment Error:", error.message);
+      alert(`Payment Error: ${error.message}`);
     }
-
+  
     setLoading(false);
   };
+  
 
   return (
     <motion.div
