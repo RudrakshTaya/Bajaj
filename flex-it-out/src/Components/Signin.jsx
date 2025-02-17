@@ -3,10 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 
+
 const SignIn = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ emailOrPhone: "", password: "" });
   const [error, setError] = useState("");
-  const { signIn } = useContext(AuthContext); // Use AuthContext
+  const { signIn } = useContext(AuthContext); // Use AuthContext to manage authentication state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,7 +19,18 @@ const SignIn = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/login", formData);
+      // Determine whether emailOrPhone is an email or phone number
+      const isPhone = /^[0-9]{10}$/.test(formData.emailOrPhone); // Check if it's a 10-digit phone number
+
+      const loginData = {
+        emailOrPhone: formData.emailOrPhone,
+        password: formData.password,
+        isPhone,
+      };
+
+      // Send login request to backend
+      const res = await axios.post("http://localhost:5001/api/auth/login", loginData);
+
       const { token, user } = res.data;
 
       if (token && user) {
@@ -42,8 +54,20 @@ const SignIn = () => {
       <h2>Sign In</h2>
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        <input
+          type="text"
+          name="emailOrPhone"
+          placeholder="Email or Phone Number"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Sign In</button>
       </form>
       <p>Don't have an account? <a href="/signup">Sign Up</a></p>
