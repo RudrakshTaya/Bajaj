@@ -1,4 +1,5 @@
 "use client"
+import axios from 'axios';
 
 import { useState, useEffect,useContext } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
@@ -9,7 +10,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
 import confetti from "canvas-confetti"
 import "./WorkoutPage.css"
-import { AuthContext } from "../context/AuthContext" // Assuming you have an AuthContext
+import { AuthContext } from "../Context/AuthContext" // Assuming you have an AuthContext
 const WorkoutPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -79,7 +80,7 @@ const WorkoutPage = () => {
       exerciseName: exercise.name,
       reps: exercise.reps,
       score: exercise.score,
-    }))
+    }));
 
     try {
       const response = await fetch("http://localhost:5001/api/workouts/save", {
@@ -90,31 +91,48 @@ const WorkoutPage = () => {
           exercises: workoutData,
           totalScore,
         }),
-      })
+      });
 
       if (response.ok) {
+        // Post the score to the leaderboard
+        try {
+          await axios.post("http://localhost:5001/api/leaderboard", {
+            userId,
+            score: totalScore,
+          });
+          alert("Score added to leaderboard!");
+        } catch (error) {
+          console.error("Error posting score", error);
+        }
+
+        // Display confetti and alert the user
         confetti({
           particleCount: 100,
           spread: 70,
           origin: { y: 0.6 },
-        })
-        alert("Workout completed and saved! Great job!")
+        });
+
+        alert("Workout completed and saved! Great job!");
+        
+        // Reset exercises and update streak
         setExercises((prevExercises) =>
           prevExercises.map((exercise) => ({
             ...exercise,
             completed: false,
             reps: 0,
             score: 0,
-          })),
-        )
-        setStreak(streak + 1)
+          }))
+        );
+        setStreak(streak + 1);
       } else {
-        console.error("Failed to save workout")
+        console.error("Failed to save workout");
       }
     } catch (error) {
-      console.error("Error saving workout:", error)
+      console.error("Error saving workout:", error);
     }
-  }
+};
+
+
 
   const renderTabContent = () => {
     switch (activeTab) {

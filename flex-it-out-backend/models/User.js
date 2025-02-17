@@ -69,12 +69,7 @@ const UserSchema = new mongoose.Schema(
       }
     },
 
-    age: { 
-      type: Number, 
-      required: true, 
-      min: 13, // Age validation, minimum 13 years old
-      max: 120 // Maximum age validation
-    },
+    
 
     createdAt: { 
       type: Date, 

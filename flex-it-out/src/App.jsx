@@ -20,7 +20,7 @@ import VideoChat from "./Components/VideoChat";
 import TrackProgressPage from "./Pages/TrackProgressPage";
 import CommunityPage from "./Pages/CommunityPage";
 import GroupPage from "./Pages/GroupPage";
-
+import Leaderboard from "./Components/Leaderboard";
 function App() {
   // Fetching the user data from AuthContext inside the component
   const { user,membership} = useContext(AuthContext); 
@@ -43,6 +43,7 @@ function App() {
           element={ membership === "premium" ? <NutritionPage /> : <PricingPlans />}
         />
         <Route path="/pricing" element={<PricingPlans />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
