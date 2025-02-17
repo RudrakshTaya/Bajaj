@@ -67,6 +67,10 @@ const PoseDetection = () => {
         } else if (exerciseId === "highKnee") {
           detectHighKnees(keypoints);
         }
+        else if(exerciseId === "lunges") {
+          detectLunges(keypoints);
+        }
+        
         provideFeedback(keypoints);
         drawKeypointsAndSkeleton(keypoints);
       }
@@ -95,9 +99,9 @@ const PoseDetection = () => {
   };
 
   const updateScore = () => {
-    const points = { squat: 5, pushup: 8, highKnee: 3 };
+    const points = { squat: 5, pushup: 8, highKnee: 3, lunges: 6 };
     setScore((prev) => prev + points[exerciseId]);
-  };
+  };  
 
   const detectSquat = (keypoints) => {
     const hip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
@@ -159,6 +163,29 @@ const PoseDetection = () => {
     }
   };
 
+  const detectLunges = (keypoints) => {
+    const leftHip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
+    const leftKnee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
+    const leftAnkle = keypoints.find((kp) => kp.name === "left_ankle" && kp.score > 0.5);
+    const rightHip = keypoints.find((kp) => kp.name === "right_hip" && kp.score > 0.5);
+    const rightKnee = keypoints.find((kp) => kp.name === "right_knee" && kp.score > 0.5);
+    const rightAnkle = keypoints.find((kp) => kp.name === "right_ankle" && kp.score > 0.5);
+  
+    if (leftHip && leftKnee && leftAnkle && rightHip && rightKnee && rightAnkle) {
+      const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
+      const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
+  
+      if (leftKneeAngle < 100 && rightKneeAngle > 160 && !isLunging) {
+        isLunging = true;
+      } else if (leftKneeAngle > 160 && rightKneeAngle > 160 && isLunging) {
+        setReps((prev) => prev + 1);
+        updateScore();
+        isLunging = false;
+      }
+    }
+  };
+  
+
   const provideFeedback = (keypoints) => {
     const leftShoulder = keypoints.find((kp) => kp.name === "left_shoulder" && kp.score > 0.5);
     const rightShoulder = keypoints.find((kp) => kp.name === "right_shoulder" && kp.score > 0.5);
@@ -182,31 +209,43 @@ const PoseDetection = () => {
     const ctx = canvasRef.current.getContext("2d");
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
+    ctx.fillStyle = "red";
+    ctx.strokeStyle = "green"; // Set line color
+    ctx.lineWidth = 2;
+
+    // Define keypoint pairs for drawing skeleton
+    const skeleton = [
+        [0, 1], [1, 2], [2, 3], [3, 4], // Right arm
+        [0, 5], [5, 6], [6, 7], // Left arm
+        [5, 11], [6, 12], [11, 12], // Torso
+        [11, 13], [13, 15], // Left leg
+        [12, 14], [14, 16] // Right leg
+    ];
+
     // Draw keypoints
     keypoints.forEach((kp) => {
-      if (kp.score > 0.5) {
-        ctx.beginPath();
-        ctx.arc(kp.x, kp.y, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = "red";
-        ctx.fill();
-      }
+        if (kp.score > 0.5) {
+            ctx.beginPath();
+            ctx.arc(kp.x, kp.y, 5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
     });
 
-    // Highlight keypoints for squats and high knees
-    const hip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
-    const knee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
-    const ankle = keypoints.find((kp) => kp.name === "left_ankle" && kp.score > 0.5);
+    // Draw skeleton
+    skeleton.forEach(([indexA, indexB]) => {
+        const pointA = keypoints[indexA];
+        const pointB = keypoints[indexB];
 
-    if (hip && knee && ankle) {
-      ctx.beginPath();
-      ctx.moveTo(hip.x, hip.y);
-      ctx.lineTo(knee.x, knee.y);
-      ctx.lineTo(ankle.x, ankle.y);
-      ctx.strokeStyle = "blue";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
-  };
+        if (pointA?.score > 0.5 && pointB?.score > 0.5) {
+            ctx.beginPath();
+            ctx.moveTo(pointA.x, pointA.y);
+            ctx.lineTo(pointB.x, pointB.y);
+            ctx.stroke();
+        }
+    });
+};
+
+
 
   const handleCompleteExercise = () => {
     // Pass exercise data back to WorkoutPage
