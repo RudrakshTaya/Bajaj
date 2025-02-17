@@ -73,6 +73,7 @@ const HomePage = () => {
             <p>Monitor your achievements and celebrate milestones.</p>
             <button className="feature-button">View Progress</button>
           </motion.div> */}
+         
 
 <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
   <FaMedal className="feature-icon" />
@@ -84,8 +85,10 @@ const HomePage = () => {
         </section>
 
         {/* Testimonials Section */}
+        
         <section className="testimonials">
-          <h2>What Our Members Say</h2>
+          
+          <h2 >What Our Members Say</h2>
           <div className="testimonial-carousel">
             <div className="testimonial">
               <p>"This app transformed my fitness journey. I've never felt better!"</p>
