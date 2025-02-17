@@ -97,6 +97,7 @@ const loginUser = async (req, res) => {
                 email: user.email,
                 phone: user.phone,  // You can also send phone if required
                 age: user.age,      // Include age if necessary
+                membership:user.membership,
             },
         });
     } catch (error) {

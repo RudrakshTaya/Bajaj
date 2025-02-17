@@ -6,9 +6,7 @@ import './HomePage.css'
 const HomePage = () => {
   const navigate = useNavigate()
 
-  const handleRegister = () => {
-    navigate("/signup")
-  }
+  
 
   const nutritionPage = () => {
     navigate("/nutrition")

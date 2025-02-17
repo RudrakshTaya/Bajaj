@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 
-
 const SignIn = () => {
   const [formData, setFormData] = useState({ emailOrPhone: "", password: "" });
   const [error, setError] = useState("");
@@ -34,11 +33,16 @@ const SignIn = () => {
       const { token, user } = res.data;
 
       if (token && user) {
-        console.log(user)
-        signIn(token, user); // Store user details in AuthContext
+        console.log(user);
+
+        // Sign in the user using the AuthContext function
+        signIn(token, user);
+
+        // Store user details in localStorage (one-time action)
         localStorage.setItem("token", token);
         localStorage.setItem("userId", user.id);
-        localStorage.setItem("username", user.name); // Ensure correct key
+        localStorage.setItem("username", user.name); 
+        localStorage.setItem("membership", user.membership.plan); // Store membership info
 
         navigate("/"); // Redirect to home/dashboard
       } else {
