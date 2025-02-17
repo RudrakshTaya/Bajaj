@@ -65,12 +65,22 @@ const HomePage = () => {
             <p>Get diet plans that suit your fitness journey.</p>
             <button className="feature-button">Explore</button>
           </motion.div>
-          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+          {/* <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaMedal className="feature-icon" />
             <h3>Track Progress</h3>
             <p>Monitor your achievements and celebrate milestones.</p>
             <button className="feature-button">View Progress</button>
-          </motion.div>
+          </motion.div> */}
+
+<motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+  <FaMedal className="feature-icon" />
+  <h3>Track Progress</h3>
+  <p>Monitor your achievements and celebrate milestones.</p>
+  <button className="feature-button" onClick={() => navigate("/track-progress")}>
+    View Progress
+  </button>
+</motion.div>
+
         </section>
 
         {/* Testimonials Section */}
