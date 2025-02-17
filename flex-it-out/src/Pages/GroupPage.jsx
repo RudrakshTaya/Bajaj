@@ -125,7 +125,7 @@ const GroupPage = () => {
         <h2>Members</h2>
         <ul>
           {group.members.map((member) => (
-            <li key={member._id}>{member.username}</li>
+            <li key={member._id}>{member.name}</li>
           ))}
         </ul>
       </div>
@@ -137,7 +137,7 @@ const GroupPage = () => {
             {messages.map((msg, index) => (
               <div key={index} className="chat-message">
                 <p>
-                  <strong>{msg.sender?.username || "Unknown"}:</strong> {msg.text}
+                  <strong>{msg.sender?.name || "Unknown"}:</strong> {msg.text}
                 </p>
                 <small>{new Date(msg.createdAt).toLocaleTimeString()}</small>
               </div>
