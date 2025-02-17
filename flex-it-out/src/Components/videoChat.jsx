@@ -152,25 +152,27 @@ const VideoChat = () => {
   const toggleVideo = () => {
     localTracks.forEach((track) => {
       if (track.kind === "video") {
+
         if (track.isEnabled) {
           track.disable()
         } else {
           track.enable()
         }
-        setIsVideoEnabled(!track.isEnabled)
+  
+        setIsVideoEnabled(!track.isEnabled);
       }
     })
-  }
+  }  
 
   const toggleAudio = () => {
     localTracks.forEach((track) => {
       if (track.kind === "audio") {
         if (track.isEnabled) {
-          track.disable()
+          track.disable();
         } else {
-          track.enable()
+          track.enable(); 
         }
-        setIsAudioEnabled(!track.isEnabled) 
+        setIsAudioEnabled(!track.isEnabled);
       }
     })
   }

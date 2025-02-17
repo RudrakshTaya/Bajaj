@@ -1,18 +1,22 @@
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { FaDumbbell, FaAppleAlt, FaUserFriends, FaMedal, FaArrowRight } from "react-icons/fa";
-import './HomePage.css';
+import { useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
+import { FaDumbbell, FaAppleAlt, FaUserFriends, FaMedal, FaArrowRight } from "react-icons/fa"
+import './HomePage.css'
 
 const HomePage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleRegister = () => {
-    navigate("/signup");
-  };
+    navigate("/signup")
+  }
 
   const nutritionPage = () => {
-    navigate("/nutrition");
-  };
+    navigate("/nutrition")
+  }
+
+  const goToCommunity = () => {
+    navigate('/community')
+  }
 
   return (
     <div className="home-container">
@@ -44,7 +48,6 @@ const HomePage = () => {
         </section>
       </motion.div>
 
-      {/* Features Section */}
       <div className="content-wrapper">
         <section className="features">
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
@@ -52,14 +55,14 @@ const HomePage = () => {
             <h3>Custom Coaching</h3>
             <p>Work with expert trainers and get customized workouts.</p>
             <button className="feature-button" onClick={() => navigate("/track-progress")}>
-    Learn More
-  </button>
+            Learn More
+            </button>
           </motion.div>
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaUserFriends className="feature-icon" />
             <h3>Community Support</h3>
             <p>Join a community of fitness enthusiasts and stay motivated.</p>
-            <button className="feature-button">Join Now</button>
+            <button className="feature-button" onClick={ goToCommunity }>Join Now</button>
           </motion.div>
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }} onClick={nutritionPage}>
             <FaAppleAlt className="feature-icon" />
@@ -67,27 +70,17 @@ const HomePage = () => {
             <p>Get diet plans that suit your fitness journey.</p>
             <button className="feature-button">Explore</button>
           </motion.div>
-          {/* <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaMedal className="feature-icon" />
             <h3>Track Progress</h3>
             <p>Monitor your achievements and celebrate milestones.</p>
             <button className="feature-button">View Progress</button>
-          </motion.div> */}
-         
-
-<motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
-  <FaMedal className="feature-icon" />
-  <h3>Track Progress</h3>
-  <p>Monitor your achievements and celebrate milestones.</p>
-  <button className="feature-button">View Progress</button>
-</motion.div>
-
+          </motion.div>
         </section>
 
         {/* Testimonials Section */}
-        
         <section className="testimonials">
-          
           <h2 >Empowered Voices: Memeber Experiences</h2>
           <div className="testimonial-carousel">
             <div className="testimonial">
@@ -103,30 +96,30 @@ const HomePage = () => {
 
         {/* Call to Action Section */}
         <section className="cta">
-        <h2>Ready to Transform Your Fitness Journey?</h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="cta-subtext"
-        >
-          Join thousands of members achieving their goals with our premium plans.
-        </motion.p>
-        <motion.button
-        onClick={() => (window.location.href = "/pricing")}
-          className="cta-button"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-        >
-          Explore Premium Plans <FaArrowRight className="cta-icon" />
-        </motion.button>
-      </section>
+          <h2>Ready to Transform Your Fitness Journey?</h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="cta-subtext"
+          >
+            Join thousands of members achieving their goals with our premium plans.
+          </motion.p>
+          <motion.button
+            onClick={() => (window.location.href = "/pricing")}
+            className="cta-button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+          >
+            Explore Premium Plans <FaArrowRight className="cta-icon" />
+          </motion.button>
+        </section>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

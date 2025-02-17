@@ -1,0 +1,74 @@
+.community-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .community-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .community-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .loading-message,
+  .error-message {
+    font-size: 1.2rem;
+    color: red;
+    margin-top: 20px;
+  }
+  
+  .group-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .group-card {
+    width: 100%;
+    max-width: 400px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .group-card:hover {
+    background: #e0e0e0;
+  }
+  
+  .group-name {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .group-members {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  .vc-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+.vc-button:hover {
+    background: #0056b3;
+}
