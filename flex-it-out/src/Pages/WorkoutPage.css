@@ -233,6 +233,7 @@ h2 svg {
 }
 
 .workout-entry {
+ 
   background-color: #f8f9fa;
   border-radius: 10px;
   padding: 1.5rem;
@@ -246,13 +247,14 @@ h2 svg {
 }
 
 .workout-entry h3 {
-  color: #34495e;
+  color: black;
   margin-bottom: 0.5rem;
 }
 
 .workout-entry ul {
   list-style-type: none;
   padding-left: 0;
+  color: black;
 }
 
 .complete-workout-button {
