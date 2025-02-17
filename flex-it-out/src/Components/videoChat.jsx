@@ -21,13 +21,16 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (videoRoom) {
+      console.log("Video room is active.");
       const participantConnected = (participant) => {
+        console.log(`Participant connected: ${participant.identity}`);
         setRemoteParticipants((prev) => [...prev, participant]);
         showSnackbar(`${participant.identity} joined the room`, "info");
         attachParticipantVideo(participant);
       };
 
       const participantDisconnected = (participant) => {
+        console.log(`Participant disconnected: ${participant.identity}`);
         setRemoteParticipants((prev) => prev.filter((p) => p.identity !== participant.identity));
         showSnackbar(`${participant.identity} left the room`, "info");
         removeParticipantVideo(participant.identity);
@@ -47,6 +50,7 @@ const VideoChat = () => {
   }, [videoRoom]);
 
   const showSnackbar = (message, severity) => {
+    console.log(`Snackbar: ${message}`);
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
     setSnackbarOpen(true);
@@ -54,16 +58,17 @@ const VideoChat = () => {
 
   const handleJoinRoom = async () => {
     try {
+      console.log("Requesting room data...");
       const res = await axios.get(`http://localhost:5001/api/group/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       const roomId = res.data.roomId;
-      console.log(roomId)
+      console.log(`Room ID received: ${roomId}`);
       
-  
       // Request a token from your backend
       const response = await axios.post("http://localhost:5001/api/video/token", { roomId });
-  
+      console.log("Token response: ", response);
+
       if (response.status !== 200) {
         console.error("Error fetching token:", response.statusText);
         showSnackbar("Error fetching token, please try again.", "error");
@@ -71,12 +76,15 @@ const VideoChat = () => {
       }
   
       const { token } = response.data;
+      console.log("Token: ", token);
   
       // Create local tracks (audio and video)
+      console.log("Creating local tracks...");
       const tracks = await createLocalTracks({ audio: true, video: { width: 640 } });
       setLocalTracks(tracks);
   
       // Connect to the room
+      console.log("Connecting to video room...");
       const room = await connect(token, { name: roomId, tracks });
       setVideoRoom(room);
   
@@ -85,10 +93,12 @@ const VideoChat = () => {
       const localAudioTrack = tracks.find((track) => track.kind === "audio");
   
       if (localVideoTrack && localVideoRef.current) {
+        console.log("Attaching local video...");
         localVideoTrack.attach(localVideoRef.current);
       }
   
       if (localAudioTrack && videoRoom) {
+        console.log("Publishing local audio...");
         videoRoom.localParticipant.publishTrack(localAudioTrack);
       }
   
@@ -98,11 +108,11 @@ const VideoChat = () => {
       console.error("Error joining room:", error);
       showSnackbar("Error joining room, please try again.", "error");
     }
-  }  
-  
+  };
 
   const handleLeaveRoom = () => {
     if (videoRoom) {
+      console.log("Leaving room...");
       // Unpublish tracks before disconnecting
       videoRoom.localParticipant.tracks.forEach((trackPublication) => {
         videoRoom.localParticipant.unpublishTrack(trackPublication.track);
@@ -121,10 +131,8 @@ const VideoChat = () => {
   };
 
   const attachParticipantVideo = (participant) => {
-    console.log("Participant tracks: ", participant.tracks);
-
+    console.log("Attaching participant's video...");
     participant.tracks.forEach((track) => {
-      // Check if the track is a video track before attaching it
       if (track.kind === "video") {
         const videoElement = track.attach();
         videoElement.id = `video-${participant.identity}`;
@@ -134,7 +142,6 @@ const VideoChat = () => {
     });
   
     participant.on("trackSubscribed", (track) => {
-      // Only attach video tracks
       if (track.kind === "video") {
         const videoElement = track.attach();
         videoElement.id = `video-${participant.identity}`;
@@ -146,6 +153,7 @@ const VideoChat = () => {
   
 
   const removeParticipantVideo = (participantId) => {
+    console.log(`Removing video for participant: ${participantId}`);
     const videoElement = document.getElementById(`video-${participantId}`);
     if (videoElement) {
       videoElement.remove();
@@ -179,6 +187,7 @@ const VideoChat = () => {
   };
 
   const toggleScreenShare = async () => {
+    console.log(isScreenSharing ? "Stopping screen share..." : "Starting screen share...");
     if (isScreenSharing) {
       // Stop screen sharing
       localTracks.forEach((track) => {
@@ -241,7 +250,7 @@ const VideoChat = () => {
         </Alert>
       </Snackbar>
     </div>
-    )
-}
+  );
+};
 
-export default VideoChat
+export default VideoChat;
