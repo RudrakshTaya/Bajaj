@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "./Context/AuthContext"; // Make sure the AuthContext is correctly imported
 
 import Navbar from "./Components/Navbar";
 import NutritionPage from "./Pages/NutritionGuidance";
@@ -20,6 +22,9 @@ import CommunityPage from "./Pages/CommunityPage";
 import GroupPage from "./Pages/GroupPage";
 
 function App() {
+  // Fetching the user data from AuthContext inside the component
+  const { user,membership} = useContext(AuthContext); 
+   console.log(membership);
   return (
     <>
       <Navbar />
@@ -32,7 +37,11 @@ function App() {
         <Route path="/pose-detection" element={<PoseDetection />} />
         <Route path="/pose-detection/:exerciseId" element={<PoseDetection />} />
         <Route path="/workout" element={<WorkoutPage />} />
-        <Route path="/nutrition" element={<NutritionPage />} />
+        {/* Only allow premium users to access NutritionPage */}
+        <Route
+          path="/nutrition"
+          element={ membership === "premium" ? <NutritionPage /> : <PricingPlans />}
+        />
         <Route path="/pricing" element={<PricingPlans />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/success" element={<Success />} />
