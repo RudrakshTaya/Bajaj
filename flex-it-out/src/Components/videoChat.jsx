@@ -124,6 +124,7 @@ const VideoChat = () => {
     console.log("Participant tracks: ", participant.tracks);
 
     participant.tracks.forEach((track) => {
+      // Check if the track is a video track before attaching it
       if (track.kind === "video") {
         const videoElement = track.attach();
         videoElement.id = `video-${participant.identity}`;
@@ -133,6 +134,7 @@ const VideoChat = () => {
     });
   
     participant.on("trackSubscribed", (track) => {
+      // Only attach video tracks
       if (track.kind === "video") {
         const videoElement = track.attach();
         videoElement.id = `video-${participant.identity}`;
@@ -141,7 +143,6 @@ const VideoChat = () => {
       }
     });
   };
-  
   
 
   const removeParticipantVideo = (participantId) => {
