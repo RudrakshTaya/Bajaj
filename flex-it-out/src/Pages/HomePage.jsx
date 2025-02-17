@@ -61,7 +61,7 @@ const HomePage = () => {
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaUserFriends className="feature-icon" />
             <h3>Community Support</h3>
-            <p>Join a community of fitness enthusiasts and stay motivated.</p>
+            <p>Find your fitness squad and stay motivated together!</p>
             <button className="feature-button" onClick={ goToCommunity }>Join Now</button>
           </motion.div>
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }} onClick={nutritionPage}>
@@ -73,7 +73,7 @@ const HomePage = () => {
 
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaMedal className="feature-icon" />
-            <h3>Track Progress</h3>
+            <h3>Performmance overview</h3>
             <p>Monitor your achievements and celebrate milestones.</p>
             <button className="feature-button">View Progress</button>
           </motion.div>
