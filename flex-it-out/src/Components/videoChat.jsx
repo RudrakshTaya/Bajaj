@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { connect, createLocalTracks } from "twilio-video";
 import axios from "axios";
 import { Button, IconButton, Snackbar, Alert } from "@mui/material";
@@ -16,6 +17,7 @@ const VideoChat = () => {
   const localVideoRef = useRef(null);
   const screenShareRef = useRef(null);
   const [remoteParticipants, setRemoteParticipants] = useState([]);
+  const { id } = useParams()
 
   useEffect(() => {
     if (videoRoom) {
@@ -52,40 +54,52 @@ const VideoChat = () => {
 
   const handleJoinRoom = async () => {
     try {
-      const roomName = "video-call-room";
-
+      const res = await axios.get(`http://localhost:5001/api/group/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      const roomId = res.data.roomId;
+      console.log(roomId)
+      
+  
       // Request a token from your backend
-      const response = await axios.post("http://localhost:5001/api/video/token", { roomId: roomName });
+      const response = await axios.post("http://localhost:5001/api/video/token", { roomId });
+  
+      if (response.status !== 200) {
+        console.error("Error fetching token:", response.statusText);
+        showSnackbar("Error fetching token, please try again.", "error");
+        return;
+      }
+  
       const { token } = response.data;
-
+  
       // Create local tracks (audio and video)
       const tracks = await createLocalTracks({ audio: true, video: { width: 640 } });
       setLocalTracks(tracks);
-
+  
       // Connect to the room
-      const room = await connect(token, { name: roomName, tracks });
+      const room = await connect(token, { name: roomId, tracks });
       setVideoRoom(room);
-
+  
       // Attach local tracks to the local video element
       const localVideoTrack = tracks.find((track) => track.kind === "video");
       const localAudioTrack = tracks.find((track) => track.kind === "audio");
-
+  
       if (localVideoTrack && localVideoRef.current) {
         localVideoTrack.attach(localVideoRef.current);
       }
-
+  
       if (localAudioTrack && videoRoom) {
         videoRoom.localParticipant.publishTrack(localAudioTrack);
       }
-
+  
       setIsVideoEnabled(true);
-
-      showSnackbar(`Joined room "${roomName}" successfully!`, "success");
+      showSnackbar(`Joined room "${roomId}" successfully!`, "success");
     } catch (error) {
       console.error("Error joining room:", error);
       showSnackbar("Error joining room, please try again.", "error");
     }
-  };
+  }  
+  
 
   const handleLeaveRoom = () => {
     if (videoRoom) {
@@ -107,6 +121,8 @@ const VideoChat = () => {
   };
 
   const attachParticipantVideo = (participant) => {
+    console.log("Participant tracks: ", participant.tracks);
+
     participant.tracks.forEach((track) => {
       if (track.kind === "video") {
         const videoElement = track.attach();
@@ -115,13 +131,18 @@ const VideoChat = () => {
         if (container) container.appendChild(videoElement);
       }
     });
-
+  
     participant.on("trackSubscribed", (track) => {
       if (track.kind === "video") {
-        attachParticipantVideo(participant);
+        const videoElement = track.attach();
+        videoElement.id = `video-${participant.identity}`;
+        const container = document.getElementById("remote-video-container");
+        if (container) container.appendChild(videoElement);
       }
     });
   };
+  
+  
 
   const removeParticipantVideo = (participantId) => {
     const videoElement = document.getElementById(`video-${participantId}`);
