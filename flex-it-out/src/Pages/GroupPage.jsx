@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 import "./GroupPage.css";
+import VideoChat from "../Components/VideoChat";
 
 const socket = io("http://localhost:5001");
 
 const GroupPage = () => {
-  const { id } = useParams(); // Group ID from URL
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [group, setGroup] = useState(null);
   const [joined, setJoined] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -121,6 +123,10 @@ const GroupPage = () => {
         {joined ? "Leave Group" : "Join Group"}
       </button>
 
+      {joined && (
+        <VideoChat />
+      )}
+
       <div className="members-list">
         <h2>Members</h2>
         <ul>
@@ -156,7 +162,7 @@ const GroupPage = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default GroupPage;
+export default GroupPage
