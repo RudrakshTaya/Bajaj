@@ -70,14 +70,7 @@ body {
 
 
 
-/* .hero p {
-  font-size: 1.6rem;
-  margin-bottom: 30px;
-  max-width: 700px;
-  opacity: 0.9;
-  animation: fadeInUp 1s ease-out 0.5s;
-  animation-fill-mode: both;
-} */
+
 
 
 
@@ -155,14 +148,15 @@ body {
 
 .feature-icon {
   font-size: 3rem;
-  color: var(--accent-color);
+  color: #3b82f6;
   margin-bottom: 20px;
 }
 
 .feature-card h3 {
   font-size: 1.8rem;
   margin-bottom: 15px;
-  color: var(--accent-color);
+  color: #3b82f6;
+  /* box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); */
 }
 
 .feature-card p {
@@ -170,6 +164,7 @@ body {
   color: var(--text-color);
   opacity: 0.9;
   margin-bottom: 20px;
+  color: #fff;
 }
 
 .feature-button {
@@ -185,14 +180,14 @@ body {
 .feature-button:hover {
   background: var(--secondary-color);
 }
-.try{
+/* .try{
   background-image: url("./src/assets/flex12.jpg");
   background-size: cover;
   background-position: center;
   width: 100%;
   height: 100vh;
   position: relative;
-}
+} */
 /* Testimonials Section */
 
 /* Updated Testimonials Section */
@@ -281,16 +276,6 @@ body {
 }
 
 
-/* Call to Action Section */
-
-/* .cta {
-  width: 100%;
-  text-align: center;
-  padding: 100px 20px;
-  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-  position: relative;
-  overflow: hidden;
-} */
 
 
 
