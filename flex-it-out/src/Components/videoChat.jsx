@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from "react"
 import { connect, createLocalTracks } from "twilio-video"
 import axios from "axios"
-import './videoChat.css'
-// Material-UI imports
 import { Button, IconButton, TextField, Card, CardContent, CardHeader, Typography, Divider, Snackbar, Alert } from "@mui/material"
 import { VideoCameraFront, VideocamOff, Mic, MicOff, CallEnd, Group, Chat, ScreenShare, StopScreenShare } from "@mui/icons-material"
 
@@ -69,32 +67,42 @@ const VideoChat = () => {
   }
 
   const handleJoinRoom = async () => {
-    if (!roomName) return showSnackbar("Please enter a room name!", "error")
-
+    if (!roomName) return showSnackbar("Please enter a room name!", "error");
+  
     try {
-      const response = await axios.post("http://localhost:5001/api/video/token", { room: roomName })
-      const { token } = response.data
-
-      const tracks = await createLocalTracks({ audio: true, video: { width: 640 } })
-      setLocalTracks(tracks)
-
-      const room = await connect(token, { name: roomName, tracks })
-      setVideoRoom(room)
-
-      room.participants.forEach(attachParticipantTracks)
-      room.on("participantConnected", attachParticipantTracks)
-      room.on("participantDisconnected", detachParticipantTracks)
-
-      // Attach local video
-      const localVideoTrack = tracks.find((track) => track.kind === "video")
-      if (localVideoTrack) {
-        localVideoTrack.attach(localVideoRef.current)
+      const response = await axios.post("http://localhost:5001/api/video/token", { room: roomName });
+      const { token } = response.data;
+  
+      const tracks = await createLocalTracks({ audio: true, video: { width: 640 } });
+      setLocalTracks(tracks);
+  
+      // Ensure that the videoRoom is being set correctly
+      const room = await connect(token, { name: roomName, tracks });
+      setVideoRoom(room); // Set videoRoom after connection
+  
+      room.participants.forEach(attachParticipantTracks);
+      room.on("participantConnected", attachParticipantTracks);
+      room.on("participantDisconnected", detachParticipantTracks);
+  
+      // Attach local video and audio once the room is successfully joined
+      const localVideoTrack = tracks.find((track) => track.kind === "video");
+      const localAudioTrack = tracks.find((track) => track.kind === "audio");
+  
+      if (localVideoTrack && localVideoRef.current) {
+        localVideoTrack.attach(localVideoRef.current);
       }
+  
+      // Make sure local audio is published only if the room is correctly set
+      if (localAudioTrack && videoRoom) {
+        videoRoom.localParticipant.publishTrack(localAudioTrack); // Publish audio to the room
+      }
+  
     } catch (error) {
-      console.error("Error joining room:", error)
-      showSnackbar("Error joining room, please try again.", "error")
+      console.error("Error joining room:", error);
+      showSnackbar("Error joining room, please try again.", "error");
     }
-  }
+  };
+  
 
   const handleLeaveRoom = () => {
     if (videoRoom) {
@@ -128,6 +136,10 @@ const VideoChat = () => {
       const container = document.getElementById("remote-video-container")
       if (container) container.appendChild(videoElement)
     }
+    // For audio track, automatically play audio to the remote participants
+    if (track.kind === "audio") {
+      track.attach() // This ensures audio is played for remote participants
+    }
   }
 
   const removeParticipantVideo = (participantId) => {
@@ -158,10 +170,11 @@ const VideoChat = () => {
         } else {
           track.enable()
         }
-        setIsAudioEnabled(!track.isEnabled)
+        setIsAudioEnabled(!track.isEnabled) 
       }
     })
   }
+  
 
   const toggleScreenShare = async () => {
     if (isScreenSharing) {
@@ -227,40 +240,54 @@ const VideoChat = () => {
               ))}
               <Divider sx={{ marginY: "16px" }} />
               <Typography variant="h6">
-                <Chat sx={{ marginRight: "8px" }} /> Chat
+                <Chat sx={{ marginRight: "8px" }} /> Messages
               </Typography>
-              <div>
-                {messages.map((message, index) => (
-                  <Typography key={index}>
-                    <strong>{message.sender}:</strong> {message.content} <em>({message.timestamp})</em>
-                  </Typography>
+              <div style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "16px" }}>
+                {messages.map((msg, index) => (
+                  <div key={index}>
+                    <strong>{msg.sender}</strong>: {msg.content}
+                  </div>
                 ))}
               </div>
-              <TextField
-                label="Type a message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                fullWidth
-                sx={{ marginTop: "8px" }}
-              />
-              <Button onClick={sendMessage} sx={{ marginTop: "8px" }} variant="contained">
-                Send
-              </Button>
+              <div>
+                <TextField
+                  label="Type a message"
+                  fullWidth
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") sendMessage()
+                  }}
+                />
+                <Button onClick={sendMessage} color="primary">Send</Button>
+              </div>
             </div>
           ) : (
-            <div style={{ textAlign: "center" }}>
-              <TextField label="Enter Room Name" value={roomName} onChange={(e) => setRoomName(e.target.value)} fullWidth />
-              <Button onClick={handleCreateRoom} variant="contained" sx={{ marginTop: "8px", marginRight: "8px" }}>
-                Create Room
-              </Button>
-              <Button onClick={handleJoinRoom} variant="contained" sx={{ marginTop: "8px" }}>
-                Join Room
-              </Button>
+            <div>
+              <TextField
+                label="Room Name"
+                fullWidth
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
+              />
+              <div style={{ display: "flex", justifyContent: "center", marginTop: "16px" }}>
+                <Button variant="contained" color="primary" onClick={handleJoinRoom}>
+                  Join Room
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleCreateRoom} style={{ marginLeft: "8px" }}>
+                  Create Room
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
       </Card>
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
         <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity}>
           {snackbarMessage}
         </Alert>
