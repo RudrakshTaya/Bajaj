@@ -54,7 +54,7 @@ const VideoChat = () => {
       const roomName = "video-call-room";
 
       // Request a token from your backend
-      const response = await axios.post("http://localhost:5001/api/video/token", { room: roomName });
+      const response = await axios.post("http://localhost:5001/api/video/token", { roomId: roomName });
       const { token } = response.data;
 
       // Create local tracks (audio and video)
