@@ -1,55 +1,21 @@
 
-.video-chat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .remote-video-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Three columns */
-    gap: 10px;
-    max-width: 1000px;
-    margin-bottom: 20px;
-  }
-  
-  .local-video-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-  }
-  
-  .local-video {
-    width: 100%;
-    border-radius: 8px;
-    max-height: 200px; /* Limit the height of local video */
-  }
-  
-  .screen-share-video {
-    display: none;
-    width: 100%;
-    border-radius: 8px;
-    max-height: 200px;
-  }
-  
-  .screen-share-video.active {
-    display: block;
-  }
-  
-  .controls {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 16px;
-  }
-  
-  .controls .MuiIconButton-root {
-    font-size: 24px;
-  }
-  
 video {
-    border: 2px solid red;
     width: 100%;
     height: 100%;
-}  
+    object-fit: cover; /* Ensures video fills the container */
+    background-color: #000; /* Fallback color */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .remote-video-container {
+      grid-template-columns: 1fr; /* Single column on smaller screens */
+    }
+  
+    .local-video-container {
+      width: 100%;
+      height: 150px;
+    }
+  }
