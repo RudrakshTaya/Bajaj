@@ -51,7 +51,9 @@ const HomePage = () => {
             <FaDumbbell className="feature-icon" />
             <h3>Personalized Training</h3>
             <p>Work with expert trainers and get customized workouts.</p>
-            <button className="feature-button">Learn More</button>
+            <button className="feature-button" onClick={() => navigate("/track-progress")}>
+    Learn More
+  </button>
           </motion.div>
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaUserFriends className="feature-icon" />
@@ -76,9 +78,7 @@ const HomePage = () => {
   <FaMedal className="feature-icon" />
   <h3>Track Progress</h3>
   <p>Monitor your achievements and celebrate milestones.</p>
-  <button className="feature-button" onClick={() => navigate("/track-progress")}>
-    View Progress
-  </button>
+  <button className="feature-button">View Progress</button>
 </motion.div>
 
         </section>
