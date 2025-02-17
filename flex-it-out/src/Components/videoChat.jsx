@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { connect, createLocalTracks } from "twilio-video";
 import axios from "axios";
-import { Button, IconButton, Snackbar, Alert } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { VideoCameraFront, VideocamOff, Mic, MicOff, CallEnd, ScreenShare, StopScreenShare } from "@mui/icons-material";
-import "./VideoChat.css"; // Importing the CSS file
+import './videoChat.css';
 
 const VideoChat = () => {
   const [videoRoom, setVideoRoom] = useState(null);
@@ -12,45 +12,27 @@ const VideoChat = () => {
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const localVideoRef = useRef(null);
   const screenShareRef = useRef(null);
-  const [remoteParticipants, setRemoteParticipants] = useState([]);
+  const remoteVideoContainerRef = useRef(null);
   const { id } = useParams();
 
   useEffect(() => {
     return () => {
-      handleLeaveRoom();
+      if (videoRoom) {
+        handleLeaveRoom();
+      }
     };
-  }, []);
-
-  const showSnackbar = (message, severity) => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
-  };
+  }, [videoRoom]);
 
   const handleJoinRoom = async () => {
     try {
-      setLocalTracks([]);
-      setRemoteParticipants([]);
-      setIsVideoEnabled(true);
-      setIsAudioEnabled(true);
-      setIsScreenSharing(false);
-      setVideoRoom(null);
-
       const res = await axios.get(`http://localhost:5001/api/group/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       const roomId = res.data.roomId;
 
       const response = await axios.post("http://localhost:5001/api/video/token", { roomId });
-      if (response.status !== 200) {
-        showSnackbar("Error fetching token, please try again.", "error");
-        return;
-      }
       const { token } = response.data;
 
       const tracks = await createLocalTracks({ audio: true, video: { width: 640 } });
@@ -64,24 +46,41 @@ const VideoChat = () => {
         localVideoTrack.attach(localVideoRef.current);
       }
 
-      showSnackbar(`Joined room "${roomId}" successfully!`, "success");
-
       room.on("participantConnected", (participant) => {
-        setRemoteParticipants((prev) => [...prev, participant]);
-        showSnackbar(`${participant.identity} joined the room`, "info");
-        attachParticipantVideo(participant);
+        const videoElement = document.createElement("video");
+        videoElement.id = `video-${participant.identity}`;
+        videoElement.autoplay = true;
+        videoElement.muted = true;
+        remoteVideoContainerRef.current.appendChild(videoElement);
+        participant.tracks.forEach((trackPublication) => {
+          if (trackPublication.track.kind === "video") {
+            trackPublication.track.attach(videoElement);
+          }
+        });
       });
 
       room.on("participantDisconnected", (participant) => {
-        setRemoteParticipants((prev) => prev.filter((p) => p.identity !== participant.identity));
-        showSnackbar(`${participant.identity} left the room`, "info");
-        removeParticipantVideo(participant.identity);
+        const videoElement = document.getElementById(`video-${participant.identity}`);
+        if (videoElement) {
+          videoElement.remove();
+        }
       });
 
-      room.participants.forEach(attachParticipantVideo);
+      room.participants.forEach((participant) => {
+        const videoElement = document.createElement("video");
+        videoElement.id = `video-${participant.identity}`;
+        videoElement.autoplay = true;
+        videoElement.muted = true;
+        remoteVideoContainerRef.current.appendChild(videoElement);
+        participant.tracks.forEach((trackPublication) => {
+          if (trackPublication.track.kind === "video") {
+            trackPublication.track.attach(videoElement);
+          }
+        });
+      });
+
     } catch (error) {
       console.error("Error joining room:", error);
-      showSnackbar("Error joining room, please try again.", "error");
     }
   };
 
@@ -98,39 +97,6 @@ const VideoChat = () => {
       localTracks.forEach((track) => track.stop());
       setLocalTracks([]);
       setVideoRoom(null);
-      document.getElementById("remote-video-container").innerHTML = "";
-      showSnackbar("You left the room.", "info");
-    }
-  };
-
-  const attachParticipantVideo = (participant) => {
-    participant.tracks.forEach((track) => {
-      if (track.kind === "video") {
-        if (track.isSubscribed && track.track) {
-          const videoElement = track.attach();
-          videoElement.id = `video-${participant.identity}`;
-          const container = document.getElementById("remote-video-container");
-          if (container) container.appendChild(videoElement);
-        }
-      }
-    });
-
-    participant.on("trackSubscribed", (track) => {
-      if (track.kind === "video") {
-        if (track.isSubscribed && track.track) {
-          const videoElement = track.attach();
-          videoElement.id = `video-${participant.identity}`;
-          const container = document.getElementById("remote-video-container");
-          if (container) container.appendChild(videoElement);
-        }
-      }
-    });
-  };
-
-  const removeParticipantVideo = (participantId) => {
-    const videoElement = document.getElementById(`video-${participantId}`);
-    if (videoElement) {
-      videoElement.remove();
     }
   };
 
@@ -176,7 +142,6 @@ const VideoChat = () => {
         setIsScreenSharing(true);
       } catch (error) {
         console.error("Error sharing screen:", error);
-        showSnackbar("Failed to share screen.", "error");
       }
     }
   };
@@ -185,12 +150,24 @@ const VideoChat = () => {
     <div className="video-chat">
       {videoRoom ? (
         <div>
-          <div id="remote-video-container" className="remote-video-container"></div>
-          <div className="local-video-container">
-            <video ref={localVideoRef} autoPlay muted className="local-video" />
-            <video ref={screenShareRef} autoPlay muted className={`screen-share-video ${isScreenSharing ? "active" : ""}`} />
+          <div
+            ref={remoteVideoContainerRef}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "10px",
+            }}
+          ></div>
+          <div className="local-video-container" style={{ marginTop: "16px" }}>
+            <video ref={localVideoRef} autoPlay muted style={{ width: "100%", borderRadius: "8px" }}></video>
+            <video
+              ref={screenShareRef}
+              autoPlay
+              muted
+              style={{ width: "100%", borderRadius: "8px", display: isScreenSharing ? "block" : "none" }}
+            ></video>
           </div>
-          <div className="controls">
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "16px" }}>
             <IconButton onClick={toggleVideo} color={isVideoEnabled ? "primary" : "error"}>
               {isVideoEnabled ? <VideoCameraFront /> : <VideocamOff />}
             </IconButton>
@@ -210,11 +187,6 @@ const VideoChat = () => {
           Join Room
         </Button>
       )}
-      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={() => setSnackbarOpen(false)}>
-        <Alert severity={snackbarSeverity} onClose={() => setSnackbarOpen(false)}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };
