@@ -57,7 +57,7 @@ body {
   left: 0;
 }
 
-.hero h1 {
+/* .hero h1 {
   font-size: 4rem;
   font-weight: 700;
   margin-bottom: 20px;
@@ -66,7 +66,17 @@ body {
   letter-spacing: 2px;
   animation: fadeInDown 1s ease-out;
   color: wheat;
+} */
+
+.hero h1 {
+  font-size: 3.5rem;  /* Increase size */
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #60a5fa; /* Change to a bright blue */
+  text-shadow: 2px 2px 10px rgba(59, 130, 246, 0.7); /* Glow effect */
 }
+
+
 
 .hero p {
   font-size: 1.6rem;
@@ -225,6 +235,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 2px;
   animation: fadeInDown 1s ease-out;
+  text-align: center;
 }
 
 .cta-subtext {
