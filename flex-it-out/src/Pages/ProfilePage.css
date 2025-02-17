@@ -1,6 +1,6 @@
 .profile-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,17 +12,18 @@
 .profile-card {
     width: 90%;
     max-width: 400px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
     border-radius: 25px;
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 20px 40px rgba(0, 0, 0, 0.1),
         0 0 0 1px rgba(255, 255, 255, 0.3);
     text-align: center;
     padding: 2.5rem;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     overflow: hidden;
     position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .profile-card::before {
@@ -32,7 +33,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 10.01%);
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 10%, transparent 10.01%);
     background-size: 20px 20px;
     transform: rotate(45deg);
     opacity: 0.3;
@@ -42,7 +43,7 @@
 .profile-card:hover {
     transform: translateY(-10px) scale(1.02);
     box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.2),
+        0 30px 60px rgba(0, 0, 0, 0.15),
         0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
@@ -52,16 +53,18 @@
     border-radius: 50%;
     margin-bottom: 1.5rem;
     box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.2),
+        0 8px 16px rgba(0, 0, 0, 0.1),
         0 0 0 4px rgba(255, 255, 255, 0.8);
     transition: all 0.3s ease;
+    border: 3px solid rgba(102, 126, 234, 0.2);
 }
 
 .profile-pic:hover {
     transform: scale(1.1);
     box-shadow: 
-        0 12px 24px rgba(0, 0, 0, 0.3),
+        0 12px 24px rgba(0, 0, 0, 0.2),
         0 0 0 6px rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.4);
 }
 
 .profile-card h2 {
@@ -81,7 +84,7 @@
 
 .edit-btn {
     padding: 0.75rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #4a6cf7 100%);
     color: white;
     border: none;
     border-radius: 25px;
@@ -122,13 +125,13 @@
 }
 
 .spinner {
-    border: 5px solid rgba(255, 255, 255, 0.3);
+    border: 5px solid rgba(102, 126, 234, 0.1);
     border-top: 5px solid #667eea;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     animation: spin 1.5s linear infinite;
-    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
 }
 
 @keyframes spin {

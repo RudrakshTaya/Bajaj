@@ -88,14 +88,14 @@ const HomePage = () => {
         
         <section className="testimonials">
           
-          <h2 >What Our Members Say</h2>
+          <h2 >Empowered Voices: Memeber Experiences</h2>
           <div className="testimonial-carousel">
             <div className="testimonial">
-              <p>"This app transformed my fitness journey. I've never felt better!"</p>
+              <p>"This app didn’t just change my fitness—it changed my life. Every workout feels like a step toward greatness!"</p>
               <span>- Sarah J.</span>
             </div>
             <div className="testimonial">
-              <p>"The personalized workouts and nutrition plans are game-changers."</p>
+              <p>"The personalized plans are more than workouts—they’re a blueprint for success. I’ve never felt this unstoppable!"</p>
               <span>- Mike R.</span>
             </div>
           </div>

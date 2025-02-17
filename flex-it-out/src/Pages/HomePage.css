@@ -241,7 +241,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 30px;
+  gap: 70px;
   flex-wrap: wrap;
   max-width: 1200px;
   width: 100%;
@@ -251,11 +251,11 @@ body {
 
 .testimonial {
   background: #1e1e1e; /* Darker gray for contrast */
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
-  width: calc(33.333% - 20px);
+  width: 500px;
   min-width: 300px;
-  max-width: 400px;
+  max-width: 2000px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
@@ -347,7 +347,7 @@ body {
   text-align: center;
   position: relative;
   z-index: 1; /* Keep text above glow */
-  font-weight: 400;
+  font-weight: 300;
 }
 
 
@@ -479,9 +479,16 @@ body {
   }
 }
 .testimonials h2{
+  font-size: 3rem;
+  margin-bottom: 20px;
   color: #fff;
-  font-weight: 300;
   text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: fadeInDown 1s ease-out;
+  text-align: center;
+  position: relative;
+  z-index: 1; /* Keep text above glow */
+  font-weight: 300;
 }
 
 
