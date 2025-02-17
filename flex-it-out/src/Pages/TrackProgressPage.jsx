@@ -96,12 +96,12 @@ const TrackProgressPage = () => {
                 <li key={index}>{exercise}</li>
               ))}
             </ul>
-            <h3>Plans:</h3>
+            {/* <h3>Plans:</h3>
             <ul>
               {trainer.plans.map((plan, index) => (
                 <li key={index}>{plan}</li>
               ))}
-            </ul>
+            </ul> */}
           </motion.div>
         ))}
       </div>
