@@ -59,6 +59,7 @@ const SignUp = () => {
     setLoading(true);
 
     try {
+      console.log(formData);
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, formData);
       alert("Signup Successful! Please log in.");
       navigate("/signin");

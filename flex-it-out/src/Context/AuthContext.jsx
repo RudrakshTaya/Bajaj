@@ -26,12 +26,12 @@ export const AuthProvider = ({ children }) => {
   const signIn = (token, user) => {
     
 
-    if (user && user.username) {  // Ensure username exists in response
+    if (user && user.name) {  // Ensure username exists in response
       localStorage.setItem("token", token);
-      localStorage.setItem("username", user.username); // Store username
+      localStorage.setItem("username", user.name); // Store username
       localStorage.setItem("userId",user.id);
       setIsLoggedIn(true);
-      setUsername(user.username);
+      setUsername(user.name);
       setUserId(user.id);
     } else {
       console.error("Error: Username is missing in the login response.");

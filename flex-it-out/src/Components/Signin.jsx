@@ -34,10 +34,11 @@ const SignIn = () => {
       const { token, user } = res.data;
 
       if (token && user) {
+        console.log(user)
         signIn(token, user); // Store user details in AuthContext
         localStorage.setItem("token", token);
         localStorage.setItem("userId", user.id);
-        localStorage.setItem("username", user.username); // Ensure correct key
+        localStorage.setItem("username", user.name); // Ensure correct key
 
         navigate("/"); // Redirect to home/dashboard
       } else {
