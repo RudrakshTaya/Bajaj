@@ -3,15 +3,22 @@ const User = require("../models/User");
 
 // ✅ Create a New Group
 exports.createGroup = async (req, res) => {
-  try {
-    const { name } = req.body;
-    const newGroup = new Group({ name, members: [], messages: [] });
-    await newGroup.save();
-    res.status(201).json(newGroup);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to create group" });
-  }
-};
+    try {
+      const { name, roomId } = req.body;
+  
+      const newGroup = new Group({
+        name,
+        members: [],
+        messages: [],
+        roomId
+      });
+  
+      await newGroup.save();
+      res.status(201).json(newGroup);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create group" });
+    }
+}  
 
 // ✅ Get All Groups
 exports.getAllGroups = async (req, res) => {
@@ -23,28 +30,29 @@ exports.getAllGroups = async (req, res) => {
   }
 };
 
-// ✅ Get Group Messages (Include `isMember`)
 exports.getGroupMessages = async (req, res) => {
     try {
         const group = await Group.findById(req.params.id)
             .populate({
-                path: "messages.sender", // Populate sender details inside messages
-                select: "name", // Only fetch username
+                path: "messages.sender",
+                select: "name",
             })
             .populate("members", "name");
 
         if (!group) return res.status(404).json({ error: "Group not found" });
 
-        // Check if the authenticated user is a member
         const isMember = group.members.some(member => member._id.toString() === req.user.id);
 
-        res.json({ ...group.toObject(), isMember });
+        res.json({
+            ...group.toObject(),
+            isMember,
+            roomId: group.roomId,
+        })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Failed to fetch group messages" });
+        console.error(error)
+        res.status(500).json({ error: "Failed to fetch group messages" })
     }
-};
-
+}
 
 // ✅ Send Message
 exports.sendMessage = async (req, res) => {

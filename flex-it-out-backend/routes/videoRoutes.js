@@ -12,10 +12,10 @@ const AccessToken = twilio.jwt.AccessToken
 const VideoGrant = AccessToken.VideoGrant
 
 router.post("/token", (req, res) => {
-    const { room } = req.body;
+    const { roomId } = req.body;
 
-    if (!room) {
-        return res.status(400).json({ error: "Room name is required" });
+    if (!roomId) {
+        return res.status(400).json({ error: "roomId name is required" });
     }
 
     const identity = `User-${uuidv4()}`;
@@ -23,7 +23,7 @@ router.post("/token", (req, res) => {
     const token = new AccessToken(accountSid, apiKeySid, apiKeySecret, { ttl: 3600, identity });
     token.identity = identity;
 
-    const videoGrant = new VideoGrant({ room });
+    const videoGrant = new VideoGrant({ roomId });
     token.addGrant(videoGrant);
 
     console.log("Generated Token:", token.toJwt());

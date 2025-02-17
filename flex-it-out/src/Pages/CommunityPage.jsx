@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import axios from "axios"
-import "./CommunityPage.css"
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid"; // Import uuid for generating roomId
+import "./CommunityPage.css";
 
 const CommunityPage = () => {
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ const CommunityPage = () => {
         const response = await axios.get("http://localhost:5001/api/group/fetchgroups", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(response.data)
-        setGroups(response.data)
+        console.log(response.data);
+        setGroups(response.data);
       } catch (err) {
         setError("Failed to load groups.");
       } finally {
@@ -32,7 +33,10 @@ const CommunityPage = () => {
 
   // Create Group Function
   const createGroup = async () => {
-    if (!groupName.trim()) return; // Prevent empty input
+    if (!groupName.trim()) return;
+
+    // Generate a complex roomId using uuid
+    const roomId = uuidv4();
 
     try {
       const response = await axios.post(
@@ -40,24 +44,25 @@ const CommunityPage = () => {
         {
           name: groupName,
           members: [],
+          roomId, 
         },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       setGroups([...groups, response.data]);
-      setGroupName("");
+      setGroupName(""); // Clear input after creation
     } catch (err) {
       alert("Failed to create group.");
     }
   };
 
   // Join Group Function
-  const handleJoinGroup = async (groupId) => {
-    const group = groups.find(g => g._id === groupId);
-    
+  const handleJoinGroup = async (groupId, roomId) => {
+    const group = groups.find((g) => g._id === groupId);
+
     // Check if the user is already a member of the group
-    if (group && group.members.some(member => member._id === userId)) {
+    if (group && group.members.some((member) => member._id === userId)) {
       alert("You are already a member of this group!");
       return;
     }
@@ -65,12 +70,18 @@ const CommunityPage = () => {
     try {
       const response = await axios.post(
         `http://localhost:5001/api/group/${groupId}/join`,
-        {},
+        {
+          roomId, // Include roomId when joining a group
+        },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setGroups(groups.map(g => g._id === groupId ? { ...g, members: [...g.members, response.data] } : g));
+      setGroups(
+        groups.map((g) =>
+          g._id === groupId ? { ...g, members: [...g.members, response.data] } : g
+        )
+      );
     } catch (err) {
       alert("Failed to join group.");
     }
@@ -101,12 +112,16 @@ const CommunityPage = () => {
       ) : (
         <div className="group-list">
           {groups.map((group) => (
-            <div key={group._id} className="group-card" onClick={() => navigate(`/group/${group._id}`)}>
+            <div
+              key={group._id}
+              className="group-card"
+              onClick={() => navigate(`/group/${group._id}`)}
+            >
               <h2 className="group-name">{group.name}</h2>
               <p className="group-members">{group.members.length} members</p>
               <button
                 className="join-group-button"
-                onClick={() => handleJoinGroup(group._id)}
+                onClick={() => handleJoinGroup(group._id, group.roomId)} // Pass roomId when joining
               >
                 Join Group
               </button>
@@ -114,10 +129,6 @@ const CommunityPage = () => {
           ))}
         </div>
       )}
-
-      <button className="vc-button" onClick={() => navigate("/video-chat")}>
-        Join Video Chat
-      </button>
     </div>
   );
 };

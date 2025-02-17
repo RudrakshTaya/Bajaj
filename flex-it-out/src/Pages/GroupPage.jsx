@@ -38,16 +38,16 @@ const GroupPage = () => {
     fetchGroup();
   }, [id, token]);
 
-  // 🔹 Connect to the group in Socket.io
+  // 🔹 Connect to the group in Socket.io with roomId
   useEffect(() => {
-    if (joined) {
-      socket.emit("joinGroup", id);
+    if (joined && group?.roomId) {
+      socket.emit("joinRoom", group.roomId); // Use roomId here
     }
 
     return () => {
       socket.off("newMessage"); // Proper cleanup
     };
-  }, [joined, id]);
+  }, [joined, id, group?.roomId]);
 
   // 🔹 Listen for real-time messages
   useEffect(() => {
@@ -72,7 +72,7 @@ const GroupPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setJoined(true);
-      socket.emit("joinGroup", id);
+      socket.emit("joinRoom", group.roomId); // Join with roomId
     } catch (error) {
       console.error("Failed to join group", error);
     }
@@ -87,6 +87,7 @@ const GroupPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setJoined(false);
+      socket.emit("leaveRoom", group.roomId); // Optionally, leave room when leaving group
     } catch (error) {
       console.error("Failed to leave group", error);
     }
@@ -104,7 +105,7 @@ const GroupPage = () => {
       );
 
       const newMsg = response.data;
-      socket.emit("sendMessage", newMsg);
+      socket.emit("sendMessage", { roomId: group.roomId, message: newMsg }); // Emit with roomId
 
       setMessages((prev) => [...prev, newMsg]);
       setNewMessage("");
@@ -165,4 +166,4 @@ const GroupPage = () => {
   )
 }
 
-export default GroupPage
+export default GroupPage;
