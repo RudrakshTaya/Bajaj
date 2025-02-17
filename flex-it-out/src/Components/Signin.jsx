@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../Context/AuthContext";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const { signIn } = useContext(AuthContext); // Use AuthContext
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,13 +15,27 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
       const res = await axios.post("http://localhost:5001/api/auth/login", formData);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userId", res.data.userId);
-      localStorage.setItem("name", res.data.name);
-      navigate("/");
+
+      console.log("Login Response:", res.data);
+
+      const { token, user } = res.data;
+
+      if (token && user) {
+        signIn(token, user); // Store user details in AuthContext
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", user.id);
+        localStorage.setItem("username", user.username); // Ensure correct key
+
+        navigate("/"); // Redirect to home/dashboard
+      } else {
+        setError("Invalid response from server");
+      }
     } catch (err) {
+      console.error("Login Error:", err);
       setError(err.response?.data?.message || "Login failed");
     }
   };
