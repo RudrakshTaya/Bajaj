@@ -20,7 +20,7 @@ const SignIn = () => {
     try {
       const res = await axios.post("http://localhost:5001/api/auth/login", formData);
 
-      console.log("Login Response:", res.data);
+      
 
       const { token, user } = res.data;
 

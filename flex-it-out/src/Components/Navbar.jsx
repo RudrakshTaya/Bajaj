@@ -8,11 +8,10 @@ const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { isLoggedIn, signOut, username } = useContext(AuthContext);
 
-    console.log("Navbar Loaded - isLoggedIn:", isLoggedIn);
-    console.log("Navbar Loaded - Username:", username);
+    
 
     const handleLogout = () => {
-        console.log("Logout Clicked");
+       
         signOut();
         setIsDropdownOpen(false);
     };

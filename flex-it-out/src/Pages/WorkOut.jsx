@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect,useContext } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
@@ -9,11 +9,14 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
 import confetti from "canvas-confetti"
 import "./WorkoutPage.css"
-
+import { AuthContext } from "../context/AuthContext" // Assuming you have an AuthContext
 const WorkoutPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { userId } = useContext(AuthContext); 
 
+   // Get the authenticated user from context
+ console.log("user",userId)
   const [exercises, setExercises] = useState([
     { id: "squat", name: "Squats", completed: false, reps: 0, score: 0, target: 20 },
     { id: "pushup", name: "Push-ups", completed: false, reps: 0, score: 0, target: 15 },
@@ -53,7 +56,8 @@ const WorkoutPage = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/workouts/user123")
+        const response = await fetch(`http://localhost:5001/api/workouts/${userId}`);
+
         const data = await response.json()
         setWorkoutHistory(data)
       } catch (error) {
@@ -82,7 +86,7 @@ const WorkoutPage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: "user123",
+          userId: userId,
           exercises: workoutData,
           totalScore,
         }),

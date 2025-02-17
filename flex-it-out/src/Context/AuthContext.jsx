@@ -5,36 +5,41 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedUsername = localStorage.getItem("username");
+    const storedUserId = localStorage.getItem("userId");
+    
 
-    console.log("AuthContext Loaded - Token:", token);
-    console.log("AuthContext Loaded - Username:", storedUsername);
+    
 
     if (token && storedUsername) {
       setIsLoggedIn(true);
-      setUsername(storedUsername);
+      setUsername(storedUsername)
+      setUserId(storedUserId);
     }
   }, []);
 
   const signIn = (token, user) => {
-    console.log("SignIn Function Called - Token:", token);
-    console.log("SignIn Function Called - User:", user);
+    
 
     if (user && user.username) {  // Ensure username exists in response
       localStorage.setItem("token", token);
       localStorage.setItem("username", user.username); // Store username
+      localStorage.setItem("userId",user.id);
       setIsLoggedIn(true);
       setUsername(user.username);
+      setUserId(user.id);
     } else {
       console.error("Error: Username is missing in the login response.");
     }
   };
 
   const signOut = () => {
-    console.log("User Logged Out");
+    
     localStorage.removeItem("token");
     localStorage.removeItem("username");
 
@@ -43,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, signIn, signOut, username }}>
+    <AuthContext.Provider value={{ isLoggedIn, signIn, signOut, username ,userId}}>
       {children}
     </AuthContext.Provider>
   );
