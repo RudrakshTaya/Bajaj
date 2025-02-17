@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect, createLocalTracks } from 'twilio-video';
 import axios from 'axios';
@@ -28,59 +28,87 @@ const VideoChat = () => {
     // ✅ Join Room with Access Token
     const handleJoinRoom = async () => {
         if (!roomName) return alert('Please enter a room name!');
-    
+
         try {
             const response = await axios.post('http://localhost:5001/api/video/token', { room: roomName });
             const { token } = response.data;
-    
+
             console.log("Token from backend:", token);
-    
+
             const tracks = await createLocalTracks({ audio: true, video: { width: 640 } });
-    
+
             console.log('Tracks created:', tracks);
             setLocalTracks(tracks);
-    
+
             const room = await connect(token, { name: roomName, tracks });
-    
+
             setVideoRoom(room);
-    
-            // ✅ Attach already existing participants (fix for A not seeing B)
+
+            // ✅ Attach existing participants
             room.participants.forEach((participant) => {
                 console.log(`Existing participant: ${participant.identity}`);
                 participant.tracks.forEach(publication => {
                     if (publication.isSubscribed) {
-                        attachTrack(publication.track);
+                        attachTrack(publication.track, participant.identity);
                     }
                 });
-    
-                participant.on('trackSubscribed', attachTrack);
+
+                participant.on('trackSubscribed', (track) => attachTrack(track, participant.identity));
             });
-    
+
             // ✅ Listen for new participants
             room.on('participantConnected', (participant) => {
                 console.log(`Participant ${participant.identity} joined`);
                 participant.tracks.forEach(publication => {
                     if (publication.isSubscribed) {
-                        attachTrack(publication.track);
+                        attachTrack(publication.track, participant.identity);
                     }
                 });
-    
-                participant.on('trackSubscribed', attachTrack);
+
+                participant.on('trackSubscribed', (track) => attachTrack(track, participant.identity));
             });
-    
+
+            // ✅ Listen for participant disconnection and remove their video
+            room.on('participantDisconnected', (participant) => {
+                console.log(`Participant ${participant.identity} left`);
+                removeParticipantVideo(participant.identity);
+            });
+
         } catch (error) {
             console.error('Error joining room:', error);
             alert('Error joining room, please try again.');
         }
     };
-    
 
-    // ✅ Helper function to attach tracks to the DOM safely
-    const attachTrack = (track) => {
+    // ✅ Leave Room
+    const handleLeaveRoom = () => {
+        if (videoRoom) {
+            videoRoom.disconnect(); // ✅ Disconnect from the Twilio room
+            localTracks.forEach(track => track.stop()); // ✅ Stop local tracks
+            setLocalTracks([]);
+            setVideoRoom(null);
+            document.getElementById("remote-video-container").innerHTML = ""; // ✅ Clear remote videos
+            console.log("You left the room.");
+        }
+    };
+
+    // ✅ Attach video tracks to the DOM
+    const attachTrack = (track, participantId) => {
         if (track.kind === 'video') {
             const videoElement = track.attach();
+            videoElement.id = `video-${participantId}`;
+
             const container = document.getElementById('remote-video-container');
             if (container) container.appendChild(videoElement);
+        }
+    };
+
+    // ✅ Remove participant's video when they leave
+    const removeParticipantVideo = (participantId) => {
+        const videoElement = document.getElementById(`video-${participantId}`);
+        if (videoElement) {
+            videoElement.remove();
+            console.log(`Removed video of participant ${participantId}`);
         }
     };
 
@@ -93,15 +121,15 @@ const VideoChat = () => {
                 <div>
                     <h3>You are in room: {videoRoom.name}</h3>
                     <div>
-                    {localTracks.map((track, index) => {
-                        if (track.kind === 'video') {
-                            const videoElement = track.attach();
-                            return <div key={index} ref={(el) => el && el.appendChild(videoElement)} />;
-                        }
-                        return null; 
-                    })}
-
+                        {localTracks.map((track, index) => {
+                            if (track.kind === 'video') {
+                                const videoElement = track.attach();
+                                return <div key={index} ref={(el) => el && el.appendChild(videoElement)} />;
+                            }
+                            return null;
+                        })}
                     </div>
+                    <button onClick={handleLeaveRoom} className="leave-button">Leave Room</button>
                     <Link to="/">Go Back</Link>
                 </div>
             ) : (
