@@ -1,24 +1,9 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const http = require("http"); // Needed for Socket.io
 const { Server } = require("socket.io");
-
-// Import Routes
-const authRoutes = require("./routes/authRoutes");
-const activityRoutes = require("./routes/activityRoutes");
-const leaderboardRoutes = require("./routes/leaderboardRoutes");
-const userRoutes = require("./routes/userRoutes");
-const emailChangeRoutes = require("./routes/emailChangeRoutes");
-const paymentRoutes = require("./routes/paymentRoutes");
-const pricingRoutes = require("./routes/pricingRoutes");
-const checkoutRoutes = require("./routes/createCheckoutSession"); 
-const workoutRoutes= require("./routes/workoutRoutes");
-const mealRoutes = require("./routes/fetchmealsRouter");
-const videoRoutes = require("./routes/videoRoutes");
-const groupRoutes = require("./routes/groupRoutes");
 
 dotenv.config();
 const app = express();
@@ -30,29 +15,54 @@ const io = new Server(server, {
   },
 });
 
+// ✅ Import Routes (Removing Duplicates)
+const authRoutes = require("./routes/authRoutes");
+const activityRoutes = require("./routes/activityRoutes");
+const leaderboardRoutes = require("./routes/leaderboardRoutes");
+const userRoutes = require("./routes/userRoutes");
+const emailChangeRoutes = require("./routes/emailChangeRoutes");
+const pricingRoutes = require("./routes/pricingRoutes");
+const checkoutRoutes = require("./routes/createCheckoutSession");
+const workoutRoutes = require("./routes/workoutRoutes");
+const mealRoutes = require("./routes/fetchmealsRouter");
+const videoRoutes = require("./routes/videoRoutes");
+const groupRoutes = require("./routes/groupRoutes"); // Ensure this file exists
+
 // ✅ Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json()); // Built-in JSON parsing middleware
 
-// ✅ Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
-
-// ✅ Routes
+// ✅ API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/activity", activityRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/email", emailChangeRoutes);
-app.use("/api/payment", paymentRoutes);
 app.use("/api/pricing", pricingRoutes);
-app.use("/api/checkout", checkoutRoutes); 
+app.use("/api/checkout", checkoutRoutes);
 app.use("/api/workouts", workoutRoutes);
 app.use("/api/meals", mealRoutes);
 app.use("/api/video", videoRoutes);
 app.use("/api/group", groupRoutes);
+
+// ✅ Global Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error("❌ Unhandled Error:", err);
+  res.status(500).json({ error: "Something went wrong!" });
+});
+
+// ✅ MongoDB Connection without deprecated options
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Timeout for server selection
+  })
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+    process.exit(1); // Exit if MongoDB connection fails
+  });
 
 // ✅ Socket.io - Real-Time Chat
 io.on("connection", (socket) => {
