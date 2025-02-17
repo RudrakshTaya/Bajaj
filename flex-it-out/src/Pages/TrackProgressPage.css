@@ -40,8 +40,8 @@
   }
   
   .trainer-photo {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 1rem;
@@ -52,6 +52,8 @@
     font-size: 1.5rem;
     color: #93c5fd; /* Light Blue */
     margin-bottom: 0.5rem;
+    justify-content: center;
+    text-align: center;
   }
   
   .trainer-card p {
@@ -98,6 +100,8 @@
   
     .trainer-card h2 {
       font-size: 1.3rem;
+      justify-content: center;
+      text-align: center;
     }
   
     .trainer-card p {
