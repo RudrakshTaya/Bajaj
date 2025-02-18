@@ -3,17 +3,30 @@ const { uploadOnCloudinary } = require('../utils/cloudinary.js');
 
 // Get User Profile
 exports.getProfile = async (req, res) => {
-  try {
-    // Find user by ID (from the authenticated user)
-    const user = await User.findById(req.user.id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.json(user);
-  } catch (error) {
-    console.error("Error getting profile:", error);
-    res.status(500).json({ message: "Server Error" });
-  }
-};
+    try {
+      // Find user by ID (from the authenticated user)
+      const user = await User.findById(req.user.id).select("-password");
+      if (!user) return res.status(404).json({ message: "User not found" });
+  
+      // Send the user profile along with the membership info
+      res.json({
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        avatar: user.avatar,
+        score: user.score,
+        streak: user.streak,
+        calories: user.calories,
+        membership: user.membership,  // Include membership details
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      });
+    } catch (error) {
+      console.error("Error getting profile:", error);
+      res.status(500).json({ message: "Server Error" });
+    }
+  };
+  
 
 // Update User Profile
 exports.updateProfile = async (req, res) => {

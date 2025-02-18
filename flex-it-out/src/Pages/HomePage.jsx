@@ -1,20 +1,36 @@
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { FaDumbbell, FaAppleAlt, FaUserFriends, FaMedal, FaArrowRight } from "react-icons/fa"
+import axios from "axios"
 import './HomePage.css'
 
 const HomePage = () => {
   const navigate = useNavigate()
 
-  
 
   const nutritionPage = () => {
     navigate("/nutrition")
   }
 
-  const goToCommunity = () => {
-    navigate('/community')
-  }
+  const goToCommunity = async () => {
+    try 
+    {
+        const token = localStorage.getItem('token')
+        const response = await axios.get('http://localhost:5001/api/user/profile', {
+            headers: { Authorization: `Bearer ${token}` },
+        })        
+
+        const isMember = response.data.membership.plan
+
+        if (isMember === 'premium') {
+            navigate('/community');
+        } else {
+            navigate('/pricing');
+        }
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+        }
+    }
 
   return (
     <div className="home-container">
