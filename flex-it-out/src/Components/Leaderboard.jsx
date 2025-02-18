@@ -13,7 +13,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/leaderboard?timeFrame=${timeFrame}`);
+        const response = await axios.get(`https://flex-it-out-backend.vercel.app/api/leaderboard?timeFrame=${timeFrame}`);
         if (response.status === 200) {
           setLeaderboard(response.data); // Axios already parses JSON, no need for .json()
         } else {

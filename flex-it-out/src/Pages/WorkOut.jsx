@@ -45,7 +45,7 @@ const WorkoutPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/user/${userId}`)
+        const response = await fetch(`https://flex-it-out-backend.vercel.app/api/user/${userId}`)
         const data = await response.json()
         setStreak(data.streak) // Assuming the user model has a streak field
         setTotalScore(data.score) // Assuming the user model has a totalScore field
@@ -60,7 +60,7 @@ const WorkoutPage = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/workouts/${userId}`);
+        const response = await fetch(`https://flex-it-out-backend.vercel.app/api/workouts/${userId}`);
         const data = await response.json()
         setWorkoutHistory(data)
       } catch (error) {
@@ -86,7 +86,7 @@ const WorkoutPage = () => {
     }));
 
     try {
-      const response = await fetch("http://localhost:5001/api/workouts/save", {
+      const response = await fetch("api/workouts/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -100,7 +100,7 @@ const WorkoutPage = () => {
       if (response.ok) {
         // Post the score to the leaderboard
         try {
-          await axios.post("http://localhost:5001/api/leaderboard", {
+          await axios.post("https://flex-it-out-backend.vercel.app/api/leaderboard", {
             userId,
             score: totalScore,
           });

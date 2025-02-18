@@ -25,7 +25,7 @@ const PaymentPage = () => {
     const stripe = await stripePromise;
   
     try {
-      const response = await fetch("http://localhost:5001/api/checkout/create-checkout-session", {
+      const response = await fetch("https://flex-it-out-backend.vercel.app/api/checkout/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan, userId }), // Send userId with the request

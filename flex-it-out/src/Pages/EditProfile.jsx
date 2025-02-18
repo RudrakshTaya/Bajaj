@@ -67,7 +67,7 @@ const EditProfile = () => {
 
     try {
       if (type === "name") {
-        await axios.put("http://localhost:5001/api/user/profile", 
+        await axios.put("https://flex-it-out-backend.vercel.app/api/user/profile", 
           { name: formData.name }, 
           { headers: { Authorization: `Bearer ${token}` } }
         );

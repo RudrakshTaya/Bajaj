@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import "./GroupPage.css";
 import VideoChat from "../Components/videoChat";
 
-const socket = io("http://localhost:5001");
+const socket = io("https://flex-it-out-backend.vercel.app");
 
 const GroupPage = () => {
   const { id } = useParams();
@@ -22,7 +22,7 @@ const GroupPage = () => {
   useEffect(() => {
     const fetchGroup = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/group/${id}`, {
+        const response = await axios.get(`https://flex-it-out-backend.vercel.app/api/group/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -67,7 +67,7 @@ const GroupPage = () => {
   const handleJoin = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5001/api/group/${id}/join`,
+        `https://flex-it-out-backend.vercel.app/api/group/${id}/join`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -82,7 +82,7 @@ const GroupPage = () => {
   const handleLeave = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5001/api/group/${id}/leave`,
+        `https://flex-it-out-backend.vercel.app/api/group/${id}/leave`,
         { userId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -99,7 +99,7 @@ const GroupPage = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5001/api/group/${id}/message`,
+        `https://flex-it-out-backend.vercel.app/api/group/${id}/message`,
         { text: newMessage, senderId: userId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

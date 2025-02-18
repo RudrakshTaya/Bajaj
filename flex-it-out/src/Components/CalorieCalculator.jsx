@@ -48,7 +48,7 @@ const CalorieCalculator = () => {
   
     try {
       await axios.put(
-        "http://localhost:5001/api/user/profile",
+        "https://flex-it-out-backend.vercel.app/api/user/profile",
         { calories: Number(calories) },
         {
           headers: {

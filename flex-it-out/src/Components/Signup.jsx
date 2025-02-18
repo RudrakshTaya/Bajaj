@@ -65,7 +65,7 @@ const SignUp = () => {
     try {
       const { confirmPassword, ...userData } = formData; // Exclude confirmPassword before sending
       console.log(userData);
-      const res = await axios.post("http://localhost:5001/api/auth/register", userData);
+      const res = await axios.post("https://flex-it-out-backend.vercel.app/api/auth/register", userData);
       
       navigate("/signin"); // Redirect to sign-in after successful registration
     } catch (err) {
