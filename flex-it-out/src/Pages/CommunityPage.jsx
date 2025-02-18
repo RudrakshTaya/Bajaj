@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid"; // Import uuid for generating roomId
+import { v4 as uuidv4 } from "uuid";
 import "./CommunityPage.css";
 
 const CommunityPage = () => {
@@ -11,9 +11,8 @@ const CommunityPage = () => {
   const [error, setError] = useState(null);
   const [groupName, setGroupName] = useState("");
   const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId"); // Get user ID from localStorage
+  const userId = localStorage.getItem("userId");
 
-  // Fetch Groups from API
   useEffect(() => {
     const fetchGroups = async () => {
       try {
@@ -119,12 +118,7 @@ const CommunityPage = () => {
             >
               <h2 className="group-name">{group.name}</h2>
               <p className="group-members">{group.members.length} members</p>
-              <button
-                className="join-group-button"
-                onClick={() => handleJoinGroup(group._id, group.roomId)} // Pass roomId when joining
-              >
-                Join Group
-              </button>
+              
             </div>
           ))}
         </div>

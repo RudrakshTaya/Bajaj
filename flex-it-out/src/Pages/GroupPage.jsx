@@ -119,10 +119,10 @@ const GroupPage = () => {
   return (
     <div className="group-container">
       <h1 className="group-title">{group.name}</h1>
-
       <button className="join-button" onClick={joined ? handleLeave : handleJoin}>
         {joined ? "Leave Group" : "Join Group"}
       </button>
+
 
       {joined && (
         <VideoChat />
