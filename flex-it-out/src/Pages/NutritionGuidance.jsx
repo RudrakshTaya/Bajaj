@@ -4,11 +4,13 @@ import axios from "axios";
 import "./NutritionGuidance.css"; // Import CSS for styling
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material"; // Import Material-UI Dialog components
 
 const NutritionGuidance = () => {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false); // State to control Dialog visibility
   const navigate = useNavigate();
   const { userId, membership } = useContext(AuthContext); // Use AuthContext to access user data
 
@@ -16,9 +18,9 @@ const NutritionGuidance = () => {
   console.log(membership);
 
   useEffect(() => {
-    // Redirect non-premium users
-    if ( membership !== "premium") {
-      navigate("/pricing");
+    // Redirect non-premium users and show the dialog for upgrading
+    if (membership !== "premium") {
+      setOpenDialog(true); // Show the dialog if the user is not premium
       return;
     }
 
@@ -44,6 +46,11 @@ const NutritionGuidance = () => {
     navigate(`/meal/${meal._id}`, { state: { meal } });
   };
 
+  const handleDialogClose = () => {
+    setOpenDialog(false); // Close the dialog
+    navigate("/pricing"); // Redirect to pricing page for premium upgrade
+  };
+
   return (
     <div className="nutrition-container">
       <CalorieCalculator />
@@ -67,6 +74,22 @@ const NutritionGuidance = () => {
           </div>
         )}
       </div>
+
+      {/* Dialog for non-premium users */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Upgrade to Premium</DialogTitle>
+        <DialogContent>
+          <p>
+            You need a premium membership to access the healthy meal plans. 
+            Please switch to a premium plan to unlock this feature.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Go to Pricing
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

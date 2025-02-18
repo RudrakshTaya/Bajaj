@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
-import { FaDumbbell, FaChartLine, FaFire, FaMedal ,FaHistory} from "react-icons/fa"
+import { FaDumbbell, FaChartLine, FaFire, FaMedal, FaHistory } from "react-icons/fa"
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
 import confetti from "canvas-confetti"
@@ -29,6 +29,13 @@ const WorkoutPage = () => {
   ])
 
   const [workoutHistory, setWorkoutHistory] = useState([])
+  const [challenges, setChallenges] = useState([
+    { id: "squatChallenge", name: "Squat Challenge", target: 20, completed: false },
+    { id: "pushupChallenge", name: "Push-up Challenge", target: 15, completed: false },
+    { id: "highKneeChallenge", name: "High Knee Challenge", target: 30, completed: false },
+    { id: "lungesChallenge", name: "Lunges Challenge", target: 20, completed: false }
+  ]);
+  
   const [activeTab, setActiveTab] = useState("exercises")
   
   const [streak, setStreak] = useState(0)
@@ -41,7 +48,7 @@ const WorkoutPage = () => {
         const response = await fetch(`http://localhost:5001/api/user/${userId}`)
         const data = await response.json()
         setStreak(data.streak) // Assuming the user model has a streak field
-        setTotalScore(data.totalScore) // Assuming the user model has a totalScore field
+        setTotalScore(data.score) // Assuming the user model has a totalScore field
       } catch (error) {
         console.error("Error fetching user data:", error)
       }
@@ -75,6 +82,7 @@ const WorkoutPage = () => {
       exerciseName: exercise.name,
       reps: exercise.reps,
       score: exercise.score,
+      streak: streak,
     }));
 
     try {
@@ -85,6 +93,7 @@ const WorkoutPage = () => {
           userId: userId,
           exercises: workoutData,
           totalScore,
+          streak,
         }),
       });
 
@@ -125,6 +134,14 @@ const WorkoutPage = () => {
     } catch (error) {
       console.error("Error saving workout:", error);
     }
+  };
+
+  const handleStartChallenge = (challengeId) => {
+    // Find the challenge
+    const challenge = challenges.find(challenge => challenge.id === challengeId);
+
+    // Start pose detection for that challenge
+    navigate(`/pose-detection/${challengeId}`, { state: { challenge, userId } });
   };
 
   const renderTabContent = () => {
@@ -186,10 +203,10 @@ const WorkoutPage = () => {
             <h2>
               <FaChartLine /> Challenges
             </h2>
-            {challenges.map((challenge, index) => (
-              <div key={index} className="challenge-card">
+            {challenges.map((challenge) => (
+              <div key={challenge.id} className="challenge-card">
                 <div className="challenge-info">
-                  <span className="challenge-icon">{challenge.icon}</span>
+                  <span className="challenge-icon"><FaDumbbell /></span>
                   <span>{challenge.name}</span>
                 </div>
                 {challenge.completed ? (
@@ -197,13 +214,9 @@ const WorkoutPage = () => {
                 ) : (
                   <button
                     className="challenge-button"
-                    onClick={() => {
-                      const newChallenges = [...challenges]
-                      newChallenges[index].completed = true
-                      setChallenges(newChallenges)
-                    }}
+                    onClick={() => handleStartChallenge(challenge.id)}
                   >
-                    Complete
+                    Start Challenge
                   </button>
                 )}
               </div>

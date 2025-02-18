@@ -2,7 +2,7 @@ const Workout = require("../models/workout");
 const User = require("../models/User");
 
 exports.saveWorkout = async (req, res) => {
-  const { userId, exercises, totalScore } = req.body;
+  const { userId, exercises, totalScore,streak } = req.body;
   console.log("Request body:", req.body); // Log incoming request
 
   try {
@@ -17,10 +17,12 @@ exports.saveWorkout = async (req, res) => {
       userId,
       exercises,
       totalScore,
+      streak,
     });
 
     // Update user score
     user.score = (user.score || 0) + totalScore;
+    user.streak=(user.streak|| 0) +1;
     await user.save();
 
     await newWorkout.save();
