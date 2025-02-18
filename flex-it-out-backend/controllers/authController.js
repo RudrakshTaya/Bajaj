@@ -2,61 +2,64 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+
+
+
+
 const registerUser = async (req, res) => {
-  try {
-      const { name, email, password, phone, age } = req.body;
+    try {
+        const { name, email, password, phone } = req.body;
 
-      console.log("Received data:", req.body); // Debugging the incoming request
+        // Validate required fields
+        
+        if (!name || !password || (!email && !phone)) {
+            return res.status(400).json({ message: "Name, password, and either email or phone are required." });
+        }
 
-      // Validate input fields
-      if (!name || !email || !password || !age) {
-          return res.status(400).json({ message: "Missing required fields" });
-      }
+        
 
-      // Validate age format (number)
-      const parsedAge = Number(age);
-      console.log("Parsed Age:", parsedAge); // Check if the age is being parsed correctly
-      if (isNaN(parsedAge) || parsedAge < 13 || parsedAge > 120) {
-          return res.status(400).json({ message: "Please provide a valid age between 13 and 120." });
-      }
-
-        // Check if the user already exists by email
-        let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ message: "User already exists" });
-
-        // Check if phone number is provided and validate if it's unique
-        if (phone) {
-            let existingUserWithPhone = await User.findOne({ phone });
-            if (existingUserWithPhone) return res.status(400).json({ message: "Phone number already in use" });
+        // Check if a user already exists with the same email or phone
+        let user = await User.findOne({ $or: [{ email }, { phone }] });
+        if (user) {
+            return res.status(400).json({ message: "User with this email or phone already exists." });
         }
 
         // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create a new user
-        user = new User({ name, email, password: hashedPassword, phone, age: parsedAge });
+        // Create the user
+        user = new User({
+            name,
+            email,
+            phone,
+            password: hashedPassword,
+           
+        });
+
         await user.save();
 
         // Generate JWT Token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-        // Respond with the token and user info (excluding password)
         res.status(201).json({
+            message: "Registration successful!",
             token,
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email,
-                phone: user.phone,
-                age: user.age,
+                email: user.email || null,
+                phone: user.phone || null,
+                
+                membership: user.membership,
             },
         });
     } catch (error) {
-        console.error("Error registering user:", error);
-        res.status(500).json({ message: "Server Error", error });
+        console.error("Signup Error:", error);
+        res.status(500).json({ message: "Server error. Please try again." });
     }
 };
+
 
 const loginUser = async (req, res) => {
     try {
@@ -96,7 +99,7 @@ const loginUser = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 phone: user.phone,  // You can also send phone if required
-                age: user.age,      // Include age if necessary
+               
                 membership:user.membership,
             },
         });
