@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Signup.css";
 
 const SignUp = () => {
@@ -8,39 +8,45 @@ const SignUp = () => {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     phone: "",
-    age: ""
+    
   });
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state for form submission
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value.trim() });
   };
 
   const validateForm = () => {
-    // Simple client-side validation
-    if (!formData.email || !formData.password || !formData.name || !formData.phone || !formData.age) {
+    const { name, email, password, confirmPassword, phone } = formData;
+    
+    if (!name || !email || !password || !confirmPassword || !phone ) {
       return "All fields are required.";
     }
-    
-    // Validate email format
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    if (!emailRegex.test(formData.email)) {
+
+    if (password !== confirmPassword) {
+      return "Passwords do not match.";
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
       return "Invalid email format.";
     }
 
-    // Validate phone number format (adjust as necessary)
     const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(formData.phone)) {
-      return "Phone number should be 10 digits.";
+    if (!phoneRegex.test(phone)) {
+      return "Phone number must be 10 digits.";
     }
 
-    // Validate age (ensure it's a number and within a reasonable range)
-    if (formData.age < 18 || formData.age > 120) {
-      return "Age should be between 18 and 120.";
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      return "Password must be at least 6 characters long, include 1 uppercase, 1 lowercase, and 1 number.";
     }
+
+    
 
     return null;
   };
@@ -48,7 +54,6 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Client-side validation
     const errorMsg = validateForm();
     if (errorMsg) {
       setError(errorMsg);
@@ -57,16 +62,16 @@ const SignUp = () => {
     
     setError("");
     setLoading(true);
-
     try {
-      console.log(formData);
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, formData);
-      alert("Signup Successful! Please log in.");
-      navigate("/signin");
+      const { confirmPassword, ...userData } = formData; // Exclude confirmPassword before sending
+      console.log(userData);
+      const res = await axios.post("http://localhost:5001/api/auth/register", userData);
+      
+      navigate("/signin"); // Redirect to sign-in after successful registration
     } catch (err) {
-      setError(err.response?.data?.message || "Signup failed");
+      setError(err.response?.data?.message || "Signup failed. Please try again.");
     } finally {
-      setLoading(false); // Stop loading spinner after submission
+      setLoading(false);
     }
   };
 
@@ -75,51 +80,15 @@ const SignUp = () => {
       <h2>Sign Up</h2>
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          name="name" 
-          placeholder="Name" 
-          onChange={handleChange} 
-          value={formData.name}
-          required 
-        />
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="Email" 
-          onChange={handleChange} 
-          value={formData.email}
-          required 
-        />
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="Password" 
-          onChange={handleChange} 
-          value={formData.password}
-          required 
-        />
-        <input 
-          type="text" 
-          name="phone" 
-          placeholder="Phone Number" 
-          onChange={handleChange} 
-          value={formData.phone}
-          required 
-        />
-        <input 
-          type="number" 
-          name="age" 
-          placeholder="Age" 
-          onChange={handleChange} 
-          value={formData.age}
-          required 
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Sign Up"}
-        </button>
+        <input type="text" name="name" placeholder="Name" onChange={handleChange} value={formData.name} required />
+        <input type="email" name="email" placeholder="Email" onChange={handleChange} value={formData.email} required />
+        <input type="password" name="password" placeholder="Password" onChange={handleChange} value={formData.password} required />
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange} value={formData.confirmPassword} required />
+        <input type="text" name="phone" placeholder="Phone Number" onChange={handleChange} value={formData.phone} required />
+       
+        <button type="submit" disabled={loading}>{loading ? "Submitting..." : "Sign Up"}</button>
       </form>
-      <p>Already have an account? <a href="/signin">Sign In</a></p>
+      <p>Already have an account? <Link to="/signin">Sign In</Link></p>
     </div>
   );
 };
