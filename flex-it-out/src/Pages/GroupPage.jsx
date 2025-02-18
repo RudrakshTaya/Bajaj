@@ -66,7 +66,7 @@ const GroupPage = () => {
   // ✅ Join Group
   const handleJoin = async () => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `http://localhost:5001/api/group/${id}/join`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
@@ -81,13 +81,13 @@ const GroupPage = () => {
   // ✅ Leave Group
   const handleLeave = async () => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `http://localhost:5001/api/group/${id}/leave`,
-        {},
+        { userId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setJoined(false);
-      socket.emit("leaveRoom", group.roomId); // Optionally, leave room when leaving group
+      socket.emit("leaveRoom", group.roomId);
     } catch (error) {
       console.error("Failed to leave group", error);
     }
