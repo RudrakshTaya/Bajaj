@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 import "./GroupPage.css";
-import VideoChat from "../Components/VideoChat";
+import VideoChat from "../Components/videoChat";
 
 const socket = io("http://localhost:5001");
 

@@ -3,7 +3,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCreditCard, FaSpinner } from "react-icons/fa";
-import { AuthContext } from "../context/AuthContext"; // Import authentication context
+import { AuthContext } from "../Context/AuthContext"; // Import authentication context
 import "./PaymentPage.css";
 
 const stripePromise = loadStripe("pk_test_51QrIYaP7TDcxXgwZjsg5PRmU9NAATaVt87I42XPl2gLOjSRd2Jw2qxgo1bGKMCkJbau5oKHcEHuqgeSbaoahbk2G00H4yaXvcf");
