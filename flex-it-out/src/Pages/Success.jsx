@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../Context/AuthContext";
 import "./SuccessPage.css";
 
 const SuccessPage = () => {
