@@ -5,7 +5,10 @@ button{
 }
 #root{
     background-color: #fff;
+    color: black;
 }
 body{
     justify-content: center;
+   
 }
+
