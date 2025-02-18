@@ -1,93 +1,93 @@
 /* videoPage.css */
 
 .video-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f1f1f1;
-  }
-  
-  .video-header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 20px;
-    background-color: #1e1e1e;
-    color: #fff;
-    align-items: center;
-  }
-  
-  .video-header h2 {
-    margin: 0;
-  }
-  
-  .mute-btn, .leave-btn, .camera-btn {
-    background-color: #f44336;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    margin-left: 10px;
-  }
-  
-  .mute-btn:hover, .leave-btn:hover, .camera-btn:hover {
-    background-color: #d32f2f;
-  }
-  
-  .video-layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
-    gap: 10px;
-    width: 100%;
-    height: 80%;
-    padding: 20px;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .video-box {
-    width: fit-content; /* Makes the div wrap around the video */
-    height: fit-content;
-    background-color: black;
-    position: relative;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  
-  .video-box video {
-    width: auto;
-    height: 250px; /* Adjust height */
-    object-fit: cover;
-  }
-  
-  
-  
-  .video-box h4 {
-    color: white;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 5px;
-    border-radius: 5px;
-  }
-  
-  #local-video video,
-  #remote-video video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .local-video-container video {
-    height: 200px; /* Adjust as needed */
-    object-fit: contain;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f1f1f1;
+}
+
+.video-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #fff;
+  align-items: center;
+}
+
+.video-header h2 {
+  margin: 0;
+}
+
+.mute-btn, .leave-btn, .camera-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.mute-btn:hover, .leave-btn:hover, .camera-btn:hover {
+  background-color: #d32f2f;
+}
+
+.video-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+  gap: 10px;
+  width: 100%;
+  height: 80%;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-box {
+  width: fit-content; /* Makes the div wrap around the video */
+  height: fit-content;
+  background-color: black;
+  position: relative;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.video-box video {
+  width: auto;
+  height: 250px; /* Adjust height */
+  object-fit: cover;
+}
+
+
+
+.video-box h4 {
+  color: white;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+#local-video video,
+#remote-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.local-video-container video {
+  height: 200px; /* Adjust as needed */
+  object-fit: contain;
+}
+

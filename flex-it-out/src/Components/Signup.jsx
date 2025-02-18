@@ -65,7 +65,7 @@ const SignUp = () => {
     try {
       const { confirmPassword, ...userData } = formData; // Exclude confirmPassword before sending
       console.log(userData);
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, userData);
+      const res = await axios.post("http://localhost:5001/api/auth/register", userData);
       
       navigate("/signin"); // Redirect to sign-in after successful registration
     } catch (err) {
