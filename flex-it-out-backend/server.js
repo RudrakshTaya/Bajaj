@@ -2,16 +2,19 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const http = require("http"); // Needed for Socket.io
+const http = require("http");
 const { Server } = require("socket.io");
 
 dotenv.config();
 const app = express();
 const server = http.createServer(app); // Create HTTP server for Socket.io
+
+// ✅ Initialize Socket.io with CORS
 const io = new Server(server, {
   cors: {
     origin: "https://flexitout.vercel.app", // Allow frontend
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true, // Allow cookies/auth headers
   },
 });
 
@@ -31,8 +34,8 @@ const groupRoutes = require("./routes/groupRoutes"); // Ensure this file exists
 // ✅ Middleware
 app.use(
   cors({
-    origin: "https://flexitout.vercel.app", // Allow your frontend
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "https://flexitout.vercel.app",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
@@ -58,12 +61,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Something went wrong!" });
 });
 
-// ✅ MongoDB Connection without deprecated options
+// ✅ MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000, // Timeout for server selection
+    serverSelectionTimeoutMS: 5000,
   })
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => {
@@ -73,19 +76,30 @@ mongoose
 
 // ✅ Socket.io - Real-Time Chat
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+  console.log(`🔵 User connected: ${socket.id}`);
 
   socket.on("joinGroup", (groupId) => {
     socket.join(groupId);
-    console.log(`User joined group: ${groupId}`);
+    console.log(`👥 User joined group: ${groupId}`);
   });
 
   socket.on("sendMessage", async ({ groupId, senderId, text }) => {
+    console.log(`📩 Message from ${senderId} to group ${groupId}: ${text}`);
     io.to(groupId).emit("newMessage", { sender: senderId, text });
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+    console.log(`🔴 User disconnected: ${socket.id}`);
+  });
+});
+
+// ✅ Handle Process Termination
+process.on("SIGINT", async () => {
+  console.log("🛑 Shutting down server...");
+  await mongoose.connection.close();
+  server.close(() => {
+    console.log("✅ Server closed successfully.");
+    process.exit(0);
   });
 });
 
