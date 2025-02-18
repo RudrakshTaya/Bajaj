@@ -29,7 +29,12 @@ const videoRoutes = require("./routes/videoRoutes");
 const groupRoutes = require("./routes/groupRoutes"); // Ensure this file exists
 
 // ✅ Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'https://flexitout.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json()); // Built-in JSON parsing middleware
 
 // ✅ API Routes
