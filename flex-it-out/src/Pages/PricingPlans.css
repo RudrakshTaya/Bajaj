@@ -7,6 +7,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
   }
   
   .fitflex-pricing-title {
@@ -26,6 +27,7 @@
   
   .fitflex-pricing-card {
     background: #ffffff;
+   
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -55,7 +57,7 @@
   .fitflex-pricing-card-price {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #4a5568;
+    
     margin: 0;
   }
   
@@ -68,6 +70,7 @@
     list-style-type: none;
     padding: 0;
     margin: 1.5rem 0;
+    color: black;
   }
   
   .fitflex-pricing-feature-item {

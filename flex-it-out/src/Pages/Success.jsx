@@ -26,7 +26,7 @@ const SuccessPage = () => {
 
         if (response.ok) {
           setMessage("✅ Payment Successful! Membership updated.");
-          setTimeout(() => navigate("/dashboard"), 3000); // Redirect after 3 sec
+          setTimeout(() => navigate("/"), 3000); // Redirect after 3 sec
         } else {
           setMessage(`❌ Payment verification failed: ${data.error}`);
         }

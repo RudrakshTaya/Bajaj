@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; // For navigation with React Router
 import { Check, Star } from "lucide-react"; // For icons
 import { Button, Card, CardContent, CardHeader, Typography, Grid } from "@mui/material"; // Import MUI components
-
+import './PricingPlans.css'
 const PricingPage = () => {
   const navigate = useNavigate(); // For navigation with React Router
 
