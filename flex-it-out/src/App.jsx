@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "./Context/AuthContext"; // Make sure the AuthContext is correctly imported
+import { AuthContext } from "./context/AuthContext"; // Make sure the AuthContext is correctly imported
 
 import Navbar from "./Components/Navbar";
 import NutritionPage from "./Pages/NutritionGuidance";
