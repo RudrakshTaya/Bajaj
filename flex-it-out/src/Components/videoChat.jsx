@@ -42,9 +42,13 @@ const VideoChat = () => {
       setVideoRoom(room);
 
       const localVideoTrack = tracks.find((track) => track.kind === "video");
-      if (localVideoTrack && localVideoRef.current) {
+      console.log("Local Video Track:", localVideoTrack);
+      if (localVideoTrack) {
         localVideoTrack.attach(localVideoRef.current);
+        console.log("Attached local video track");
       }
+      
+
 
       room.on("participantConnected", (participant) => {
         const videoElement = document.createElement("video");
@@ -159,7 +163,7 @@ const VideoChat = () => {
             }}
           ></div>
           <div className="local-video-container" style={{ marginTop: "16px" }}>
-            <video ref={localVideoRef} autoPlay muted style={{ width: "100%", borderRadius: "8px" }}></video>
+            {/* <video ref={localVideoRef} autoPlay muted style={{ width: "100%", borderRadius: "8px" }}></video> */}
             <video
               ref={screenShareRef}
               autoPlay
@@ -188,7 +192,7 @@ const VideoChat = () => {
         </Button>
       )}
     </div>
-  );
-};
+    )
+}
 
-export default VideoChat;
+export default VideoChat
