@@ -79,7 +79,7 @@ const HomePage = () => {
 
         {/* Testimonials Section */}
         <section className="testimonials">
-          <h2 >Empowered Voices: Memeber Experiences</h2>
+          <h2 >Empowered Voices: Member Experiences</h2>
           <div className="testimonial-carousel">
             <div className="testimonial">
               <p>"This app didn’t just change my fitness—it changed my life. Every workout feels like a step toward greatness!"</p>
