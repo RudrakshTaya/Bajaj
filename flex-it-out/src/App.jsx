@@ -16,7 +16,7 @@ import PaymentPage from "./Pages/PaymentPage";
 import Success from "./Pages/Success";
 import Cancel from "./Pages/Cancel";
 import MealPage from "./Pages/MealDescription";
-import VideoChat from "./Components/VideoChat";
+import VideoChat from "./Components/videoChat";
 import TrackProgressPage from "./Pages/TrackProgressPage";
 import CommunityPage from "./Pages/CommunityPage";
 import GroupPage from "./Pages/GroupPage";
