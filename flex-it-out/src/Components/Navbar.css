@@ -25,6 +25,7 @@
 
 .navbar-brand a:hover {
   color: #60A5FA; /* Lighter Blue */
+  text-decoration: none;
 }
 
 /* Logo icon styling */
@@ -33,6 +34,7 @@
   color: #3B82F6; /* 🔵 Match blue theme */
   margin-right: 8px; /* Add spacing between icon and text */
   vertical-align: middle;
+  
 }
 
 /* Navigation links */
@@ -55,6 +57,7 @@
 .nav-links a:hover {
   color: #60A5FA; /* 🔵 Blue hover */
   background-color: rgba(96, 165, 250, 0.1);
+  text-decoration: none;
 }
 
 /* Username styling */
