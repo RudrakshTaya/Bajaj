@@ -35,7 +35,7 @@ const HomePage = () => {
   return (
     <div className="home-container">
       {/* Hero Section */}
-      <motion.div className="hero-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+      {/* <motion.div className="hero-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
         <section className="hero">
           <motion.h1
             initial={{ y: -50, opacity: 0 }}
@@ -60,7 +60,48 @@ const HomePage = () => {
             Get Started <FaArrowRight className="cta-icon" />
           </motion.button>
         </section>
-      </motion.div>
+      </motion.div> */}
+
+
+
+
+<motion.div className="hero-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+  {/* Background Video */}
+  <video autoPlay loop muted playsInline className="video-bg">
+    <source src="/flexitoutvideo.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  {/* Content Over Video */}
+  <section className="hero">
+    <motion.h1
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.2, duration: 0.8 }}
+    >
+      CRUSH WORKOUTS, ANYTIME, ANYWHERE.
+    </motion.h1>
+    <motion.p
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.4, duration: 0.8 }}
+    >
+      Train like a beast, transform like a legend!
+    </motion.p>
+    <motion.button
+      className="cta-button"
+      onClick={() => navigate("/workout")}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      Get Started <FaArrowRight className="cta-icon" />
+    </motion.button>
+  </section>
+</motion.div>
+
+
+
+
 
       <div className="content-wrapper">
         <section className="features">
