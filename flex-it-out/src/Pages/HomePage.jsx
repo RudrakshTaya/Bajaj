@@ -101,6 +101,23 @@ const HomePage = () => {
 
 
 
+{/* Testimonials Section */}
+<section className="testimonials">
+          <h2 >Empowered Voices: Member Experiences</h2>
+          <div className="testimonial-carousel">
+            <div className="testimonial">
+              <p>"This app didn’t just change my fitness—it changed my life. Every workout feels like a step toward greatness!"</p>
+              <span>- Sarah J.</span>
+            </div>
+            <div className="testimonial">
+              <p>"The personalized plans are more than workouts—they’re a blueprint for success. I’ve never felt this unstoppable!"</p>
+              <span>- Mike R.</span>
+            </div>
+          </div>
+        </section>
+
+
+
 
 
       <div className="content-wrapper">
@@ -134,20 +151,7 @@ const HomePage = () => {
           </motion.div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="testimonials">
-          <h2 >Empowered Voices: Member Experiences</h2>
-          <div className="testimonial-carousel">
-            <div className="testimonial">
-              <p>"This app didn’t just change my fitness—it changed my life. Every workout feels like a step toward greatness!"</p>
-              <span>- Sarah J.</span>
-            </div>
-            <div className="testimonial">
-              <p>"The personalized plans are more than workouts—they’re a blueprint for success. I’ve never felt this unstoppable!"</p>
-              <span>- Mike R.</span>
-            </div>
-          </div>
-        </section>
+        
 
         {/* Call to Action Section */}
         <section className="cta">
