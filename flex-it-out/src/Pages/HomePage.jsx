@@ -107,7 +107,7 @@ const HomePage = () => {
         <section className="features">
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaDumbbell className="feature-icon" />
-            <h3>Custom Coaching</h3>
+            <h3>Personalized Training</h3>
             <p>Work with expert trainers and get customized workouts.</p>
             <button className="feature-button" onClick={() => navigate("/track-progress")}>
             Learn More
