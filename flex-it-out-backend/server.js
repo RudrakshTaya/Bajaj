@@ -5,17 +5,38 @@ const mongoose = require("mongoose");
 const http = require("http");
 const { Server } = require("socket.io");
 
+// ✅ Load Environment Variables
 dotenv.config();
 const app = express();
-const server = http.createServer(app); // Create HTTP server for Socket.io
+const server = http.createServer(app);
 
-// ✅ Initialize Socket.io with CORS
+// ✅ Configure CORS Middleware
+app.use(cors({
+  origin: "https://flexitout.vercel.app", // Frontend URL
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true, // Allow cookies/auth headers
+}));
+
+// ✅ Manually Set CORS Headers
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://flexitout.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// ✅ Initialize Socket.io
 const io = new Server(server, {
   cors: {
-    origin: "https://flexitout.vercel.app", // Allow frontend
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true, // Allow cookies/auth headers
+    origin: "https://flexitout.vercel.app",
+    methods: ["GET", "POST"],
+    credentials: true,
   },
+  transports: ["websocket", "polling"], // Ensure proper transport fallback
 });
 
 // ✅ Import Routes
@@ -29,17 +50,9 @@ const checkoutRoutes = require("./routes/createCheckoutSession");
 const workoutRoutes = require("./routes/workoutRoutes");
 const mealRoutes = require("./routes/fetchmealsRouter");
 const videoRoutes = require("./routes/videoRoutes");
-const groupRoutes = require("./routes/groupRoutes"); // Ensure this file exists
+const groupRoutes = require("./routes/groupRoutes");
 
 // ✅ Middleware
-app.use(
-  cors({
-    origin: "https://flexitout.vercel.app",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true,
-  })
-);
-
 app.use(express.json()); // Built-in JSON parsing middleware
 
 // ✅ API Routes
@@ -62,17 +75,16 @@ app.use((err, req, res, next) => {
 });
 
 // ✅ MongoDB Connection
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-  })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => {
-    console.error("❌ MongoDB Connection Error:", err);
-    process.exit(1); // Exit if MongoDB connection fails
-  });
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000,
+})
+.then(() => console.log("✅ MongoDB Connected"))
+.catch((err) => {
+  console.error("❌ MongoDB Connection Error:", err);
+  process.exit(1); // Exit if MongoDB connection fails
+});
 
 // ✅ Socket.io - Real-Time Chat
 io.on("connection", (socket) => {
