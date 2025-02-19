@@ -134,7 +134,7 @@ const HomePage = () => {
             <FaUserFriends className="feature-icon" />
             <h3>Community Support</h3>
             <p>Find your fitness squad and stay motivated together!</p>
-            <button className="feature-button" onClick={ goToCommunity }>Join Now</button>
+            <button className="feature-button" onClick={() => navigate("/community")}>Join Now</button>
           </motion.div>
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }} onClick={nutritionPage}>
             <FaAppleAlt className="feature-icon" />
