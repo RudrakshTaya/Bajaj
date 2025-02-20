@@ -14,7 +14,6 @@ const PaymentPage = () => {
   const plan = searchParams.get("plan");
 
   const { userId, isLoggedIn } = useContext(AuthContext);
-    console.log(userId);
   const handlePayment = async () => {
     if (!isLoggedIn || !userId) {
       alert("You must be logged in to make a payment.");
