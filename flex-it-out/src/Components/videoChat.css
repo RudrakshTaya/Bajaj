@@ -1,5 +1,4 @@
-/* Enhanced videoChat.css */
-
+/* General styles for the video chat container */
 .video-chat {
     max-width: 1200px;
     margin: 20px auto;
@@ -9,15 +8,58 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   }
   
-  /* Remote video container with grid layout for equal sizing */
-  .remote-video-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* Container for all videos (local and remote) */
+  .video-container {
+    display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 20px;
   }
   
-  /* Style for all video elements in the remote container */
+  /* Local video container */
+  .local-video-container {
+    position: relative;
+    flex: 1;
+    max-width: 300px; /* Adjust as needed */
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1f2937; /* Dark background for empty videos */
+  }
+  
+  /* Local video element */
+  .local-video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
+    object-fit: cover;
+    display: block;
+  }
+  
+  /* Placeholder when the camera is off */
+  .camera-off-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  /* Remote video container */
+  .remote-video-container {
+    flex: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  
+  /* Remote video elements */
   .remote-video-container video {
     width: 100%;
     aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
@@ -30,44 +72,6 @@
   
   .remote-video-container video:hover {
     transform: scale(1.02);
-  }
-  
-  /* Local video container */
-  .local-video-container {
-    position: relative;
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
-  /* Local video styling */
-  video[ref="localVideoRef"] {
-    width: 100%;
-    max-width: 640px;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: 8px;
-    background-color: #1f2937;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    display: block;
-    margin: 0 auto;
-  }
-  
-  /* Screen share styling */
-  .screen-share {
-    width: 100%;
-    max-width: 800px;
-    aspect-ratio: 16 / 9;
-    object-fit: contain;
-    background-color: #1f2937;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    margin: 0 auto;
-    display: none;
-  }
-  
-  .screen-share.active {
-    display: block;
-    margin-bottom: 20px;
   }
   
   /* Controls container */
@@ -168,32 +172,4 @@
   
   .remote-video-container video {
     animation: fadeIn 0.3s ease;
-  }
-
-  .local-video-container {
-    position: relative;
-    flex: 1;
-    max-width: 300px; /* Adjust as needed */
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .local-video {
-    width: 100%;
-    height: auto;
-  }
-  
-  .camera-off-placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #000;
-    color: #fff;
-    font-size: 16px;
   }
