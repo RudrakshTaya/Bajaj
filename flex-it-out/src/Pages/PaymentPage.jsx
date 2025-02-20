@@ -13,7 +13,7 @@ const PaymentPage = () => {
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
 
-  const { userId, isLoggedIn } = useContext(AuthContext); // Get user authentication details
+  const { userId, isLoggedIn } = useContext(AuthContext);
     console.log(userId);
   const handlePayment = async () => {
     if (!isLoggedIn || !userId) {
@@ -28,7 +28,7 @@ const PaymentPage = () => {
       const response = await fetch("https://flex-it-out-backend-1.onrender.com/api/checkout/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, userId }), // Send userId with the request
+        body: JSON.stringify({ plan, userId }),
       });
   
       if (!response.ok) {

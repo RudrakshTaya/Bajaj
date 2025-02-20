@@ -11,8 +11,8 @@ const PoseDetection = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const [reps, setReps] = useState(0); // Track reps for the current exercise
-  const [score, setScore] = useState(0); // Track score for the current exercise
+  const [reps, setReps] = useState(0);
+  const [score, setScore] = useState(0);
 
   let isSquatting = false;
   let isPushingUp = false;
