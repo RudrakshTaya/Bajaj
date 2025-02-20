@@ -169,3 +169,31 @@
   .remote-video-container video {
     animation: fadeIn 0.3s ease;
   }
+
+  .local-video-container {
+    position: relative;
+    flex: 1;
+    max-width: 300px; /* Adjust as needed */
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .local-video {
+    width: 100%;
+    height: auto;
+  }
+  
+  .camera-off-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+  }
