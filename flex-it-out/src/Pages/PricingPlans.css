@@ -137,6 +137,7 @@
   padding: 16px;
   position: relative;
   color: white; /* Ensure text is white */
+  opacity: 1 !important; /* Make sure opacity is full */
 }
 
 .fitflex-pricing-card:hover {
@@ -149,6 +150,7 @@
   font-size: 1.25rem;
   font-weight: 500;
   color: white !important; /* Force white text */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Improve readability */
 }
 
 /* Price Styling */
@@ -156,6 +158,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: white !important; /* Ensure price is visible */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .fitflex-pricing-card-price span {
@@ -170,6 +173,7 @@
   border-radius: 4px;
   padding: 12px;
   transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
 .fitflex-pricing-card-button:hover {
@@ -177,11 +181,23 @@
 }
 
 /* Background for Pricing Cards */
-.fitflex-pricing-card-student,
+.fitflex-pricing-card-student {
+  background: linear-gradient(135deg, #1e5799, #207cca, #2989d8, #7db9e8); /* Blue gradient */
+  color: white !important;
+}
+
 .fitflex-pricing-card-basic,
 .fitflex-pricing-card-premium {
-  background: linear-gradient(135deg, #404040, #555555, #666666, #808080);
+  background: linear-gradient(135deg, #2c2c2c, #3b3b3b, #505050); /* Darker gradient */
   color: white !important;
+}
+
+/* Ensure text is fully visible */
+.fitflex-pricing-card-basic .fitflex-pricing-feature-item,
+.fitflex-pricing-card-premium .fitflex-pricing-feature-item {
+  color: white !important;
+  opacity: 1 !important; /* Ensure full visibility */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Enhance contrast */
 }
 
 /* Hover Effect for Pricing Cards */
@@ -204,6 +220,7 @@
   top: 10px;
   right: 10px;
   color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .fitflex-pricing-popular-tag svg {
@@ -223,6 +240,8 @@
   align-items: center;
   margin-bottom: 12px;
   color: white !important; /* Ensure text remains white */
+  opacity: 1 !important;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Improves readability */
 }
 
 /* Checkmark Icon */
