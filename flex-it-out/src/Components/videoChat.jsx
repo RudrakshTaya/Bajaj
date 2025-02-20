@@ -7,7 +7,7 @@ import { Button, IconButton, CardContent, Snackbar, Alert } from "@mui/material"
 import { VideoCameraFront, VideocamOff, Mic, MicOff, CallEnd, ScreenShare, StopScreenShare } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import './videoChat.css';
-import socket from "./socket"; // Import Socket.io instance
+import socket from "./socket";
 
 const VideoChat = () => {
   const { id } = useParams();  // Get roomId from URL
@@ -20,8 +20,8 @@ const VideoChat = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
 
-  const localVideoRef = useRef(null);
-  const screenShareRef = useRef(null);
+  const localVideoRef = useRef(null); // Ref for local video
+  const screenShareRef = useRef(null); // Ref for screen sharing
 
   useEffect(() => {
     if (!id) return;
@@ -93,7 +93,7 @@ const VideoChat = () => {
       const localAudioTrack = tracks.find((track) => track.kind === "audio");
 
       if (localVideoTrack) {
-        localVideoTrack.attach(localVideoRef.current);
+        localVideoTrack.attach(localVideoRef.current); // Attach local video to the local video element
       }
 
       if (localAudioTrack) {
@@ -177,21 +177,30 @@ const VideoChat = () => {
     }
   };
 
-  const toggleTrack = (trackType) => {
-    localTracks.forEach((track) => {
-      if (track.kind === trackType) {
-        if (track.isEnabled) {
-          track.disable();
-        } else {
-          track.enable();
-        }
-        if (trackType === "video") {
-          setIsVideoEnabled(!track.isEnabled);
-        } else if (trackType === "audio") {
-          setIsAudioEnabled(!track.isEnabled);
-        }
+  const toggleVideo = () => {
+    const localVideoTrack = localTracks.find((track) => track.kind === "video");
+    if (localVideoTrack) {
+      if (localVideoTrack.isEnabled) {
+        localVideoTrack.disable(); // Disable the video track
+        setIsVideoEnabled(false);
+      } else {
+        localVideoTrack.enable(); // Enable the video track
+        setIsVideoEnabled(true);
       }
-    });
+    }
+  };
+
+  const toggleAudio = () => {
+    const localAudioTrack = localTracks.find((track) => track.kind === "audio");
+    if (localAudioTrack) {
+      if (localAudioTrack.isEnabled) {
+        localAudioTrack.disable(); // Disable the audio track
+        setIsAudioEnabled(false);
+      } else {
+        localAudioTrack.enable(); // Enable the audio track
+        setIsAudioEnabled(true);
+      }
+    }
   };
 
   const toggleScreenShare = async () => {
@@ -220,12 +229,30 @@ const VideoChat = () => {
       <CardContent>
         {videoRoom ? (
           <div>
-            <div id="remote-video-container" className="remote-video-container"></div>
+            <div className="video-container">
+              {/* Local Video */}
+              <div className="local-video-container">
+                <video
+                  ref={localVideoRef}
+                  autoPlay
+                  muted
+                  className="local-video"
+                  style={{ display: isVideoEnabled ? "block" : "none" }} // Hide video when camera is off
+                ></video>
+                {!isVideoEnabled && (
+                  <div className="camera-off-placeholder">
+                    Camera is off
+                  </div>
+                )}
+              </div>
+              {/* Remote Videos */}
+              <div id="remote-video-container" className="remote-video-container"></div>
+            </div>
             <div className="controls-container">
-              <IconButton onClick={() => toggleTrack("video")} color={isVideoEnabled ? "primary" : "error"}>
+              <IconButton onClick={toggleVideo} color={isVideoEnabled ? "primary" : "error"}>
                 {isVideoEnabled ? <VideoCameraFront /> : <VideocamOff />}
               </IconButton>
-              <IconButton onClick={() => toggleTrack("audio")} color={isAudioEnabled ? "primary" : "error"}>
+              <IconButton onClick={toggleAudio} color={isAudioEnabled ? "primary" : "error"}>
                 {isAudioEnabled ? <Mic /> : <MicOff />}
               </IconButton>
               <IconButton onClick={toggleScreenShare} color={isScreenSharing ? "primary" : "default"}>
