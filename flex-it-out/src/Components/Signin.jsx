@@ -28,7 +28,7 @@ const SignIn = () => {
       };
 
       // Send login request to backend
-      const res = await axios.post("https://flex-it-out-backend.vercel.app/api/auth/login", loginData);
+      const res = await axios.post("https://flex-it-out-backend-1.onrender.com/api/auth/login", loginData);
 
       const { token, user } = res.data;
 
