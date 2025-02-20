@@ -83,88 +83,155 @@
 
 
    
- /* Main container */
-.fitflex-pricing-card {
-  border-radius: 10px;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-  padding: 20px;
-  text-align: center;
-}
-
-/* Title and Price */
-.fitflex-pricing-card-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.fitflex-pricing-card-price {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-top: 5px;
-}
-
-.fitflex-pricing-card-price span {
-  font-size: 1rem;
-  color: #7f8c8d;
-}
-
-/* Feature List */
-.fitflex-pricing-feature-list {
-  list-style: none;
+   
+/* ========================
+   GENERAL STYLES
+======================== */
+body {
+  color: #333; /* Dark text */
+  background-color: #f8f9fa; /* Light background */
+  font-family: Arial, sans-serif;
+  margin: 0;
   padding: 0;
-  margin-top: 10px;
 }
 
-.fitflex-pricing-feature-item {
-  font-size: 1rem;
-  color: #555;
-  padding: 8px 0;
+/* ========================
+   ANIMATIONS
+======================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========================
+   CONTAINER
+======================== */
+.container {
+  animation: fadeIn 0.5s ease-out;
+  color: #000; /* Ensure text is visible */
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* ========================
+   CARD STYLES
+======================== */
+.card {
+  background-color: white;
+  color: black; /* Ensure text is readable */
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: auto;
+}
+
+.card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-content > div {
+  animation: slideIn 0.5s ease-out;
+}
+
+/* ========================
+   TEXT & TYPOGRAPHY
+======================== */
+h1, h2, h3, h4, h5, h6 {
+  color: #222;
+}
+
+p {
+  color: #444;
+}
+
+/* ========================
+   AVATAR STYLES
+======================== */
+.avatar {
+  transition: transform 0.3s ease-in-out;
   display: flex;
+  justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
 }
 
-.fitflex-pricing-feature-icon {
-  color: #27ae60;
-  font-size: 1.2rem;
+.avatar:hover {
+  transform: scale(1.05);
 }
 
-/* Plan Specific Colors */
-.fitflex-pricing-card-student {
-  border: 2px solid #3498db;
+.avatar img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
 }
 
-.fitflex-pricing-card-basic {
-  border: 2px solid #2ecc71;
-}
-
-.fitflex-pricing-card-premium {
-  border: 2px solid #f1c40f;
-}
-
-/* Button Styling */
-.MuiButton-containedPrimary {
-  background-color: #2980b9 !important;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.MuiButton-containedPrimary:hover {
-  background-color: #1c638e !important;
-}
-
-/* Popular Tag */
-.fitflex-pricing-popular-tag {
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-  font-weight: bold;
-  background-color: #f1c40f;
-  color: #fff;
-  padding: 5px 10px;
+/* ========================
+   BUTTON STYLES
+======================== */
+.button {
+  transition: transform 0.2s ease-in-out;
+  background-color: #007bff; /* Blue */
+  color: white;
+  padding: 10px 15px;
+  border: none;
   border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  background-color: #0056b3; /* Darker Blue */
+}
+
+/* ========================
+   LOADER & ERROR MESSAGE
+======================== */
+.loader, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+}
+
+.loader {
+  color: #4a5568;
+}
+
+.error {
+  color: #e53e3e;
+  font-weight: bold;
+}
+
+/* ========================
+   RESPONSIVE STYLES
+======================== */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    max-width: 90%;
+  }
 }
