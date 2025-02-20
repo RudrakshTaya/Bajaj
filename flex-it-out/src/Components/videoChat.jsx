@@ -295,7 +295,7 @@ const VideoChat = () => {
     if (!id) return showSnackbar("Room ID is missing", "error");
 
     try {
-      const res = await axios.get(`https://flex-it-out-backend.vercel.app/api/group/${id}`, {
+      const res = await axios.get(`https://flex-it-out-backend-1.onrender.com/api/group/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -303,7 +303,7 @@ const VideoChat = () => {
 
       const roomId = res.data.roomId;
 
-      const response = await axios.post("https://flex-it-out-backend.vercel.app/api/video/token", { roomId }, {
+      const response = await axios.post("https://flex-it-out-backend-1.onrender.com/api/video/token", { roomId }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

@@ -28,7 +28,7 @@ const NutritionGuidance = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get("https://flex-it-out-backend.vercel.app/api/meals/getmeals", {
+        const response = await axios.get("https://flex-it-out-backend-1.onrender.com/api/meals/getmeals", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMeals(response.data);

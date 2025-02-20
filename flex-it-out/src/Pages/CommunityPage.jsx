@@ -16,7 +16,7 @@ const CommunityPage = () => {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const response = await axios.get("https://flex-it-out-backend.vercel.app/api/group/fetchgroups", {
+        const response = await axios.get("https://flex-it-out-backend-1.onrender.com/api/group/fetchgroups", {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log(response.data);
@@ -39,7 +39,7 @@ const CommunityPage = () => {
 
     try {
       const response = await axios.post(
-        "https://flex-it-out-backend.vercel.app/api/group/creategroup",
+        "https://flex-it-out-backend-1.onrender.com/api/group/creategroup",
         {
           name: groupName,
           members: [],
@@ -68,7 +68,7 @@ const CommunityPage = () => {
 
     try {
       const response = await axios.post(
-        `https://flex-it-out-backend.vercel.app/api/group/${groupId}/join`,
+        `https://flex-it-out-backend-1.onrender.com/api/group/${groupId}/join`,
         {
           roomId, // Include roomId when joining a group
         },

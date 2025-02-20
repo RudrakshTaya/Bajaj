@@ -27,7 +27,7 @@ const EditProfile = () => {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/user/profile", {
+        const res = await axios.get("https://flex-it-out-backend-1.onrender.com/api/user/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFormData({ name: res.data.name, email: res.data.email });
@@ -67,7 +67,7 @@ const EditProfile = () => {
 
     try {
       if (type === "name") {
-        await axios.put("https://flex-it-out-backend.vercel.app/api/user/profile", 
+        await axios.put("https://flex-it-out-backend-1.onrender.com/api/user/profile", 
           { name: formData.name }, 
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -79,7 +79,7 @@ const EditProfile = () => {
           return;
         }
 
-        const res = await axios.post("http://localhost:5001/api/email/request-email-change", 
+        const res = await axios.post("https://flex-it-out-backend-1.onrender.com/api/email/request-email-change", 
           { newEmail: formData.email },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -90,7 +90,7 @@ const EditProfile = () => {
         const formDataToSend = new FormData();
         formDataToSend.append("profileImage", formData.profileImage);
 
-        await axios.put("http://localhost:5001/api/user/profile", formDataToSend, {
+        await axios.put("https://flex-it-out-backend-1.onrender.com/api/user/profile", formDataToSend, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,

@@ -21,7 +21,7 @@ const SuccessPage = () => {
       }
 
       try {
-        const response = await fetch(`https://flex-it-out-backend.vercel.app/api/checkout/verify-payment/${sessionId}`);
+        const response = await fetch(`https://flex-it-out-backend-1.onrender.com/api/checkout/verify-payment/${sessionId}`);
         const data = await response.json();
 
         if (response.ok) {

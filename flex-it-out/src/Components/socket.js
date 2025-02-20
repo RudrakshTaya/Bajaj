@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const socket = io("https://flex-it-out-backend.vercel.app", {
+const socket = io("https://flex-it-out-backend-1.onrender.com", {
   transports: ["websocket", "polling"], // WebSocket with fallback
   withCredentials: true,
 });

@@ -30,7 +30,7 @@ const ProfilePage = () => {
           return;
         }
 
-        const res = await fetch("https://flex-it-out-backend.vercel.app/api/user/profile", {
+        const res = await fetch("https://flex-it-out-backend-1.onrender.com/api/user/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -81,7 +81,7 @@ const ProfilePage = () => {
         formDataToSubmit.append("avatar", avatar); // Append the file if it's selected
       }
 
-      const res = await fetch("https://flex-it-out-backend.vercel.app/api/user/profile", {
+      const res = await fetch("https://flex-it-out-backend-1.onrender.com/api/user/profile", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
