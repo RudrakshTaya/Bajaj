@@ -153,7 +153,13 @@ const WorkoutPage = () => {
     }
   };
 
-  // Render tab content
+  const handleStartChallenge = (challengeId) => {
+    // Find the challenge
+    const challenge = challenges.find(challenge => challenge.id === challengeId);
+    const returnUrl = "/workout";
+    navigate(`/pose-detection/${challengeId}?returnUrl=${returnUrl}`, { state: { challenge, userId } });
+
+  };
   const renderTabContent = () => {
     switch (activeTab) {
       case "exercises":
@@ -190,9 +196,10 @@ const WorkoutPage = () => {
                     <span className="exercise-score">Score: {exercise.score}</span>
                   </div>
                 ) : (
-                  <Link to={`/pose-detection/${exercise.id}`}>
+                    <Link to={`/pose-detection/${exercise.id}?returnUrl=/workout`}>
                     <button className="start-button">Start</button>
                   </Link>
+                  
                 )}
               </div>
             ))}
