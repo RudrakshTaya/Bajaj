@@ -5,14 +5,14 @@ import { io } from "socket.io-client";
 import "./GroupPage.css";
 import VideoChat from "../Components/videoChat";
 
-const API_URL =
-  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
-    ? (import.meta.env.MODE === "production"
-      ? import.meta.env.VITE_API_URL_PRODUCTION
-      : import.meta.env.VITE_API_URL_TESTING)
-    : "http://localhost:5001";
+const SOCKET_URL =
+  import.meta.env.VITE_NODE_ENV === "development"
+    ? import.meta.env.VITE_API_URL_TESTING
+    : import.meta.env.VITE_API_URL_PRODUCTION;
 
-const socket = io("https://flex-it-out-backend-1.onrender.com");
+const socket = io(SOCKET_URL, {
+  transports: ["websocket", "polling"], // Ensures better connectivity
+})
 
 const GroupPage = () => {
   const { id } = useParams();
@@ -29,7 +29,7 @@ const GroupPage = () => {
   useEffect(() => {
     const fetchGroup = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/group/${id}`, {
+        const response = await axios.get(`${SOCKET_URL}/api/group/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -74,7 +74,7 @@ const GroupPage = () => {
   const handleJoin = async () => {
     try {
       const response = await axios.post(
-        `https://flex-it-out-backend-1.onrender.com/api/group/${id}/join`,
+        `${SOCKET_URL}/api/group/${id}/join`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -89,7 +89,7 @@ const GroupPage = () => {
   const handleLeave = async () => {
     try {
       const response = await axios.post(
-        `https://flex-it-out-backend-1.onrender.com/api/group/${id}/leave`,
+        `${SOCKET_URL}/api/group/${id}/leave`,
         { userId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -106,7 +106,7 @@ const GroupPage = () => {
 
     try {
       const response = await axios.post(
-        `https://flex-it-out-backend-1.onrender.com/api/group/${id}/message`,
+        `${SOCKET_URL}/api/group/${id}/message`,
         { text: newMessage, senderId: userId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

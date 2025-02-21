@@ -21,6 +21,7 @@ import TrackProgressPage from "./Pages/TrackProgressPage";
 import CommunityPage from "./Pages/CommunityPage";
 import GroupPage from "./Pages/GroupPage";
 import Leaderboard from "./Components/Leaderboard";
+import MultiPlayerChallenges from "./Pages/MultiplayerChallenges"
 
 function App() {
   const { membership} = useContext(AuthContext); 
@@ -56,6 +57,7 @@ function App() {
         <Route path="/track-progress" element={<TrackProgressPage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/group/:id" element={<GroupPage />} />
+        <Route path="/multiplayer-challenges" element={<MultiPlayerChallenges />} />
       </Routes>
     </>
   );
