@@ -164,18 +164,22 @@ const ProfilePage = () => {
             </form>
           ) : (
             <div className="space-y-2">
-              <Typography variant="body1" className="flex items-center">
-                <Phone className="mr-2" /> {user.phone}
-              </Typography>
-              <Typography variant="body1" className="flex items-center">
-                <Mail className="mr-2" /> {user.email}
-              </Typography>
-              <Typography variant="body1" className="flex items-center">
-                <Flame className="mr-2" /> {user.calories} calories burned
-              </Typography>
-              <Typography variant="body1" className="flex items-center">
-                <Calendar className="mr-2" /> Joined {new Date(user.createdAt).toLocaleDateString()}
-              </Typography>
+              <Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
+  <Phone className="mr-2" /> {user.phone}
+</Typography>
+<Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
+  <Mail className="mr-2" /> {user.email}
+</Typography>
+<Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
+  <Flame className="mr-2" /> {user.calories} calories burned
+</Typography>
+<Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
+  <Calendar className="mr-2" /> Joined {new Date(user.createdAt).toLocaleDateString()}
+</Typography>
+
+
+
+
             </div>
           )}
         </CardContent>

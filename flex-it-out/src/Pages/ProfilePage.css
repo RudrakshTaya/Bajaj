@@ -72,6 +72,15 @@
     transform: translateY(-2px);
   }
   
+ /* Force text color to black */
+.MuiTypography-root {
+  color: black !important;
+}
+
+
+
+  
+  
   @media (max-width: 640px) {
     .container {
       padding: 1rem;
