@@ -6,6 +6,14 @@ import { FaCreditCard, FaSpinner } from "react-icons/fa";
 import { AuthContext } from "../Context/AuthContext"; // Import authentication context
 import "./PaymentPage.css";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
+
 const stripePromise = loadStripe("pk_test_51QrIYaP7TDcxXgwZjsg5PRmU9NAATaVt87I42XPl2gLOjSRd2Jw2qxgo1bGKMCkJbau5oKHcEHuqgeSbaoahbk2G00H4yaXvcf");
 
 const PaymentPage = () => {
@@ -24,7 +32,7 @@ const PaymentPage = () => {
     const stripe = await stripePromise;
   
     try {
-      const response = await fetch("https://flex-it-out-backend-1.onrender.com/api/checkout/create-checkout-session", {
+      const response = await fetch(`${API_URL}/api/checkout/create-checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan, userId }),

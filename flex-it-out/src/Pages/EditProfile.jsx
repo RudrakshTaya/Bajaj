@@ -3,6 +3,13 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./EditProfile.css";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
 const EditProfile = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +34,7 @@ const EditProfile = () => {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("https://flex-it-out-backend-1.onrender.com/api/user/profile", {
+        const res = await axios.get(`${API_URL}/api/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFormData({ name: res.data.name, email: res.data.email });

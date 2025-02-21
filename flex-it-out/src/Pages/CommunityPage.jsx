@@ -4,6 +4,13 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import "./CommunityPage.css";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
 const CommunityPage = () => {
   const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
@@ -16,7 +23,7 @@ const CommunityPage = () => {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const response = await axios.get("https://flex-it-out-backend-1.onrender.com/api/group/fetchgroups", {
+        const response = await axios.get(`${API_URL}/api/group/fetchgroups`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log(response.data);

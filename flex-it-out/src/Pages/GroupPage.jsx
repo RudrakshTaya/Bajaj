@@ -5,6 +5,13 @@ import { io } from "socket.io-client";
 import "./GroupPage.css";
 import VideoChat from "../Components/videoChat";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
 const socket = io("https://flex-it-out-backend-1.onrender.com");
 
 const GroupPage = () => {
@@ -22,7 +29,7 @@ const GroupPage = () => {
   useEffect(() => {
     const fetchGroup = async () => {
       try {
-        const response = await axios.get(`https://flex-it-out-backend-1.onrender.com/api/group/${id}`, {
+        const response = await axios.get(`${API_URL}/api/group/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
