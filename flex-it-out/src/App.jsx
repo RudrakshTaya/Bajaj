@@ -24,7 +24,7 @@ import Leaderboard from "./Components/Leaderboard";
 import PricingPage from "./Pages/PricingPlans";
 function App() {
   // Fetching the user data from AuthContext inside the component
-  const { user,membership} = useContext(AuthContext); 
+  const { membership} = useContext(AuthContext); 
    console.log(membership);
   return (
     <>
@@ -43,7 +43,10 @@ function App() {
           element={ membership === "premium" ? <NutritionPage /> : <PricingPlans />}
         />
      
-        <Route path="/pricing" element={<PricingPage/>}/>
+        <Route
+            path="/pricing"
+            element={ membership === "premium" ? <CommunityPage /> : <PricingPage/>}
+        />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/success" element={<Success />} />

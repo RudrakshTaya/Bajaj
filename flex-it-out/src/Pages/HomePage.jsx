@@ -12,26 +12,6 @@ const HomePage = () => {
     navigate("/nutrition")
   }
 
-  const goToCommunity = async () => {
-    try 
-    {
-        const token = localStorage.getItem('token')
-        const response = await axios.get('https://flex-it-out-backend-1.onrender.com/api/user/profile', {
-            headers: { Authorization: `Bearer ${token}` },
-        })        
-
-        const isMember = response.data.membership.plan
-
-        if (isMember === 'premium') {
-            navigate('/community');
-        } else {
-            navigate('/pricing');
-        }
-        } catch (error) {
-            console.error('Error fetching profile:', error);
-        }
-    }
-
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -134,7 +114,7 @@ const HomePage = () => {
             <FaUserFriends className="feature-icon" />
             <h3>Community Support</h3>
             <p>Find your fitness squad and stay motivated together!</p>
-            <button className="feature-button" onClick={() => navigate("/community")}>Join Now</button>
+            <button className="feature-button">Join Now</button>
           </motion.div>
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }} onClick={nutritionPage}>
             <FaAppleAlt className="feature-icon" />
