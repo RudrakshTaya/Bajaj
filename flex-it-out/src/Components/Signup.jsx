@@ -3,6 +3,14 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "./Signup.css";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
+
 const SignUp = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -65,7 +73,7 @@ const SignUp = () => {
     try {
       const { confirmPassword, ...userData } = formData; // Exclude confirmPassword before sending
       console.log(userData);
-      const res = await axios.post("https://flex-it-out-backend-1.onrender.com/api/auth/register", userData);
+      const res = await axios.post(`${API_URL}/api/auth/register`, userData);
       
       navigate("/signin"); // Redirect to sign-in after successful registration
     } catch (err) {
