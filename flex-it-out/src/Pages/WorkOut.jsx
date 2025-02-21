@@ -12,6 +12,14 @@ import confetti from "canvas-confetti"
 import "./WorkoutPage.css"
 import { AuthContext } from "../Context/AuthContext" // Assuming you have an AuthContext
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
+
 
 const WorkoutPage = () => {
   const navigate = useNavigate()
@@ -45,7 +53,7 @@ const WorkoutPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`https://flex-it-out-backend-1.onrender.com/api/user/${userId}`)
+        const response = await fetch(`${API_URL}/api/user/${userId}`)
         const data = await response.json()
         setStreak(data.streak) // Assuming the user model has a streak field
         setTotalScore(data.score) // Assuming the user model has a totalScore field
@@ -60,7 +68,7 @@ const WorkoutPage = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await fetch(`https://flex-it-out-backend-1.onrender.com/api/workouts/${userId}`);
+        const response = await fetch(`${API_URL}/api/workouts/${userId}`);
         const data = await response.json()
         setWorkoutHistory(data)
       } catch (error) {
@@ -100,7 +108,7 @@ const WorkoutPage = () => {
       if (response.ok) {
         // Post the score to the leaderboard
         try {
-          await axios.post("https://flex-it-out-backend-1.onrender.com/api/leaderboard", {
+          await axios.post(`${API_URL}/api/leaderboard`, {
             userId,
             score: totalScore,
           });

@@ -6,6 +6,14 @@ import { User, Pencil, Phone, Mail, Flame, Calendar } from "lucide-react";
 import { Button, TextField, Card, CardContent, CardActions, CardHeader, Avatar, CircularProgress, Typography } from "@mui/material";
 import './ProfilePage.css';
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
+
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +38,7 @@ const ProfilePage = () => {
           return;
         }
 
-        const res = await fetch("https://flex-it-out-backend-1.onrender.com/api/user/profile", {
+        const res = await fetch(`${API_URL}/api/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
