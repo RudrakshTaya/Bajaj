@@ -156,7 +156,7 @@ const MultiplayerBattle = () => {
             </div>
 
             <button className="start-button" onClick={handleStartChallenge}>
-                🚀 Start {exercise} Challenge
+                  🚀 Start {exercise} Challenge
             </button>
         </div>
     );
