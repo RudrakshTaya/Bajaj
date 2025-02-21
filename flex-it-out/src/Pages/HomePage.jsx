@@ -12,6 +12,10 @@ const HomePage = () => {
     navigate("/nutrition")
   }
 
+  const goToCommunity = () => {
+    navigate('/community')
+  }
+
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -86,7 +90,7 @@ const HomePage = () => {
           <h2 >Empowered Voices: Member Experiences</h2>
           <div className="testimonial-carousel">
             <div className="testimonial">
-              <p>"This app didn’t just change my fitness—it changed my life. Every workout feels like a step toward greatness!"</p>
+              <p>"This app didn't just change my fitness—it changed my life. Every workout feels like a step toward greatness!"</p>
               <span>- Sarah J.</span>
             </div>
             <div className="testimonial">
@@ -114,7 +118,7 @@ const HomePage = () => {
             <FaUserFriends className="feature-icon" />
             <h3>Community Support</h3>
             <p>Find your fitness squad and stay motivated together!</p>
-            <button className="feature-button">Join Now</button>
+            <button className="feature-button" onClick={goToCommunity}>Join Now</button>
           </motion.div>
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }} onClick={nutritionPage}>
             <FaAppleAlt className="feature-icon" />
