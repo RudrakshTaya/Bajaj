@@ -94,7 +94,7 @@ const WorkoutPage = () => {
     }));
 
     try {
-      const response = await fetch("api/workouts/save", {
+      const response = await fetch(`${API_URL}/api/workouts/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
