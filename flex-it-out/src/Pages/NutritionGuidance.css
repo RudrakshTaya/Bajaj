@@ -80,3 +80,90 @@
   ul li {
     color: black;
   }
+
+  .calorie-calculator {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calorie-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calorie-inputs input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.calorie-inputs button {
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.exercise-suggestions {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.exercise-suggestions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.exercise-suggestions li {
+  font-size: 16px;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+
+/* .calorie-input-section {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.exercise-suggestion {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f0f8ff;
+  border-left: 5px solid #007bff;
+  font-weight: bold;
+} */
+
+.calorie-input-section {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.exercise-suggestion {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f0f8ff;
+  border-left: 5px solid #007bff;
+  font-weight: bold;
+}
+
+.exercise-suggestion h3 {
+  color: #d9534f; /* Red color for warning */
+}
+
+.exercise-suggestion p {
+  font-size: 16px;
+}
