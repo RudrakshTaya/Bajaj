@@ -245,7 +245,6 @@
   gap: 10px;
   animation: fadeIn 0.3s ease;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -372,3 +371,87 @@
   }
 }
 
+/* Notification Panel */
+.notification-panel {
+    position: absolute;
+    top: 60px; /* Adjust this to align below the navbar */
+    right: 20px;
+    width: 280px;
+    background: #1E293B; /* Darker background */
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1100; /* Higher than navbar */
+    padding: 15px;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* Notification Title */
+  .notification-panel h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #3B82F6; /* Highlighted title */
+  }
+  
+  /* Invite Items */
+  .invite-item {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  /* Hover Effect */
+  .invite-item:hover {
+    background: rgba(96, 165, 250, 0.2);
+    transform: translateX(5px);
+  }
+  
+  /* Last Item Border Removal */
+  .invite-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Empty Invite Message */
+  .invite-item.empty {
+    text-align: center;
+    font-size: 14px;
+    color: #CBD5E1;
+    background: none;
+  }
+  
+  /* Notification Bell Icon */
+  .bell-icon-container {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  /* Red Dot for New Notifications */
+  .invite-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 3px 6px;
+  }
+  

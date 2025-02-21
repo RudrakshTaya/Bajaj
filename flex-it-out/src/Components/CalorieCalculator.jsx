@@ -19,7 +19,7 @@ const CalorieCalculator = () => {
   const [calories, setCalories] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+   const userId = localStorage.getItem("userId");
   const calculateCalories = () => {
     if (!age || !weight || !height) {
       alert("Please fill in all fields!");
@@ -55,7 +55,7 @@ const CalorieCalculator = () => {
   
     try {
       await axios.put(
-        `${API_URL}/api/user/profile`,
+        `${API_URL}/api/profile/${userId}`,
         { calories: Number(calories) },
         {
           headers: {
