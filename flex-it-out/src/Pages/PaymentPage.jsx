@@ -42,7 +42,7 @@ const PaymentPage = () => {
       await stripe.redirectToCheckout({ sessionId: id });
     } catch (error) {
       console.error("❌ Payment Error:", error.message);
-      alert(Payment Error: ${error.message});
+      alert(`Payment Error: ${error.message}`);
     }
   
     setLoading(false);
