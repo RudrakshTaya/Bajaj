@@ -404,20 +404,22 @@ const PoseDetection = () => {
   };
 
   const detectSquat = (keypoints) => {
-    const hip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
-    const knee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
-    const ankle = keypoints.find((kp) => kp.name === "left_ankle" && kp.score > 0.5);
+    const leftHip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
+    const leftKnee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
+    const leftAnkle = keypoints.find((kp) => kp.name === "left_ankle" && kp.score > 0.5);
+    const rightKnee = keypoints.find((kp) => kp.name === "right_knee" && kp.score > 0.5); // Add right knee
 
-    if (hip && knee && ankle) {
-      const kneeAngle = calculateAngle(hip, knee, ankle);
-      const hipHeight = hip.y;
-      const kneeHeight = knee.y;
+    if (leftHip && leftKnee && leftAnkle && rightKnee) {  // All keypoints needed
+      const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
+      const rightKneeAngle = calculateAngle(leftHip, rightKnee, leftAnkle); // Compare to left
+      const hipHeight = leftHip.y;
+      const kneeHeight = leftKnee.y;
 
-      if (kneeAngle < 90 && hipHeight > kneeHeight && !isSquatting) {
+      if (leftKneeAngle < 90 && hipHeight > kneeHeight && !isSquatting) {
         isSquatting = true;
-      } else if (kneeAngle > 160 && hipHeight < kneeHeight && isSquatting) {
-        const isProper = kneeAngle > 160 && hipHeight < kneeHeight; // Basic check, refine as needed
-        const isHalf = kneeAngle > 90 && kneeAngle < 160; // Check for half squat
+      } else if (leftKneeAngle > 160 && hipHeight < kneeHeight && isSquatting) {
+        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160 && hipHeight < kneeHeight; // Both knees straight, hip below knees
+        const isHalf = leftKneeAngle > 90 && leftKneeAngle < 135 && rightKneeAngle > 90 && rightKneeAngle < 135; // Deeper than 90, but not fully locked
         setReps((prev) => prev + 1);
         updateScore(isProper, isHalf);
         isSquatting = false;
@@ -425,18 +427,27 @@ const PoseDetection = () => {
     }
   };
 
-  const detectPushup = (keypoints) => {
-    const shoulder = keypoints.find((kp) => kp.name === "left_shoulder" && kp.score > 0.5);
-    const elbow = keypoints.find((kp) => kp.name === "left_elbow" && kp.score > 0.5);
-    const wrist = keypoints.find((kp) => kp.name === "left_wrist" && kp.score > 0.5);
 
-    if (shoulder && elbow && wrist) {
-      const elbowAngle = calculateAngle(shoulder, elbow, wrist);
-      if (elbowAngle < 90 && !isPushingUp) {
+  const detectPushup = (keypoints) => {
+    const leftShoulder = keypoints.find((kp) => kp.name === "left_shoulder" && kp.score > 0.5);
+    const leftElbow = keypoints.find((kp) => kp.name === "left_elbow" && kp.score > 0.5);
+    const leftWrist = keypoints.find((kp) => kp.name === "left_wrist" && kp.score > 0.5);
+    const rightShoulder = keypoints.find((kp) => kp.name === "right_shoulder" && kp.score > 0.5);
+    const rightElbow = keypoints.find((kp) => kp.name === "right_elbow" && kp.score > 0.5);
+    const rightWrist = keypoints.find((kp) => kp.name === "right_wrist" && kp.score > 0.5);
+    const nose = keypoints.find((kp) => kp.name === "nose" && kp.score > 0.5);
+
+    if (leftShoulder && leftElbow && leftWrist && rightShoulder && rightElbow && rightWrist && nose) {
+      const leftElbowAngle = calculateAngle(leftShoulder, leftElbow, leftWrist);
+      const rightElbowAngle = calculateAngle(rightShoulder, rightElbow, rightWrist);
+      const shoulderHeight = (leftShoulder.y + rightShoulder.y) / 2;
+      const noseHeight = nose.y;
+
+      if (leftElbowAngle < 90 && rightElbowAngle < 90 && noseHeight > shoulderHeight && !isPushingUp) { // Check nose height
         isPushingUp = true;
-      } else if (elbowAngle > 160 && isPushingUp) {
-        const isProper = elbowAngle > 160; // Basic check, refine as needed
-        const isHalf = elbowAngle > 90 && elbowAngle < 160; // Check for half pushup
+      } else if (leftElbowAngle > 160 && rightElbowAngle > 160 && isPushingUp) {
+        const isProper = leftElbowAngle > 160 && rightElbowAngle > 160 && noseHeight > shoulderHeight; // Fully extended and nose above shoulders
+        const isHalf = leftElbowAngle > 90 && leftElbowAngle < 135 && rightElbowAngle > 90 && rightElbowAngle < 135; // Between 90 and 135
         setReps((prev) => prev + 1);
         updateScore(isProper, isHalf);
         isPushingUp = false;
@@ -478,12 +489,14 @@ const PoseDetection = () => {
     if (leftHip && leftKnee && leftAnkle && rightHip && rightKnee && rightAnkle) {
       const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
       const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
+      const leftHeel = keypoints.find((kp) => kp.name === "left_heel" && kp.score > 0.5);
+      const rightHeel = keypoints.find((kp) => kp.name === "right_heel" && kp.score > 0.5);
 
       if (leftKneeAngle < 100 && rightKneeAngle > 160 && !isLunging) {
         isLunging = true;
       } else if (leftKneeAngle > 160 && rightKneeAngle > 160 && isLunging) {
-        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160; // Basic check, refine as needed
-        const isHalf = leftKneeAngle > 100 && leftKneeAngle < 160; // Check for half lunge
+        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160 && leftHeel && rightHeel && leftHeel.y < leftKnee.y && rightHeel.y < rightKnee.y; // Both knees straight, heels on ground
+        const isHalf = leftKneeAngle > 100 && leftKneeAngle < 135 && rightKneeAngle > 100 && rightKneeAngle < 135; // Between 100 and 135 for both
         setReps((prev) => prev + 1);
         updateScore(isProper, isHalf);
         isLunging = false;

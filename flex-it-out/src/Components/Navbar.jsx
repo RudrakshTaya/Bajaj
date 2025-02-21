@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GiBiceps } from "react-icons/gi";
 import { FaBell } from "react-icons/fa";
 import { AuthContext } from "../Context/AuthContext";
@@ -19,6 +19,7 @@ const Navbar = () => {
     const [showInvites, setShowInvites] = useState(false);
     const { isLoggedIn, signOut, username } = useContext(AuthContext);
     const notificationRef = useRef(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -75,6 +76,15 @@ const Navbar = () => {
         };
     }, [showInvites]);
 
+    const goToMultiplayerBattle = (roomId, exerciseId) => {
+        if (roomId) {
+            navigate(`/multiplayer-battle/${roomId}?exercise=${exerciseId}`);
+        } else {
+            console.error("No roomId found for this invite");
+        }
+    };
+    
+
     return (
         <nav className="navbar">
             <div className="navbar-brand">
@@ -124,8 +134,12 @@ const Navbar = () => {
                     <h3>Invites</h3>
                     {invites.length > 0 ? (
                         invites.map((invite, index) => (
-                            <div key={index} className="invite-item">
-                                {invite.message || `Challenge from ${invite.sender?.name || "Unknown"}`}
+                            <div
+                                key={index}
+                                className="invite-item"
+                                onClick={() => goToMultiplayerBattle(invite.roomId, invite.challengeType)}
+                            >
+                                {invite.message || `Challenge from ${invite.sender?.name || "Unknown"} (${invite.challengeType})`}
                             </div>
                         ))
                     ) : (
