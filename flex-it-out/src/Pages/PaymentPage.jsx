@@ -27,7 +27,8 @@ const PaymentPage = () => {
     try {
       const response = await fetch("https://flex-it-out-backend-1.onrender.com/api/checkout/create-checkout-session", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },       
+        
         body: JSON.stringify({ plan, userId }), // Send userId with the request
       });
   
