@@ -61,6 +61,7 @@ import { GiBiceps } from "react-icons/gi";
 import { AuthContext } from "../Context/AuthContext";
 import "./Navbar.css";
 
+
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);

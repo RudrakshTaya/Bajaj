@@ -9,6 +9,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import './videoChat.css';
 import socket from "./socket";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
 const VideoChat = () => {
   const { id } = useParams();  // Get roomId from URL
   const [videoRoom, setVideoRoom] = useState(null);
@@ -55,7 +62,7 @@ const VideoChat = () => {
     if (!id) return showSnackbar("Room ID is missing", "error");
 
     try {
-      const res = await axios.get(`https://flex-it-out-backend-1.onrender.com/api/group/${id}`, {
+      const res = await axios.get(`${API_URL}/api/group/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

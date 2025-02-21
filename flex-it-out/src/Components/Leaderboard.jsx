@@ -3,6 +3,12 @@ import { Trophy, Medal, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import axios from "axios"; // Make sure axios is imported
 import './leaderboard.css';
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -13,7 +19,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await axios.get(`https://flex-it-out-backend-1.onrender.com/api/leaderboard?timeFrame=${timeFrame}`);
+        const response = await axios.get(`${API_URL}/api/leaderboard?timeFrame=${timeFrame}`);
         if (response.status === 200) {
           setLeaderboard(response.data); // Axios already parses JSON, no need for .json()
         } else {
