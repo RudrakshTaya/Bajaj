@@ -70,7 +70,7 @@
 //         else if(exerciseId === "lunges") {
 //           detectLunges(keypoints);
 //         }
-        
+
 //         provideFeedback(keypoints);
 //         drawKeypointsAndSkeleton(keypoints);
 //       }
@@ -101,7 +101,7 @@
 //   const updateScore = () => {
 //     const points = { squat: 5, pushup: 8, highKnee: 3, lunges: 6 };
 //     setScore((prev) => prev + points[exerciseId]);
-//   };  
+//   };
 
 //   const detectSquat = (keypoints) => {
 //     const hip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
@@ -170,11 +170,11 @@
 //     const rightHip = keypoints.find((kp) => kp.name === "right_hip" && kp.score > 0.5);
 //     const rightKnee = keypoints.find((kp) => kp.name === "right_knee" && kp.score > 0.5);
 //     const rightAnkle = keypoints.find((kp) => kp.name === "right_ankle" && kp.score > 0.5);
-  
+
 //     if (leftHip && leftKnee && leftAnkle && rightHip && rightKnee && rightAnkle) {
 //       const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
 //       const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
-  
+
 //       if (leftKneeAngle < 100 && rightKneeAngle > 160 && !isLunging) {
 //         isLunging = true;
 //       } else if (leftKneeAngle > 160 && rightKneeAngle > 160 && isLunging) {
@@ -184,7 +184,6 @@
 //       }
 //     }
 //   };
-  
 
 //   const provideFeedback = (keypoints) => {
 //     const leftShoulder = keypoints.find((kp) => kp.name === "left_shoulder" && kp.score > 0.5);
@@ -245,8 +244,6 @@
 //     });
 // };
 
-
-
 //   const handleCompleteExercise = () => {
 //     // Pass exercise data back to WorkoutPage
 //     navigate("/workout", {
@@ -284,11 +281,6 @@
 // };
 
 // export default PoseDetection;
-
-
-
-
-
 
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -330,21 +322,18 @@ const PoseDetection = () => {
       try {
         const video = videoRef.current;
         if (!video) return;
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
         video.srcObject = stream;
         await new Promise((resolve) => (video.onloadedmetadata = resolve));
         video.play();
         console.log("🎥 Camera Started");
 
-
-        detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
-        console.log("✅ MoveNet Model Loaded");
-
         detector = await poseDetection.createDetector(
             poseDetection.SupportedModels.MoveNet
         )
             console.log("✅ MoveNet Model Loaded");
-
 
         setLoading(false);
         detectPoses(detector);
@@ -366,11 +355,10 @@ const PoseDetection = () => {
           detectPushup(keypoints);
         } else if (exerciseId === "highKnee") {
           detectHighKnees(keypoints);
-        }
-        else if(exerciseId === "lunges") {
+        } else if (exerciseId === "lunges") {
           detectLunges(keypoints);
         }
-        
+
         provideFeedback(keypoints);
         drawKeypointsAndSkeleton(keypoints);
       }
@@ -399,23 +387,34 @@ const PoseDetection = () => {
   };
 
   const updateScore = (isProper, isHalf) => {
-    const points = { squat: 5, pushup: 8, highKnee: 3, lunges: 6 };
+    const points = { squat: 5, pushup: 8, highKnee: 6, lunges: 4 }; // Score per rep, now 1 for all
     let scoreIncrement = points[exerciseId];
 
-      if (!isProper) {
-        scoreIncrement /= 2; // Half score for half pose
+    if (!isProper) {
+      scoreIncrement = 0; // No score for improper form
+    } else if (isHalf) {
+      scoreIncrement /= 2; // Half score for half pose
     }
 
     setScore((prev) => prev + scoreIncrement);
   };
 
   const detectSquat = (keypoints) => {
-    const leftHip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
-    const leftKnee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
-    const leftAnkle = keypoints.find((kp) => kp.name === "left_ankle" && kp.score > 0.5);
-    const rightKnee = keypoints.find((kp) => kp.name === "right_knee" && kp.score > 0.5); // Add right knee
+    const leftHip = keypoints.find(
+      (kp) => kp.name === "left_hip" && kp.score > 0.5
+    );
+    const leftKnee = keypoints.find(
+      (kp) => kp.name === "left_knee" && kp.score > 0.5
+    );
+    const leftAnkle = keypoints.find(
+      (kp) => kp.name === "left_ankle" && kp.score > 0.5
+    );
+    const rightKnee = keypoints.find(
+      (kp) => kp.name === "right_knee" && kp.score > 0.5
+    ); // Add right knee
 
-    if (leftHip && leftKnee && leftAnkle && rightKnee) {  // All keypoints needed
+    if (leftHip && leftKnee && leftAnkle && rightKnee) {
+      // All keypoints needed
       const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
       const rightKneeAngle = calculateAngle(leftHip, rightKnee, leftAnkle); // Compare to left
       const hipHeight = leftHip.y;
@@ -424,28 +423,54 @@ const PoseDetection = () => {
       if (leftKneeAngle < 90 && hipHeight > kneeHeight && !isSquatting) {
         isSquatting = true;
       } else if (leftKneeAngle > 160 && hipHeight < kneeHeight && isSquatting) {
-        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160 && hipHeight < kneeHeight; // Both knees straight, hip below knees
-        const isHalf = leftKneeAngle < 130 &&  rightKneeAngle<130 ; // Deeper than 90, but not fully locked
-        setReps((prev) => prev + 1);
-        updateScore(isProper, isHalf);
+        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160 && hipHeight < kneeHeight;
+        const isHalf = leftKneeAngle > 90 && leftKneeAngle < 135 && rightKneeAngle > 90 && rightKneeAngle < 135; // Deeper than 90, but not fully locked
+        
+        if (isProper || isHalf) { // Only count if proper or half
+          setReps((prev) => prev + 1); // Increment reps even for half
+          updateScore(isProper, isHalf);
+        }
         isSquatting = false;
       }
     }
   };
 
-
   const detectPushup = (keypoints) => {
-    const leftShoulder = keypoints.find((kp) => kp.name === "left_shoulder" && kp.score > 0.5);
-    const leftElbow = keypoints.find((kp) => kp.name === "left_elbow" && kp.score > 0.5);
-    const leftWrist = keypoints.find((kp) => kp.name === "left_wrist" && kp.score > 0.5);
-    const rightShoulder = keypoints.find((kp) => kp.name === "right_shoulder" && kp.score > 0.5);
-    const rightElbow = keypoints.find((kp) => kp.name === "right_elbow" && kp.score > 0.5);
-    const rightWrist = keypoints.find((kp) => kp.name === "right_wrist" && kp.score > 0.5);
+    const leftShoulder = keypoints.find(
+      (kp) => kp.name === "left_shoulder" && kp.score > 0.5
+    );
+    const leftElbow = keypoints.find(
+      (kp) => kp.name === "left_elbow" && kp.score > 0.5
+    );
+    const leftWrist = keypoints.find(
+      (kp) => kp.name === "left_wrist" && kp.score > 0.5
+    );
+    const rightShoulder = keypoints.find(
+      (kp) => kp.name === "right_shoulder" && kp.score > 0.5
+    );
+    const rightElbow = keypoints.find(
+      (kp) => kp.name === "right_elbow" && kp.score > 0.5
+    );
+    const rightWrist = keypoints.find(
+      (kp) => kp.name === "right_wrist" && kp.score > 0.5
+    );
     const nose = keypoints.find((kp) => kp.name === "nose" && kp.score > 0.5);
 
-    if (leftShoulder && leftElbow && leftWrist && rightShoulder && rightElbow && rightWrist && nose) {
+    if (
+      leftShoulder &&
+      leftElbow &&
+      leftWrist &&
+      rightShoulder &&
+      rightElbow &&
+      rightWrist &&
+      nose
+    ) {
       const leftElbowAngle = calculateAngle(leftShoulder, leftElbow, leftWrist);
-      const rightElbowAngle = calculateAngle(rightShoulder, rightElbow, rightWrist);
+      const rightElbowAngle = calculateAngle(
+        rightShoulder,
+        rightElbow,
+        rightWrist
+      );
       const shoulderHeight = (leftShoulder.y + rightShoulder.y) / 2;
       const noseHeight = nose.y;
 
@@ -453,17 +478,23 @@ const PoseDetection = () => {
         isPushingUp = true;
       } else if (leftElbowAngle > 160 && rightElbowAngle > 160 && isPushingUp) {
         const isProper = leftElbowAngle > 160 && rightElbowAngle > 160 && noseHeight > shoulderHeight; // Fully extended and nose above shoulders
-        const isHalf = leftElbowAngle > 20 && leftElbowAngle < 90 && rightElbowAngle > 20 && rightElbowAngle < 90; // Between 90 and 135
-        setReps((prev) => prev + 1);
-        updateScore(isProper, isHalf);
+        const isHalf = leftElbowAngle > 90 && leftElbowAngle < 135 && rightElbowAngle > 90 && rightElbowAngle < 135; // Between 90 and 135
+        if (isProper || isHalf) { // Only count if proper or half
+            setReps((prev) => prev + 1); // Increment reps even for half
+            updateScore(isProper, isHalf);
+          }
         isPushingUp = false;
       }
     }
   };
 
   const detectHighKnees = (keypoints) => {
-    const hip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
-    const knee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
+    const hip = keypoints.find(
+      (kp) => kp.name === "left_hip" && kp.score > 0.5
+    );
+    const knee = keypoints.find(
+      (kp) => kp.name === "left_knee" && kp.score > 0.5
+    );
 
     if (hip && knee) {
       const kneeHeight = knee.y;
@@ -474,10 +505,12 @@ const PoseDetection = () => {
         lastKneeRaiseTime = Date.now();
       } else if (kneeHeight > hipHeight && isRaisingKnee) {
         if (Date.now() - lastKneeRaiseTime > 300) {
-          const isProper = kneeHeight > hipHeight; // Basic check, refine as needed
+          const isProper = kneeHeight > hipHeight; // Check if the high knee is proper
           const isHalf = false; // Half high knees not really applicable
-          setReps((prev) => prev + 1);
-          updateScore(isProper, isHalf);
+          if (isProper || isHalf) { // Only count if proper or half
+            setReps((prev) => prev + 1); // Increment reps even for half
+            updateScore(isProper, isHalf);
+          }
           isRaisingKnee = false;
         }
       }
@@ -485,36 +518,69 @@ const PoseDetection = () => {
   };
 
   const detectLunges = (keypoints) => {
-    const leftHip = keypoints.find((kp) => kp.name === "left_hip" && kp.score > 0.5);
-    const leftKnee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
-    const leftAnkle = keypoints.find((kp) => kp.name === "left_ankle" && kp.score > 0.5);
-    const rightHip = keypoints.find((kp) => kp.name === "right_hip" && kp.score > 0.5);
-    const rightKnee = keypoints.find((kp) => kp.name === "right_knee" && kp.score > 0.5);
-    const rightAnkle = keypoints.find((kp) => kp.name === "right_ankle" && kp.score > 0.5);
+    const leftHip = keypoints.find(
+      (kp) => kp.name === "left_hip" && kp.score > 0.5
+    );
+    const leftKnee = keypoints.find(
+      (kp) => kp.name === "left_knee" && kp.score > 0.5
+    );
+    const leftAnkle = keypoints.find(
+      (kp) => kp.name === "left_ankle" && kp.score > 0.5
+    );
+    const rightHip = keypoints.find(
+      (kp) => kp.name === "right_hip" && kp.score > 0.5
+    );
+    const rightKnee = keypoints.find(
+      (kp) => kp.name === "right_knee" && kp.score > 0.5
+    );
+    const rightAnkle = keypoints.find(
+      (kp) => kp.name === "right_ankle" && kp.score > 0.5
+    );
 
-    if (leftHip && leftKnee && leftAnkle && rightHip && rightKnee && rightAnkle) {
+    if (
+      leftHip &&
+      leftKnee &&
+      leftAnkle &&
+      rightHip &&
+      rightKnee &&
+      rightAnkle
+    ) {
       const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
       const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
-      const leftHeel = keypoints.find((kp) => kp.name === "left_heel" && kp.score > 0.5);
-      const rightHeel = keypoints.find((kp) => kp.name === "right_heel" && kp.score > 0.5);
+      const leftHeel = keypoints.find(
+        (kp) => kp.name === "left_heel" && kp.score > 0.5
+      );
+      const rightHeel = keypoints.find(
+        (kp) => kp.name === "right_heel" && kp.score > 0.5
+      );
 
       if (leftKneeAngle < 100 && rightKneeAngle > 160 && !isLunging) {
         isLunging = true;
       } else if (leftKneeAngle > 160 && rightKneeAngle > 160 && isLunging) {
         const isProper = leftKneeAngle > 160 && rightKneeAngle > 160 && leftHeel && rightHeel && leftHeel.y < leftKnee.y && rightHeel.y < rightKnee.y; // Both knees straight, heels on ground
         const isHalf = leftKneeAngle > 100 && leftKneeAngle < 135 && rightKneeAngle > 100 && rightKneeAngle < 135; // Between 100 and 135 for both
-        setReps((prev) => prev + 1);
-        updateScore(isProper, isHalf);
+        if (isProper || isHalf) { // Only count if proper or half
+            setReps((prev) => prev + 1); // Increment reps even for half
+            updateScore(isProper, isHalf);
+          }
         isLunging = false;
       }
     }
   };
 
   const provideFeedback = (keypoints) => {
-    const leftShoulder = keypoints.find((kp) => kp.name === "left_shoulder" && kp.score > 0.5);
-    const rightShoulder = keypoints.find((kp) => kp.name === "right_shoulder" && kp.score > 0.5);
-    const leftKnee = keypoints.find((kp) => kp.name === "left_knee" && kp.score > 0.5);
-    const rightKnee = keypoints.find((kp) => kp.name === "right_knee" && kp.score > 0.5);
+    const leftShoulder = keypoints.find(
+      (kp) => kp.name === "left_shoulder" && kp.score > 0.5
+    );
+    const rightShoulder = keypoints.find(
+      (kp) => kp.name === "right_shoulder" && kp.score > 0.5
+    );
+    const leftKnee = keypoints.find(
+      (kp) => kp.name === "left_knee" && kp.score > 0.5
+    );
+    const rightKnee = keypoints.find(
+      (kp) => kp.name === "right_knee" && kp.score > 0.5
+    );
 
     if (leftShoulder && rightShoulder && leftKnee && rightKnee) {
       if (leftShoulder.y > leftKnee.y || rightShoulder.y > rightKnee.y) {
@@ -541,48 +607,49 @@ const PoseDetection = () => {
 
     // Define keypoint pairs for drawing skeleton
     const skeleton = [
-        [0, 1], [1, 2], [2, 3], [3, 4], // Right arm
-        [0, 5], [5, 6], [6, 7], // Left arm
-        [5, 11], [6, 12], [11, 12], // Torso
-        [11, 13], [13, 15], // Left leg
-        [12, 14], [14, 16] // Right leg
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 4], // Right arm
+      [0, 5],
+      [5, 6],
+      [6, 7], // Left arm
+      [5, 11],
+      [6, 12],
+      [11, 12], // Torso
+      [11, 13],
+      [13, 15], // Left leg
+      [12, 14],
+      [14, 16], // Right leg
     ];
 
     // Draw keypoints
     keypoints.forEach((kp) => {
-        if (kp.score > 0.5) {
-            ctx.beginPath();
-            ctx.arc(kp.x, kp.y, 5, 0, 2 * Math.PI);
-            ctx.fill();
-        }
+      if (kp.score > 0.5) {
+        ctx.beginPath();
+        ctx.arc(kp.x, kp.y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
     });
 
     // Draw skeleton
     skeleton.forEach(([indexA, indexB]) => {
-        const pointA = keypoints[indexA];
-        const pointB = keypoints[indexB];
+      const pointA = keypoints[indexA];
+      const pointB = keypoints[indexB];
 
-        if (pointA?.score > 0.5 && pointB?.score > 0.5) {
-            ctx.beginPath();
-            ctx.moveTo(pointA.x, pointA.y);
-            ctx.lineTo(pointB.x, pointB.y);
-            ctx.stroke();
-        }
+      if (pointA?.score > 0.5 && pointB?.score > 0.5) {
+        ctx.beginPath();
+        ctx.moveTo(pointA.x, pointA.y);
+        ctx.lineTo(pointB.x, pointB.y);
+        ctx.stroke();
+      }
     });
-};
-
-
-
-
-const handleCompleteExercise = () => {
-    // Pass exercise data back to WorkoutPage
-    navigate("/workout", {
+  };
 
 const handleCompleteExercise = () => {
     const returnUrl = location.state?.returnUrl || "/workout";
     console.log("returnUrl:", returnUrl)
     navigate(returnUrl, {
-
       state: {
         exerciseId,
         reps,
@@ -610,7 +677,10 @@ const handleCompleteExercise = () => {
 
       {loading && <p className="loading-text">⏳ Loading AI Model...</p>}
 
-      <button className="complete-exercise-button" onClick={handleCompleteExercise}>
+      <button
+        className="complete-exercise-button"
+        onClick={handleCompleteExercise}
+      >
         Complete Exercise
       </button>
     </div>
@@ -618,6 +688,3 @@ const handleCompleteExercise = () => {
 };
 
 export default PoseDetection;
-
-
-
