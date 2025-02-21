@@ -291,7 +291,7 @@
 
 
 import React, { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import * as tf from "@tensorflow/tfjs";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-webgl";
@@ -305,6 +305,7 @@ const PoseDetection = () => {
   const [loading, setLoading] = useState(true);
   const [reps, setReps] = useState(0);
   const [score, setScore] = useState(0);
+    const location = useLocation()
 
   let isSquatting = false;
   let isPushingUp = false;
@@ -335,8 +336,15 @@ const PoseDetection = () => {
         video.play();
         console.log("🎥 Camera Started");
 
+
         detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
         console.log("✅ MoveNet Model Loaded");
+
+        detector = await poseDetection.createDetector(
+            poseDetection.SupportedModels.MoveNet
+        )
+            console.log("✅ MoveNet Model Loaded");
+
 
         setLoading(false);
         detectPoses(detector);
@@ -565,9 +573,16 @@ const PoseDetection = () => {
 
 
 
+
 const handleCompleteExercise = () => {
     // Pass exercise data back to WorkoutPage
     navigate("/workout", {
+
+const handleCompleteExercise = () => {
+    const returnUrl = location.state?.returnUrl || "/workout";
+    console.log("returnUrl:", returnUrl)
+    navigate(returnUrl, {
+
       state: {
         exerciseId,
         reps,
@@ -575,6 +590,7 @@ const handleCompleteExercise = () => {
       },
     });
   };
+  
 
   return (
     <div className="pose-container">
