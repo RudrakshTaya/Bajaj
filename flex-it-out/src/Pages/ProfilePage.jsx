@@ -13,7 +13,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [avatar, setAvatar] = useState(null);
-
+  const userId = localStorage.getItem("userId");
   const [formData, setFormData] = useState({
     name: "",
     bio: "",
@@ -28,7 +28,7 @@ const ProfilePage = () => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const userId = localStorage.getItem("userId");
+       
         if (!token) {
           setError("Unauthorized. Please log in.");
           setLoading(false);
@@ -88,7 +88,7 @@ const ProfilePage = () => {
         formDataToSubmit.append("avatar", avatar);
       }
 
-      const res = await fetch(`${API_URL}/api/user/profile`, {
+      const res = await fetch(`${API_URL}/api/profile/${userId}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
         body: formDataToSubmit,
