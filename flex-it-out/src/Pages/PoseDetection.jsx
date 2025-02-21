@@ -567,40 +567,40 @@ const PoseDetection = () => {
 
 
 
-  const handleCompleteExercise = () => {
-    // Pass exercise data back to WorkoutPage
-    navigate("/workout", {
-      state: {
-        exerciseId,
-        reps,
-        score,
-      },
-    });
-  };
+const handleCompleteExercise = () => {
+  // Pass exercise data back to WorkoutPage
+  navigate("/workout", {
+    state: {
+      exerciseId,
+      reps,
+      score,
+    },
+  });
+};
 
-  return (
-    <div className="pose-container">
-      <header className="pose-header">
-        <h1>Pose Detection 🏋️</h1>
-      </header>
+return (
+  <div className="pose-container">
+    <header className="pose-header">
+      <h1>Pose Detection 🏋️</h1>
+    </header>
 
-      <div className="stats-container">
-        <h2>🔥 Reps: {reps}</h2>
-        <h2>🎯 Score: {score}</h2>
-      </div>
-
-      <div className="video-container">
-        <video ref={videoRef} className="video" />
-        <canvas ref={canvasRef} className="canvas" width="640" height="480" />
-      </div>
-
-      {loading && <p className="loading-text">⏳ Loading AI Model...</p>}
-
-      <button className="complete-exercise-button" onClick={handleCompleteExercise}>
-        Complete Exercise
-      </button>
+    <div className="stats-container">
+      <h2>🔥 Reps: {reps}</h2>
+      <h2>🎯 Score: {score}</h2>
     </div>
-  );
+
+    <div className="video-container">
+      <video ref={videoRef} className="video" />
+      <canvas ref={canvasRef} className="canvas" width="640" height="480" />
+    </div>
+
+    {loading && <p className="loading-text">⏳ Loading AI Model...</p>}
+
+    <button className="complete-exercise-button" onClick={handleCompleteExercise}>
+      Complete Exercise
+    </button>
+  </div>
+);
 };
 
 export default PoseDetection;
