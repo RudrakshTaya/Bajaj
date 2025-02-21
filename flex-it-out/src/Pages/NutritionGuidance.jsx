@@ -5,6 +5,12 @@ import "./NutritionGuidance.css"; // Import CSS for styling
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material"; // Import Material-UI Dialog components
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
 
 const NutritionGuidance = () => {
   const [meals, setMeals] = useState([]);
@@ -26,7 +32,7 @@ const NutritionGuidance = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get("https://flex-it-out-backend-1.onrender.com/api/meals/getmeals", {
+        const response = await axios.get(`${API_URL}/api/meals/getmeals`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMeals(response.data);

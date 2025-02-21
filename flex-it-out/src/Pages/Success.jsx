@@ -4,6 +4,13 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../Context/AuthContext";
 import "./SuccessPage.css";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
 const SuccessPage = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("Verifying payment...");
@@ -21,7 +28,7 @@ const SuccessPage = () => {
       }
 
       try {
-        const response = await fetch(`https://flex-it-out-backend-1.onrender.com/api/checkout/verify-payment/${sessionId}`);
+        const response = await fetch(`${API_URL}/api/checkout/verify-payment/${sessionId}`);
         const data = await response.json();
 
         if (response.ok) {

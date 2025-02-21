@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import "./CalorieCalculator.css";
 import axios from "axios";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
 const CalorieCalculator = () => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [age, setAge] = useState("");
@@ -48,7 +55,7 @@ const CalorieCalculator = () => {
   
     try {
       await axios.put(
-        "https://flex-it-out-backend-1.onrender.com/api/user/profile",
+        `${API_URL}/api/user/profile`,
         { calories: Number(calories) },
         {
           headers: {
