@@ -1,7 +1,10 @@
+
+
+// export default ProfilePage;
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Pencil, Phone, Mail, Flame, Calendar, Trophy, Dumbbell } from "lucide-react";
-import { Button, TextField, Card, CardContent, CardActions, CardHeader, Avatar, CircularProgress, Typography, MenuItem, Select } from "@mui/material";
+import { Button, TextField, Card, CardContent, CardActions, CardHeader, CircularProgress, Typography, MenuItem, Select } from "@mui/material";
 import "./ProfilePage.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
@@ -12,8 +15,7 @@ const ProfilePage = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [avatar, setAvatar] = useState(null);
-
+  const userId = localStorage.getItem("userId");
   const [formData, setFormData] = useState({
     name: "",
     bio: "",
@@ -28,7 +30,7 @@ const ProfilePage = () => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const userId = localStorage.getItem("userId");
+
         if (!token) {
           setError("Unauthorized. Please log in.");
           setLoading(false);
@@ -66,10 +68,6 @@ const ProfilePage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAvatarChange = (e) => {
-    setAvatar(e.target.files[0]);
-  };
-
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -79,19 +77,13 @@ const ProfilePage = () => {
         return;
       }
 
-      const formDataToSubmit = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSubmit.append(key, value === "" ? null : value);
-      });
-
-      if (avatar) {
-        formDataToSubmit.append("avatar", avatar);
-      }
-
-      const res = await fetch(`${API_URL}/api/user/profile`, {
+      const res = await fetch(`${API_URL}/api/profile/${userId}`, {
         method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formDataToSubmit,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
@@ -112,9 +104,6 @@ const ProfilePage = () => {
     <div className="container mx-auto px-4 py-8">
       <Card className="max-w-md mx-auto">
         <CardHeader className="text-center">
-          <Avatar sx={{ width: 96, height: 96, mx: "auto", mb: 2 }}>
-            <img src={profile.avatar || "/placeholder.svg"} alt={profile.name} />
-          </Avatar>
           <Typography variant="h5">Name: {profile.name || "N/A"}</Typography>
           <Typography variant="body2" color="textSecondary">Bio: {profile.bio || "N/A"}</Typography>
         </CardHeader>
@@ -139,8 +128,6 @@ const ProfilePage = () => {
                 <MenuItem value="flexibility">Flexibility</MenuItem>
                 <MenuItem value="general_fitness">General Fitness</MenuItem>
               </Select>
-              <input type="file" onChange={handleAvatarChange} accept="image/*" className="hidden" id="avatar-upload" />
-              <label htmlFor="avatar-upload" className="btn btn-primary">Choose Avatar</label>
             </form>
           ) : (
             <div className="space-y-2">

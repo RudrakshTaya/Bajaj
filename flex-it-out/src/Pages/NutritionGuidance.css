@@ -1,169 +1,115 @@
+/* NutritionGuidance.css */
+
 .nutrition-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh; /* Ensures the div takes full height of the viewport */
-    padding: 20px;
-    background-color: #f8f9fa;
-  }
-  
-  /* Section containing the meals */
-  .meals-section {
-    width: 100%;
-    max-width: 1200px;
-    margin-top: 20px;
-  }
-  
-  /* Title Styling */
-  .section-title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  /* Meal Grid */
-  .meal-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    width: 100%;
-    padding: 10px;
-  }
-  
-  /* Meal Card */
-  .meal-card {
-    background: white;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .meal-card:hover {
-    transform: translateY(-5px);
-  }
-  
-.meal-image {
-    width: 100%;
-    height: 200px; 
-    object-fit: cover; 
-    border-radius: 8px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-  
-  /* Meal Title */
-  .meal-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 10px 0;
-    color: #444;
-  }
-  
-  /* Meal Description */
-  .meal-description {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  /* Loading and Error Messages */
-  .loading, .error {
-    font-size: 18px;
-    text-align: center;
-    color: #d9534f;
-    margin-top: 20px;
-  }
-  
-  ul li {
-    color: black;
-  }
-
-  .calorie-calculator {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
+.daily-meal-tracker {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
-.calorie-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.calorie-inputs input {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.calorie-inputs button {
-  padding: 10px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.exercise-suggestions {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 12px;
+.daily-meal-tracker h2 {
   text-align: center;
+  margin-bottom: 15px;
 }
 
-.exercise-suggestions ul {
+.daily-meal-tracker .MuiTextField-root {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.daily-meal-tracker .MuiButton-root {
+  display: block;
+  margin: 15px auto 0;
+  width: 100%;
+}
+
+.daily-meal-list {
+  margin-top: 20px;
+}
+
+.daily-meal-list ul {
   list-style: none;
   padding: 0;
 }
 
-.exercise-suggestions li {
-  font-size: 16px;
+.daily-meal-list li {
+  background: #e3f2fd;
   margin: 5px 0;
-  font-weight: bold;
-}
-
-
-/* .calorie-input-section {
-  margin: 20px 0;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.exercise-suggestion {
-  margin-top: 15px;
   padding: 10px;
-  background: #f0f8ff;
-  border-left: 5px solid #007bff;
-  font-weight: bold;
-} */
-
-.calorie-input-section {
-  margin: 20px 0;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.exercise-suggestion {
-  margin-top: 15px;
-  padding: 10px;
-  background: #f0f8ff;
-  border-left: 5px solid #007bff;
-  font-weight: bold;
-}
-
-.exercise-suggestion h3 {
-  color: #d9534f; /* Red color for warning */
-}
-
-.exercise-suggestion p {
+  border-radius: 5px;
   font-size: 16px;
+}
+
+.meals-section {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.meal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.meal-card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.meal-card:hover {
+  transform: scale(1.05);
+}
+
+.meal-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.meal-title {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.meal-description {
+  font-size: 14px;
+  color: #555;
+}
+
+.loading, .error {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .daily-meal-tracker {
+    padding: 15px;
+  }
+  
+  .meal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-card {
+    padding: 10px;
+  }
 }

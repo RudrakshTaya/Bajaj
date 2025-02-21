@@ -22,6 +22,7 @@ const Leaderboard = () => {
         const response = await axios.get(`${API_URL}/api/leaderboard?timeFrame=${timeFrame}`);
         if (response.status === 200) {
           setLeaderboard(response.data);
+          console.log(response.data);
         } else {
           throw new Error("Failed to fetch leaderboard");
         }
@@ -111,9 +112,9 @@ const Leaderboard = () => {
                     )}
                   </td>
                   <td className="clb-player">
-                    
-                    <span>{entry.userId.name}</span>
-                  </td>
+                  <span>{entry.userId ? entry.userId.name : "Anonymous"}</span>
+                </td>
+                
                   <td className="clb-score">
                     {entry.score.toLocaleString()}
                     {index === 0 && <Medal className="clb-medal" />}
