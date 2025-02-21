@@ -140,16 +140,17 @@ const MultiplayerBattle = () => {
             <div className="participants-list">
                 <h3>Participants:</h3>
                 <div className="participants-container">
-                    {participants.length === 0 ? (
-                        <p>No participants yet</p>
-                    ) : (
-                        participants.map((id, index) => (
-                            <div key={index} className="participant-item">
-                                🏋️ {id === userId ? "You" : id}
-                            </div>
-                        ))
-                    )}
-                </div>
+                {participants.length === 0 ? (
+                    <p>No participants yet</p>
+                ) : (
+                    participants.map((user, index) => (
+                        <div key={index} className="participant-item">
+                            🏋️ {user.userId === userId ? "You" : user.name}
+                        </div>
+                    ))
+                )}
+            </div>
+
             </div>
 
             <button className="start-button" onClick={handleStartChallenge}>
