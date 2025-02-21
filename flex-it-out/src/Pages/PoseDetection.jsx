@@ -386,10 +386,12 @@ const PoseDetection = () => {
   };
 
   const updateScore = (isProper, isHalf) => {
-    const points = { squat: 5, pushup: 8, highKnee: 3, lunges: 6 };
+    const points = { squat: 5, pushup: 8, highKnee: 6, lunges: 4 }; // Score per rep, now 1 for all
     let scoreIncrement = points[exerciseId];
 
-    if (isHalf) {
+    if (!isProper) {
+      scoreIncrement = 0; // No score for improper form
+    } else if (isHalf) {
       scoreIncrement /= 2; // Half score for half pose
     }
 
@@ -420,15 +422,13 @@ const PoseDetection = () => {
       if (leftKneeAngle < 90 && hipHeight > kneeHeight && !isSquatting) {
         isSquatting = true;
       } else if (leftKneeAngle > 160 && hipHeight < kneeHeight && isSquatting) {
-        const isProper =
-          leftKneeAngle > 160 && rightKneeAngle > 160 && hipHeight < kneeHeight; // Both knees straight, hip below knees
-        const isHalf =
-          leftKneeAngle > 90 &&
-          leftKneeAngle < 135 &&
-          rightKneeAngle > 90 &&
-          rightKneeAngle < 135; // Deeper than 90, but not fully locked
-        setReps((prev) => prev + 1);
-        updateScore(isProper, isHalf);
+        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160 && hipHeight < kneeHeight;
+        const isHalf = leftKneeAngle > 90 && leftKneeAngle < 135 && rightKneeAngle > 90 && rightKneeAngle < 135; // Deeper than 90, but not fully locked
+        
+        if (isProper || isHalf) { // Only count if proper or half
+          setReps((prev) => prev + 1); // Increment reps even for half
+          updateScore(isProper, isHalf);
+        }
         isSquatting = false;
       }
     }
@@ -473,26 +473,15 @@ const PoseDetection = () => {
       const shoulderHeight = (leftShoulder.y + rightShoulder.y) / 2;
       const noseHeight = nose.y;
 
-      if (
-        leftElbowAngle < 90 &&
-        rightElbowAngle < 90 &&
-        noseHeight > shoulderHeight &&
-        !isPushingUp
-      ) {
-        // Check nose height
+      if (leftElbowAngle < 90 && rightElbowAngle < 90 && noseHeight > shoulderHeight && !isPushingUp) { // Check nose height
         isPushingUp = true;
       } else if (leftElbowAngle > 160 && rightElbowAngle > 160 && isPushingUp) {
-        const isProper =
-          leftElbowAngle > 160 &&
-          rightElbowAngle > 160 &&
-          noseHeight > shoulderHeight; // Fully extended and nose above shoulders
-        const isHalf =
-          leftElbowAngle > 90 &&
-          leftElbowAngle < 135 &&
-          rightElbowAngle > 90 &&
-          rightElbowAngle < 135; // Between 90 and 135
-        setReps((prev) => prev + 1);
-        updateScore(isProper, isHalf);
+        const isProper = leftElbowAngle > 160 && rightElbowAngle > 160 && noseHeight > shoulderHeight; // Fully extended and nose above shoulders
+        const isHalf = leftElbowAngle > 90 && leftElbowAngle < 135 && rightElbowAngle > 90 && rightElbowAngle < 135; // Between 90 and 135
+        if (isProper || isHalf) { // Only count if proper or half
+            setReps((prev) => prev + 1); // Increment reps even for half
+            updateScore(isProper, isHalf);
+          }
         isPushingUp = false;
       }
     }
@@ -515,10 +504,12 @@ const PoseDetection = () => {
         lastKneeRaiseTime = Date.now();
       } else if (kneeHeight > hipHeight && isRaisingKnee) {
         if (Date.now() - lastKneeRaiseTime > 300) {
-          const isProper = kneeHeight > hipHeight; // Basic check, refine as needed
+          const isProper = kneeHeight > hipHeight; // Check if the high knee is proper
           const isHalf = false; // Half high knees not really applicable
-          setReps((prev) => prev + 1);
-          updateScore(isProper, isHalf);
+          if (isProper || isHalf) { // Only count if proper or half
+            setReps((prev) => prev + 1); // Increment reps even for half
+            updateScore(isProper, isHalf);
+          }
           isRaisingKnee = false;
         }
       }
@@ -565,20 +556,12 @@ const PoseDetection = () => {
       if (leftKneeAngle < 100 && rightKneeAngle > 160 && !isLunging) {
         isLunging = true;
       } else if (leftKneeAngle > 160 && rightKneeAngle > 160 && isLunging) {
-        const isProper =
-          leftKneeAngle > 160 &&
-          rightKneeAngle > 160 &&
-          leftHeel &&
-          rightHeel &&
-          leftHeel.y < leftKnee.y &&
-          rightHeel.y < rightKnee.y; // Both knees straight, heels on ground
-        const isHalf =
-          leftKneeAngle > 100 &&
-          leftKneeAngle < 135 &&
-          rightKneeAngle > 100 &&
-          rightKneeAngle < 135; // Between 100 and 135 for both
-        setReps((prev) => prev + 1);
-        updateScore(isProper, isHalf);
+        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160 && leftHeel && rightHeel && leftHeel.y < leftKnee.y && rightHeel.y < rightKnee.y; // Both knees straight, heels on ground
+        const isHalf = leftKneeAngle > 100 && leftKneeAngle < 135 && rightKneeAngle > 100 && rightKneeAngle < 135; // Between 100 and 135 for both
+        if (isProper || isHalf) { // Only count if proper or half
+            setReps((prev) => prev + 1); // Increment reps even for half
+            updateScore(isProper, isHalf);
+          }
         isLunging = false;
       }
     }
