@@ -3,6 +3,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 
+const API_URL =
+  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
+    ? (import.meta.env.MODE === "production"
+      ? import.meta.env.VITE_API_URL_PRODUCTION
+      : import.meta.env.VITE_API_URL_TESTING)
+    : "http://localhost:5001";
+
+
 const SignIn = () => {
   const [formData, setFormData] = useState({ emailOrPhone: "", password: "" });
   const [error, setError] = useState("");
@@ -28,7 +36,7 @@ const SignIn = () => {
       };
 
       // Send login request to backend
-      const res = await axios.post("https://flex-it-out-backend-1.onrender.com/api/auth/login", loginData);
+      const res = await axios.post(`${API_URL}/api/auth/login`, loginData);
 
       const { token, user } = res.data;
 

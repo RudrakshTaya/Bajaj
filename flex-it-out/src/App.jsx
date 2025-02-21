@@ -21,9 +21,8 @@ import TrackProgressPage from "./Pages/TrackProgressPage";
 import CommunityPage from "./Pages/CommunityPage";
 import GroupPage from "./Pages/GroupPage";
 import Leaderboard from "./Components/Leaderboard";
-import PricingPage from "./Pages/PricingPlans";
+
 function App() {
-  // Fetching the user data from AuthContext inside the component
   const { membership} = useContext(AuthContext); 
    console.log(membership);
   return (
@@ -47,6 +46,7 @@ function App() {
             path="/community"
             element={ membership === "premium" ? <CommunityPage /> : <PricingPlans/>}
         />
+        <Route path="/pricing" element = {<PricingPlans/>} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/success" element={<Success />} />

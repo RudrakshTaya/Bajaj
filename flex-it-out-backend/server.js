@@ -5,16 +5,15 @@ const mongoose = require("mongoose");
 const http = require("http");
 const { Server } = require("socket.io");
 
-// ✅ Load Environment Variables
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
 // ✅ Configure CORS Middleware
 app.use(cors({
-  origin: "https://flexitout.vercel.app", // Frontend URL
+  origin: "https://flexitout.vercel.app",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  credentials: true, // Allow cookies/auth headers
+  credentials: true,
 }));
 
 // ✅ Manually Set CORS Headers
@@ -36,10 +35,9 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
-  transports: ["websocket", "polling"], // Ensure proper transport fallback
+  transports: ["websocket", "polling"],
 });
 
-// ✅ Import Routes
 const authRoutes = require("./routes/authRoutes");
 const activityRoutes = require("./routes/activityRoutes");
 const leaderboardRoutes = require("./routes/leaderboardRoutes");
@@ -52,10 +50,8 @@ const mealRoutes = require("./routes/fetchmealsRouter");
 const videoRoutes = require("./routes/videoRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 
-// ✅ Middleware
-app.use(express.json()); // Built-in JSON parsing middleware
+app.use(express.json());
 
-// ✅ API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/activity", activityRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
