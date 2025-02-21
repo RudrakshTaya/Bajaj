@@ -34,10 +34,14 @@ const SignIn = () => {
         password: formData.password,
         isPhone,
       };
+      console.log("API URL:", API_URL);
+      console.log("Mode:", import.meta.env.MODE);
 
       // Send login request to backend
       const res = await axios.post(`${API_URL}/api/auth/login`, loginData);
 
+      console.log('logged in')
+      
       const { token, user } = res.data;
 
       if (token && user) {
