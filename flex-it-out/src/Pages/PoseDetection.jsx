@@ -390,9 +390,16 @@ const PoseDetection = () => {
     return (radians * 180) / Math.PI;
   };
 
-  const updateScore = (isProper) => {
+  const updateScore = (isProper, isHalf) => {
     const points = { squat: 5, pushup: 8, highKnee: 3, lunges: 6 };
-    const scoreIncrement = isProper ? points[exerciseId] : points[exerciseId] / 2;
+    let scoreIncrement = points[exerciseId];
+
+    if (!isProper) {
+      scoreIncrement /= 2; // Half score for improper form
+    } else if (isHalf) {
+        scoreIncrement /= 2; // Half score for half pose
+    }
+
     setScore((prev) => prev + scoreIncrement);
   };
 
@@ -406,13 +413,13 @@ const PoseDetection = () => {
       const hipHeight = hip.y;
       const kneeHeight = knee.y;
 
-      // Squat detection logic
       if (kneeAngle < 90 && hipHeight > kneeHeight && !isSquatting) {
         isSquatting = true;
       } else if (kneeAngle > 160 && hipHeight < kneeHeight && isSquatting) {
-        const isProper = kneeAngle > 160 && hipHeight < kneeHeight; // Check if the squat is proper
+        const isProper = kneeAngle > 160 && hipHeight < kneeHeight; // Basic check, refine as needed
+        const isHalf = kneeAngle > 90 && kneeAngle < 160; // Check for half squat
         setReps((prev) => prev + 1);
-        updateScore(isProper); // Pass whether the squat was proper or not
+        updateScore(isProper, isHalf);
         isSquatting = false;
       }
     }
@@ -428,9 +435,10 @@ const PoseDetection = () => {
       if (elbowAngle < 90 && !isPushingUp) {
         isPushingUp = true;
       } else if (elbowAngle > 160 && isPushingUp) {
-        const isProper = elbowAngle > 160; // Check if the pushup is proper
+        const isProper = elbowAngle > 160; // Basic check, refine as needed
+        const isHalf = elbowAngle > 90 && elbowAngle < 160; // Check for half pushup
         setReps((prev) => prev + 1);
-        updateScore(isProper); // Pass whether the pushup was proper or not
+        updateScore(isProper, isHalf);
         isPushingUp = false;
       }
     }
@@ -444,15 +452,15 @@ const PoseDetection = () => {
       const kneeHeight = knee.y;
       const hipHeight = hip.y;
 
-      // High knee detection logic
       if (kneeHeight < hipHeight && !isRaisingKnee) {
         isRaisingKnee = true;
         lastKneeRaiseTime = Date.now();
       } else if (kneeHeight > hipHeight && isRaisingKnee) {
         if (Date.now() - lastKneeRaiseTime > 300) {
-          const isProper = kneeHeight > hipHeight; // Check if the high knee is proper
+          const isProper = kneeHeight > hipHeight; // Basic check, refine as needed
+          const isHalf = false; // Half high knees not really applicable
           setReps((prev) => prev + 1);
-          updateScore(isProper); // Pass whether the high knee was proper or not
+          updateScore(isProper, isHalf);
           isRaisingKnee = false;
         }
       }
@@ -466,7 +474,7 @@ const PoseDetection = () => {
     const rightHip = keypoints.find((kp) => kp.name === "right_hip" && kp.score > 0.5);
     const rightKnee = keypoints.find((kp) => kp.name === "right_knee" && kp.score > 0.5);
     const rightAnkle = keypoints.find((kp) => kp.name === "right_ankle" && kp.score > 0.5);
-  
+
     if (leftHip && leftKnee && leftAnkle && rightHip && rightKnee && rightAnkle) {
       const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
       const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
@@ -474,14 +482,14 @@ const PoseDetection = () => {
       if (leftKneeAngle < 100 && rightKneeAngle > 160 && !isLunging) {
         isLunging = true;
       } else if (leftKneeAngle > 160 && rightKneeAngle > 160 && isLunging) {
-        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160; // Check if the lunge is proper
+        const isProper = leftKneeAngle > 160 && rightKneeAngle > 160; // Basic check, refine as needed
+        const isHalf = leftKneeAngle > 100 && leftKneeAngle < 160; // Check for half lunge
         setReps((prev) => prev + 1);
-        updateScore(isProper); // Pass whether the lunge was proper or not
+        updateScore(isProper, isHalf);
         isLunging = false;
       }
-    } 
+    }
   };
-  
 
   const provideFeedback = (keypoints) => {
     const leftShoulder = keypoints.find((kp) => kp.name === "left_shoulder" && kp.score > 0.5);
