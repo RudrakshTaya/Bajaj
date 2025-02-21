@@ -70,7 +70,7 @@ const VideoChat = () => {
 
       const roomId = res.data.roomId;
 
-      const response = await axios.post("https://flex-it-out-backend-1.onrender.com/api/video/token", { roomId }, {
+      const response = await axios.post(`${API_URL}/api/video/token`, { roomId }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

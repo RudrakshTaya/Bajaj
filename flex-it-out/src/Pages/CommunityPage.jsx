@@ -46,7 +46,7 @@ const CommunityPage = () => {
 
     try {
       const response = await axios.post(
-        "https://flex-it-out-backend-1.onrender.com/api/group/creategroup",
+        `${API_URL}/api/group/creategroup`,
         {
           name: groupName,
           members: [],
@@ -75,7 +75,7 @@ const CommunityPage = () => {
 
     try {
       const response = await axios.post(
-        `https://flex-it-out-backend-1.onrender.com/api/group/${groupId}/join`,
+        `${API_URL}/api/group/${groupId}/join`,
         {
           roomId, // Include roomId when joining a group
         },
