@@ -297,9 +297,13 @@ const WorkoutPage = () => {
         <button className={activeTab === "exercises" ? "active" : ""} onClick={() => setActiveTab("exercises")}>
           <FaDumbbell /> Exercises
         </button>
-        <button className={activeTab === "challenges" ? "active" : ""} onClick={() => setActiveTab("challenges")}>
-          <FaChartLine /> Challenges
+        <button
+            className={activeTab === "challenges" ? "active" : ""}
+            onClick={() => navigate("/multiplayer-challenges")}
+            >
+            <FaChartLine /> Multiplayer Challenges
         </button>
+
         <button className={activeTab === "trackProgress" ? "active" : ""} onClick={() => setActiveTab("trackProgress")}>
           <FaHistory /> Track Progress
         </button>

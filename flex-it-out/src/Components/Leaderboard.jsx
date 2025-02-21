@@ -21,7 +21,7 @@ const Leaderboard = () => {
       try {
         const response = await axios.get(`${API_URL}/api/leaderboard?timeFrame=${timeFrame}`);
         if (response.status === 200) {
-          setLeaderboard(response.data); // Axios already parses JSON, no need for .json()
+          setLeaderboard(response.data);
         } else {
           throw new Error("Failed to fetch leaderboard");
         }
@@ -30,7 +30,7 @@ const Leaderboard = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }
 
     fetchLeaderboard();
   }, [timeFrame]);
