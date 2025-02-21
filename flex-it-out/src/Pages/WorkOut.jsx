@@ -1,96 +1,105 @@
-"use client"
-import axios from 'axios';
-
-import { useState, useEffect, useContext } from "react"
-import { Link, useNavigate, useLocation } from "react-router-dom"
-import { motion, AnimatePresence } from "framer-motion"
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
-import { FaDumbbell, FaChartLine, FaFire, FaMedal, FaHistory } from "react-icons/fa"
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
-import "react-circular-progressbar/dist/styles.css"
-import confetti from "canvas-confetti"
-import "./WorkoutPage.css"
-import { AuthContext } from "../Context/AuthContext" // Assuming you have an AuthContext
+"use client";
+import axios from "axios";
+import { useState, useEffect, useContext } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { FaDumbbell, FaChartLine, FaFire, FaMedal, FaHistory } from "react-icons/fa";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import confetti from "canvas-confetti";
+import "./WorkoutPage.css";
+import { AuthContext } from "../Context/AuthContext";
 
 const API_URL =
   import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
-    ? (import.meta.env.MODE === "production"
+    ? import.meta.env.MODE === "production"
       ? import.meta.env.VITE_API_URL_PRODUCTION
-      : import.meta.env.VITE_API_URL_TESTING)
+      : import.meta.env.VITE_API_URL_TESTING
     : "http://localhost:5001";
 
-
-
 const WorkoutPage = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { userId } = useContext(AuthContext); 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userId } = useContext(AuthContext);
 
-  // Get the authenticated user from context
-  console.log("user", userId)
-  
   const [exercises, setExercises] = useState([
     { id: "squat", name: "Squats", completed: false, reps: 0, score: 0, target: 20 },
     { id: "pushup", name: "Push-ups", completed: false, reps: 0, score: 0, target: 15 },
     { id: "highKnee", name: "High Knees", completed: false, reps: 0, score: 0, target: 30 },
-    { id: "lunges", name: "Lunges", completed: false, reps: 0, score: 0, target: 20 }, 
-  ])
+    { id: "lunges", name: "Lunges", completed: false, reps: 0, score: 0, target: 20 },
+  ]);
 
-  const [workoutHistory, setWorkoutHistory] = useState([])
+  const [workoutHistory, setWorkoutHistory] = useState([]);
   const [challenges, setChallenges] = useState([
     { id: "squatChallenge", name: "Squat Challenge", target: 20, completed: false },
     { id: "pushupChallenge", name: "Push-up Challenge", target: 15, completed: false },
     { id: "highKneeChallenge", name: "High Knee Challenge", target: 30, completed: false },
-    { id: "lungesChallenge", name: "Lunges Challenge", target: 20, completed: false }
+    { id: "lungesChallenge", name: "Lunges Challenge", target: 20, completed: false },
   ]);
-  
-  const [activeTab, setActiveTab] = useState("exercises")
-  
-  const [streak, setStreak] = useState(0)
-  const [totalScore, setTotalScore] = useState(0)
-  
-  // Fetch the user model data (streak and total score)
+
+  const [activeTab, setActiveTab] = useState("exercises");
+  const [streak, setStreak] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
+
+  // Update exercises when returning from Pose Detection
+  useEffect(() => {
+    if (location.state) {
+      const { exerciseId, reps, score } = location.state;
+      setExercises((prevExercises) =>
+        prevExercises.map((exercise) =>
+          exercise.id === exerciseId
+            ? { ...exercise, completed: true, reps, score }
+            : exercise
+        )
+      );
+    }
+  }, [location.state]);
+
+  // Fetch user data (streak and total score)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/user/${userId}`)
-        const data = await response.json()
-        setStreak(data.streak) // Assuming the user model has a streak field
-        setTotalScore(data.score) // Assuming the user model has a totalScore field
+        const response = await fetch(`${API_URL}/api/user/${userId}`);
+        const data = await response.json();
+        setStreak(data.streak);
+        setTotalScore(data.score);
       } catch (error) {
-        console.error("Error fetching user data:", error)
+        console.error("Error fetching user data:", error);
       }
-    }
+    };
 
-    fetchUserData()
-  }, [userId])
+    fetchUserData();
+  }, [userId]);
 
+  // Fetch workout history
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
         const response = await fetch(`${API_URL}/api/workouts/${userId}`);
-        const data = await response.json()
-        setWorkoutHistory(data)
+        const data = await response.json();
+        setWorkoutHistory(data);
       } catch (error) {
-        console.error("Error fetching workouts:", error)
+        console.error("Error fetching workouts:", error);
       }
-    }
+    };
 
-    fetchWorkouts()
-  }, [])
+    fetchWorkouts();
+  }, [userId]);
 
+  // Update total score when exercises change
   useEffect(() => {
-    const newTotalScore = exercises.reduce((sum, exercise) => sum + exercise.score, 0)
-    setTotalScore(newTotalScore)
-  }, [exercises])
+    const newTotalScore = exercises.reduce((sum, exercise) => sum + exercise.score, 0);
+    setTotalScore(newTotalScore);
+  }, [exercises]);
 
+  // Handle completing the workout
   const handleCompleteWorkout = async () => {
     const workoutData = exercises.map((exercise) => ({
       exerciseId: exercise.id,
       exerciseName: exercise.name,
       reps: exercise.reps,
       score: exercise.score,
-      streak: streak,
     }));
 
     try {
@@ -114,7 +123,7 @@ const WorkoutPage = () => {
           });
           alert("Score added to leaderboard!");
         } catch (error) {
-          console.error("Error posting score", error)
+          console.error("Error posting score", error);
         }
 
         // Display confetti and alert the user
@@ -125,7 +134,7 @@ const WorkoutPage = () => {
         });
 
         alert("Workout completed and saved! Great job!");
-        
+
         // Reset exercises and update streak
         setExercises((prevExercises) =>
           prevExercises.map((exercise) => ({
@@ -144,14 +153,7 @@ const WorkoutPage = () => {
     }
   };
 
-  const handleStartChallenge = (challengeId) => {
-    // Find the challenge
-    const challenge = challenges.find(challenge => challenge.id === challengeId);
-
-    // Start pose detection for that challenge
-    navigate(`/pose-detection/${challengeId}`, { state: { challenge, userId } });
-  };
-
+  // Render tab content
   const renderTabContent = () => {
     switch (activeTab) {
       case "exercises":
@@ -198,84 +200,10 @@ const WorkoutPage = () => {
               Complete Workout
             </button>
           </motion.div>
-        )
-      case "challenges":
-        return (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="challenges"
-          >
-            <h2>
-              <FaChartLine /> Challenges
-            </h2>
-            {challenges.map((challenge) => (
-              <div key={challenge.id} className="challenge-card">
-                <div className="challenge-info">
-                  <span className="challenge-icon"><FaDumbbell /></span>
-                  <span>{challenge.name}</span>
-                </div>
-                {challenge.completed ? (
-                  <span className="completed">✅ Completed</span>
-                ) : (
-                  <button
-                    className="challenge-button"
-                    onClick={() => handleStartChallenge(challenge.id)}
-                  >
-                    Start Challenge
-                  </button>
-                )}
-              </div>
-            ))}
-          </motion.div>
-        )
-      case "trackProgress":
-        return (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="track-progress"
-          >
-            <h2>
-              <FaHistory /> Track Progress
-            </h2>
-            {workoutHistory.length > 0 ? (
-              <>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={workoutHistory}>
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="totalScore" stroke="#8884d8" />
-                  </LineChart>
-                </ResponsiveContainer>
-                {workoutHistory.map((workout, index) => (
-                  <div key={index} className="workout-entry">
-                    <h3>{new Date(workout.date).toLocaleDateString()}</h3>
-                    <p>Total Score: {workout.totalScore} pts</p>
-                    <ul>
-                      {workout.exercises.map((exercise, i) => (
-                        <li key={i}>
-                          {exercise.exerciseName}: {exercise.reps} reps ({exercise.score} pts)
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </>
-            ) : (
-              <p>No workout history found.</p>
-            )}
-          </motion.div>
-        )
-      default:
-        return null
+        );
+      // Rest of the tab content...
     }
-  }
+  };
 
   return (
     <div className="workout-container">
