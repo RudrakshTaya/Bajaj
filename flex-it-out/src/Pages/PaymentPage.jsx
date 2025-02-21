@@ -13,8 +13,7 @@ const PaymentPage = () => {
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
 
-  const { userId, isLoggedIn } = useContext(AuthContext); // Get user authentication details
-    console.log(userId);
+  const { userId, isLoggedIn } = useContext(AuthContext);
   const handlePayment = async () => {
     if (!isLoggedIn || !userId) {
       alert("You must be logged in to make a payment.");
@@ -27,9 +26,8 @@ const PaymentPage = () => {
     try {
       const response = await fetch("https://flex-it-out-backend-1.onrender.com/api/checkout/create-checkout-session", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },       
-        
-        body: JSON.stringify({ plan, userId }), // Send userId with the request
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan, userId }),
       });
   
       if (!response.ok) {
@@ -44,7 +42,7 @@ const PaymentPage = () => {
       await stripe.redirectToCheckout({ sessionId: id });
     } catch (error) {
       console.error("❌ Payment Error:", error.message);
-      alert(`Payment Error: ${error.message}`);
+      alert(Payment Error: ${error.message});
     }
   
     setLoading(false);

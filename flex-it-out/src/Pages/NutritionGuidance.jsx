@@ -10,17 +10,15 @@ const NutritionGuidance = () => {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false); // State to control Dialog visibility
+  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
-  const { userId, membership } = useContext(AuthContext); // Use AuthContext to access user data
+  const { userId, membership } = useContext(AuthContext);
 
-  // Log membership for debugging (optional)
   console.log(membership);
 
   useEffect(() => {
-    // Redirect non-premium users and show the dialog for upgrading
     if (membership !== "premium") {
-      setOpenDialog(true); // Show the dialog if the user is not premium
+      setOpenDialog(true);
       return;
     }
 
@@ -40,15 +38,15 @@ const NutritionGuidance = () => {
     };
 
     fetchMeals();
-  }, [navigate, userId, membership]); // Update dependencies to use userId and membership
+  }, [navigate, userId, membership]);
 
   const showMeal = (meal) => {
     navigate(`/meal/${meal._id}`, { state: { meal } });
   };
 
   const handleDialogClose = () => {
-    setOpenDialog(false); // Close the dialog
-    navigate("/pricing"); // Redirect to pricing page for premium upgrade
+    setOpenDialog(false);
+    navigate("/pricing");
   };
 
   return (
@@ -75,7 +73,6 @@ const NutritionGuidance = () => {
         )}
       </div>
 
-      {/* Dialog for non-premium users */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Upgrade to Premium</DialogTitle>
         <DialogContent>

@@ -4,10 +4,10 @@ import { Check, Star } from "lucide-react"; // For icons
 import { Button, Card, CardContent, CardHeader, Typography, Grid } from "@mui/material"; // Import MUI components
 import './PricingPlans.css'
 const PricingPage = () => {
-  const navigate = useNavigate(); // For navigation with React Router
+  const navigate = useNavigate();
 
   const handlePayment = (plan) => {
-    navigate(`/payment?plan=${plan}`); // Navigate to the payment page with the selected plan
+    navigate(`/payment?plan=${plan}`);
   };
 
   const plans = [
