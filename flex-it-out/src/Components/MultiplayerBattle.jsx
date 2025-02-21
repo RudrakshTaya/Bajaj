@@ -23,15 +23,13 @@ const MultiplayerBattle = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [participants, setParticipants] = useState([]); // Store joined users
+    const [participants, setParticipants] = useState([]);
+    const [stats, setStats] = useState({}); // Store reps and scores
 
     useEffect(() => {
         console.log("Joined room:", roomId, "Exercise:", exercise);
-
-        // ✅ Emit joinBattle event
         socket.emit("joinBattle", { roomId, userId });
 
-        // ✅ Listen for participant updates
         socket.on("updateParticipants", (updatedParticipants) => {
             setParticipants(updatedParticipants);
         });
@@ -44,22 +42,29 @@ const MultiplayerBattle = () => {
             console.log(`User ${userId} left`);
         });
 
+        socket.on("updateStats", ({ userId, reps, score }) => {
+            setStats((prevStats) => ({
+                ...prevStats,
+                [userId]: { reps, score },
+            }));
+        });
+
         return () => {
             socket.emit("leaveBattle", { roomId, userId });
             socket.off("updateParticipants");
             socket.off("playerJoined");
             socket.off("playerLeft");
+            socket.off("updateStats");
         };
     }, [roomId, exercise]);
 
     const handleStartChallenge = () => {
         const returnUrl = `/multiplayer-battle/${roomId}?exercise=${exercise}`;
-        navigate(`/pose-detection/${exercise}`, { 
-            state: { exercise, userId, returnUrl }
+        navigate(`/pose-detection/${exercise}`, {
+            state: { exercise, userId, returnUrl },
         });
     };
 
-    // Debounced Search Effect
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
             if (searchTerm.length >= 3) {
@@ -92,7 +97,6 @@ const MultiplayerBattle = () => {
                 { inviterId: userId, inviteeId, exerciseId: exercise },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-
             const { roomId, challengeType } = response.data;
             alert("Invitation sent!");
             navigate(`/multiplayer-battle/${roomId}?exercise=${challengeType}`);
@@ -104,7 +108,6 @@ const MultiplayerBattle = () => {
 
     return (
         <div className="battle-container">
-            {/* Search Bar on Top */}
             <div className="search-container">
                 <input
                     type="text"
@@ -118,7 +121,6 @@ const MultiplayerBattle = () => {
                 </button>
             </div>
 
-            {/* Search Results */}
             <div className="user-list">
                 {loading ? (
                     <p>Loading users...</p>
@@ -136,21 +138,21 @@ const MultiplayerBattle = () => {
 
             <p className="battle-exercise">Exercise: <strong>{exercise}</strong></p>
 
-            {/* Participant List with Scroll */}
             <div className="participants-list">
                 <h3>Participants:</h3>
                 <div className="participants-container">
-                {participants.length === 0 ? (
-                    <p>No participants yet</p>
-                ) : (
-                    participants.map((user, index) => (
-                        <div key={index} className="participant-item">
-                            🏋️ {user.userId === userId ? "You" : user.name}
-                        </div>
-                    ))
-                )}
-            </div>
-
+                    {participants.length === 0 ? (
+                        <p>No participants yet</p>
+                    ) : (
+                        participants.map((user, index) => (
+                            <div key={index} className="participant-item">
+                                🏋️ {user.userId === userId ? "You" : user.name} 
+                                <span>Reps: {stats[user.userId]?.reps || 0}</span> 
+                                <span>Score: {stats[user.userId]?.score || 0}</span>
+                            </div>
+                        ))
+                    )}
+                </div>
             </div>
 
             <button className="start-button" onClick={handleStartChallenge}>
