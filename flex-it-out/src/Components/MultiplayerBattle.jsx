@@ -34,9 +34,12 @@ const MultiplayerBattle = () => {
             setParticipants(updatedParticipants);
         });
 
-        socket.on("playerJoined", ({ userId }) => {
-            console.log(`User ${userId} joined`);
-        });
+        socket.on("playerJoined", ({ userId, name }) => {
+            console.log(`User ${name} joined`);
+            
+            // Update participants list dynamically
+            setParticipants((prev) => [...prev, { userId, name }]);
+        });        
 
         socket.on("playerLeft", ({ userId }) => {
             console.log(`User ${userId} left`);
@@ -141,17 +144,18 @@ const MultiplayerBattle = () => {
             <div className="participants-list">
                 <h3>Participants:</h3>
                 <div className="participants-container">
-                    {participants.length === 0 ? (
-                        <p>No participants yet</p>
-                    ) : (
-                        participants.map((user, index) => (
-                            <div key={index} className="participant-item">
-                                🏋️ {user.userId === userId ? "You" : user.name} 
-                                <span>Reps: {stats[user.userId]?.reps || 0}</span> 
-                                <span>Score: {stats[user.userId]?.score || 0}</span>
-                            </div>
-                        ))
-                    )}
+                {participants.length === 0 ? (
+                    <p>No participants yet</p>
+                ) : (
+                    participants.map((user, index) => (
+                        <div key={index} className="participant-item">
+                            🏋️ {user.userId === userId ? "You" : user.name} 
+                            <span>Reps: {stats[user.userId]?.reps || 0}</span> 
+                            <span>Score: {stats[user.userId]?.score || 0}</span>
+                        </div>
+                    ))
+                )}
+
                 </div>
             </div>
 
