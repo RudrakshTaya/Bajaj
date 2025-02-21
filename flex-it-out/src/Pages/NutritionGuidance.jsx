@@ -1,269 +1,21 @@
-// import React, { useState, useEffect, useContext } from "react";
-// import CalorieCalculator from "../Components/CalorieCalculator";
-// import axios from "axios";
-// import "./NutritionGuidance.css"; // Import CSS for styling
-// import { useNavigate } from "react-router-dom";
-// import { AuthContext } from "../Context/AuthContext";
-// import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material"; // Import Material-UI Dialog components
-// const API_URL =
-//   import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
-//     ? (import.meta.env.MODE === "production"
-//       ? import.meta.env.VITE_API_URL_PRODUCTION
-//       : import.meta.env.VITE_API_URL_TESTING)
-//     : "http://localhost:5001";
-
-// const NutritionGuidance = () => {
-//   const [meals, setMeals] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [openDialog, setOpenDialog] = useState(false);
-//   const navigate = useNavigate();
-//   const { userId, membership } = useContext(AuthContext);
-
-//   console.log(membership);
-
-//   useEffect(() => {
-//     if (membership !== "premium") {
-//       setOpenDialog(true);
-//       return;
-//     }
-
-//     const fetchMeals = async () => {
-//       try {
-//         const token = localStorage.getItem("token");
-
-//         const response = await axios.get(`${API_URL}/api/meals/getmeals`, {
-//           headers: { Authorization: `Bearer ${token}` },
-//         });
-//         setMeals(response.data);
-//       } catch (error) {
-//         setError("Failed to fetch meals");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchMeals();
-//   }, [navigate, userId, membership]);
-
-//   const showMeal = (meal) => {
-//     navigate(`/meal/${meal._id}`, { state: { meal } });
-//   };
-
-//   const handleDialogClose = () => {
-//     setOpenDialog(false);
-//     navigate("/pricing");
-//   };
-
-//   return (
-//     <div className="nutrition-container">
-//       <CalorieCalculator />
-
-//       <div className="meals-section">
-//         <h2 className="section-title">Healthy Meal Plans 🍽️</h2>
-
-//         {loading ? (
-//           <p className="loading">Loading meals...</p>
-//         ) : error ? (
-//           <p className="error">{error}</p>
-//         ) : (
-//           <div className="meal-grid">
-//             {meals.map((meal) => (
-//               <div key={meal._id} className="meal-card" onClick={() => showMeal(meal)}>
-//                 <img src={meal.imageUrl} alt={meal.name} className="meal-image" />
-//                 <h3 className="meal-title">{meal.name}</h3>
-//                 <p className="meal-description">Calories: {meal.calories}</p>
-//               </div>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-
-//       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-//         <DialogTitle>Upgrade to Premium</DialogTitle>
-//         <DialogContent>
-//           <p>
-//             You need a premium membership to access the healthy meal plans. 
-//             Please switch to a premium plan to unlock this feature.
-//           </p>
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={handleDialogClose} color="primary">
-//             Go to Pricing
-//           </Button>
-//         </DialogActions>
-//       </Dialog>
-//     </div>
-//   );
-// };
-
-// export default NutritionGuidance;
-// import React, { useState, useEffect, useContext } from "react";
-// import CalorieCalculator from "../Components/CalorieCalculator";
-// import axios from "axios";
-// import "./NutritionGuidance.css"; // Import CSS for styling
-// import { useNavigate } from "react-router-dom";
-// import { AuthContext } from "../Context/AuthContext";
-// import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material"; // Import Material-UI Dialog components
-// const API_URL =
-//   import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
-//     ? (import.meta.env.MODE === "production"
-//       ? import.meta.env.VITE_API_URL_PRODUCTION
-//       : import.meta.env.VITE_API_URL_TESTING)
-//     : "http://localhost:5001";
-
-// const NutritionGuidance = () => {
-//   const [meals, setMeals] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [openDialog, setOpenDialog] = useState(false);
-//   const [consumedCalories, setConsumedCalories] = useState(0);
-//   const [suggestedCalories, setSuggestedCalories] = useState(2000); // Default value, can be updated from calculator
-//   const [exerciseSuggestion, setExerciseSuggestion] = useState("");
-//   const navigate = useNavigate();
-//   const { userId, membership } = useContext(AuthContext);
-
-//   console.log(membership);
-
-//   useEffect(() => {
-//     if (membership !== "premium") {
-//       setOpenDialog(true);
-//       return;
-//     }
-
-//     const fetchMeals = async () => {
-//       try {
-//         const token = localStorage.getItem("token");
-
-//         const response = await axios.get(`${API_URL}/api/meals/getmeals`, {
-//           headers: { Authorization: `Bearer ${token}` },
-//         });
-//         setMeals(response.data);
-//       } catch (error) {
-//         setError("Failed to fetch meals");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchMeals();
-//   }, [navigate, userId, membership]);
-
-//   const showMeal = (meal) => {
-//     navigate(`/meal/${meal._id}`, { state: { meal } });
-//   };
-
-//   const handleDialogClose = () => {
-//     setOpenDialog(false);
-//     navigate("/pricing");
-//   };
-
-//   const handleCalorieInput = (event) => {
-//     setConsumedCalories(event.target.value);
-//   };
-
-//   const handleAddCalories = () => {
-//     const consumed = parseInt(consumedCalories, 10);
-//     if (consumed > suggestedCalories) {
-//       setExerciseSuggestion("You have exceeded your calorie limit! Try 30 minutes of cardio, jogging, or HIIT exercises.");
-//     } else {
-//       setExerciseSuggestion("Great job! You're within your daily limit.");
-//     }
-//   };
-
-//   return (
-//     <div className="nutrition-container">
-//       <CalorieCalculator setSuggestedCalories={setSuggestedCalories} />
-
-//       <div className="calorie-input-section">
-//         <h3>Track Your Calories</h3>
-//         <TextField
-//           type="number"
-//           label="Enter Calories Consumed"
-//           variant="outlined"
-//           value={consumedCalories}
-//           onChange={handleCalorieInput}
-//           fullWidth
-//         />
-//         <Button variant="contained" color="primary" onClick={handleAddCalories}>
-//           Add Calories
-//         </Button>
-//         {exerciseSuggestion && <p className="exercise-suggestion">{exerciseSuggestion}</p>}
-//       </div>
-
-//       <div className="meals-section">
-//         <h2 className="section-title">Healthy Meal Plans 🍽️</h2>
-
-//         {loading ? (
-//           <p className="loading">Loading meals...</p>
-//         ) : error ? (
-//           <p className="error">{error}</p>
-//         ) : (
-//           <div className="meal-grid">
-//             {meals.map((meal) => (
-//               <div key={meal._id} className="meal-card" onClick={() => showMeal(meal)}>
-//                 <img src={meal.imageUrl} alt={meal.name} className="meal-image" />
-//                 <h3 className="meal-title">{meal.name}</h3>
-//                 <p className="meal-description">Calories: {meal.calories}</p>
-//               </div>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-
-//       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-//         <DialogTitle>Upgrade to Premium</DialogTitle>
-//         <DialogContent>
-//           <p>
-//             You need a premium membership to access the healthy meal plans. 
-//             Please switch to a premium plan to unlock this feature.
-//           </p>
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={handleDialogClose} color="primary">
-//             Go to Pricing
-//           </Button>
-//         </DialogActions>
-//       </Dialog>
-//     </div>
-//   );
-// };
-
-// export default NutritionGuidance;
-import React, { useState, useEffect, useContext } from "react";
-import CalorieCalculator from "../Components/CalorieCalculator";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./NutritionGuidance.css";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../Context/AuthContext";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
+import { TextField, Select, MenuItem, Button } from "@mui/material";
 
-const API_URL =
-  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
-    ? (import.meta.env.MODE === "production"
-      ? import.meta.env.VITE_API_URL_PRODUCTION
-      : import.meta.env.VITE_API_URL_TESTING)
-    : "http://localhost:5001";
+const API_URL = "http://localhost://5001"; // Replace with your actual API URL
 
 const NutritionGuidance = () => {
-  const [meals, setMeals] = useState([]);
+  const [apiMeals, setApiMeals] = useState([]); // Suggested meals from API
+  const [userMeals, setUserMeals] = useState([]); // User-logged meals
+  const [mealName, setMealName] = useState("");
+  const [caloriesConsumed, setCaloriesConsumed] = useState("");
+  const [mealTime, setMealTime] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
-  const navigate = useNavigate();
-  const { userId, membership } = useContext(AuthContext);
+  const [error, setError] = useState("");
 
-  const [caloriesConsumed, setCaloriesConsumed] = useState(0);
-  const [caloriesLimit, setCaloriesLimit] = useState(2000);
-  const [excessCalories, setExcessCalories] = useState(0);
-  const [exerciseSuggestion, setExerciseSuggestion] = useState("");
-
+  // Fetch meals from API (Suggested Meals)
   useEffect(() => {
-    if (membership !== "premium") {
-      setOpenDialog(true);
-      return;
-    }
-
     const fetchMeals = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -271,7 +23,8 @@ const NutritionGuidance = () => {
         const response = await axios.get(`${API_URL}/api/meals/getmeals`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setMeals(response.data);
+
+        setApiMeals(response.data); // Store fetched meals
       } catch (error) {
         setError("Failed to fetch meals");
       } finally {
@@ -280,106 +33,114 @@ const NutritionGuidance = () => {
     };
 
     fetchMeals();
-  }, [navigate, userId, membership]);
+  }, []); // Removed unnecessary dependencies
 
-  const showMeal = (meal) => {
-    navigate(`/meal/${meal._id}`, { state: { meal } });
-  };
+  // Handle input changes
+  const handleMealNameChange = (e) => setMealName(e.target.value);
+  const handleCalorieInput = (e) => setCaloriesConsumed(e.target.value);
+  const handleMealTimeChange = (e) => setMealTime(e.target.value);
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-    navigate("/pricing");
-  };
-
-  // Function to handle calorie input change
-  const handleCalorieInput = (e) => {
-    setCaloriesConsumed(e.target.value);
-  };
-
-  // Function to check calorie limit and suggest exercises
-  const checkCalories = () => {
-    const excess = caloriesConsumed - caloriesLimit;
-    setExcessCalories(excess);
-
-    if (excess > 0) {
-      let suggestion = "";
-      if (excess <= 200) {
-        suggestion = "Do 15 Squats and 20 Push-ups.";
-      } else if (excess <= 500) {
-        suggestion = "Perform 30 High Knees and 20 Jump Ropes.";
-      } else {
-        suggestion = "Try 50 Squats and 40 High Knees for an intense burn.";
-      }
-      setExerciseSuggestion(suggestion);
-    } else {
-      setExerciseSuggestion("Great job! You're under your calorie limit.");
+  // Add user meal to tracking
+  const addMeal = () => {
+    if (!mealName || !caloriesConsumed || !mealTime) {
+      alert("Please enter meal name, calories, and select a meal time.");
+      return;
     }
+
+    const newMeal = {
+      name: mealName,
+      calories: parseInt(caloriesConsumed),
+      mealTime: mealTime,
+    };
+
+    setUserMeals([...userMeals, newMeal]); // Add meal to tracking
+    setMealName(""); // Clear inputs
+    setCaloriesConsumed("");
+    setMealTime("");
   };
+
+  // Calculate total calories for user-logged meals
+  const totalCalories = userMeals.reduce((sum, meal) => sum + meal.calories, 0);
 
   return (
     <div className="nutrition-container">
-      <CalorieCalculator />
+      <h2>🍽️ Nutrition Tracker</h2>
 
-      <div className="calorie-input-section">
-        <TextField
-          label="Enter Calories Consumed"
-          type="number"
-          variant="outlined"
-          value={caloriesConsumed}
-          onChange={handleCalorieInput}
-        />
-        <Button variant="contained" color="primary" onClick={checkCalories}>
-          Check Calories & Get Exercise
-        </Button>
-      </div>
-
-      {exerciseSuggestion && (
-        <div className="exercise-suggestion">
-          {excessCalories > 0 ? (
-            <>
-              <h3>You exceeded by {excessCalories} calories! ⚠️</h3>
-              <p>{exerciseSuggestion}</p>
-            </>
-          ) : (
-            <h3>{exerciseSuggestion} ✅</h3>
-          )}
-        </div>
-      )}
-
-      <div className="meals-section">
-        <h2 className="section-title">Healthy Meal Plans 🍽️</h2>
-
+      {/* 📌 Suggested Meals (API Data) */}
+      <div className="api-meals-section">
+        <h3>Suggested Meals</h3>
         {loading ? (
-          <p className="loading">Loading meals...</p>
+          <p>Loading meal suggestions...</p>
         ) : error ? (
           <p className="error">{error}</p>
         ) : (
-          <div className="meal-grid">
-            {meals.map((meal) => (
-              <div key={meal._id} className="meal-card" onClick={() => showMeal(meal)}>
-                <img src={meal.imageUrl} alt={meal.name} className="meal-image" />
-                <h3 className="meal-title">{meal.name}</h3>
-                <p className="meal-description">Calories: {meal.calories}</p>
-              </div>
-            ))}
-          </div>
+          <table className="meal-table">
+            <thead>
+              <tr>
+                <th>Meal</th>
+                <th>Calories</th>
+              </tr>
+            </thead>
+            <tbody>
+              {apiMeals.map((meal, index) => (
+                <tr key={index}>
+                  <td>{meal.name}</td>
+                  <td>{meal.calories} kcal</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Upgrade to Premium</DialogTitle>
-        <DialogContent>
-          <p>
-            You need a premium membership to access the healthy meal plans. 
-            Please switch to a premium plan to unlock this feature.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Go to Pricing
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* 📌 User-Logged Meals */}
+      <div className="meal-input-section">
+        <h3>Track Your Meals</h3>
+        <TextField label="Meal Name" variant="outlined" value={mealName} onChange={handleMealNameChange} />
+        <TextField label="Enter Calories" type="number" variant="outlined" value={caloriesConsumed} onChange={handleCalorieInput} />
+
+        <Select value={mealTime} onChange={handleMealTimeChange} displayEmpty variant="outlined">
+          <MenuItem value="" disabled>Select Meal Time</MenuItem>
+          <MenuItem value="Breakfast">Breakfast</MenuItem>
+          <MenuItem value="Lunch">Lunch</MenuItem>
+          <MenuItem value="Dinner">Dinner</MenuItem>
+          <MenuItem value="Snack">Snack</MenuItem>
+        </Select>
+
+        <Button variant="contained" color="primary" onClick={addMeal}>
+          Add Meal
+        </Button>
+      </div>
+
+      {/* 📌 User-Logged Meals Table */}
+      <div className="user-meals-section">
+        <h3>Your Meals</h3>
+        {userMeals.length === 0 ? (
+          <p>No meals added yet.</p>
+        ) : (
+          <table className="meal-table">
+            <thead>
+              <tr>
+                <th>Meal</th>
+                <th>Calories</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userMeals.map((meal, index) => (
+                <tr key={index}>
+                  <td>{meal.name}</td>
+                  <td>{meal.calories} kcal</td>
+                  <td>{meal.mealTime}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* 📌 Total Calories */}
+      <h3>Total Calories Consumed: {totalCalories} kcal</h3>
     </div>
   );
 };
