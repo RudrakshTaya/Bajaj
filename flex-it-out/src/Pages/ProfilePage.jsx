@@ -1,57 +1,58 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Pencil, Phone, Mail, Flame, Calendar } from "lucide-react";
-import { Button, TextField, Card, CardContent, CardActions, CardHeader, Avatar, CircularProgress, Typography } from "@mui/material";
-import './ProfilePage.css';
+import { User, Pencil, Phone, Mail, Flame, Calendar, Trophy, Dumbbell } from "lucide-react";
+import { Button, TextField, Card, CardContent, CardActions, CardHeader, Avatar, CircularProgress, Typography, MenuItem, Select } from "@mui/material";
+import "./ProfilePage.css";
 
-const API_URL =
-  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
-    ? (import.meta.env.MODE === "production"
-      ? import.meta.env.VITE_API_URL_PRODUCTION
-      : import.meta.env.VITE_API_URL_TESTING)
-    : "http://localhost:5001";
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [avatar, setAvatar] = useState(null);
+
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
-    email: "",
-    streak: "",
+    bio: "",
+    age: "",
+    gender: "other",
+    height: "",
+    weight: "",
+    fitnessGoals: "general_fitness",
   });
-  const [avatar, setAvatar] = useState(null); // State to handle the profile image upload
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
+        const userId = localStorage.getItem("userId");
         if (!token) {
           setError("Unauthorized. Please log in.");
           setLoading(false);
           return;
         }
 
-        const res = await fetch(`${API_URL}/api/user/profile`, {
+        const res = await fetch(`${API_URL}/api/profile/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
-        console.log(data);
-        setUser(data);
+        if (!res.ok) throw new Error(data.message || "Failed to load profile");
+
+        setProfile(data);
         setFormData({
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          streak: data.calories,
+          name: data.name || "",
+          bio: data.bio || "",
+          age: data.age !== null ? data.age : "",
+          gender: data.gender || "other",
+          height: data.height !== null ? data.height : "",
+          weight: data.weight !== null ? data.weight : "",
+          fitnessGoals: data.fitnessGoals || "general_fitness",
         });
       } catch (err) {
-        setError("Failed to load profile. Try again later.");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -66,7 +67,7 @@ const ProfilePage = () => {
   };
 
   const handleAvatarChange = (e) => {
-    setAvatar(e.target.files[0]); // Set the selected avatar file
+    setAvatar(e.target.files[0]);
   };
 
   const handleProfileUpdate = async (e) => {
@@ -78,35 +79,29 @@ const ProfilePage = () => {
         return;
       }
 
-      // Prepare form data for profile update, including avatar if available
       const formDataToSubmit = new FormData();
-      formDataToSubmit.append("name", formData.name);
-      formDataToSubmit.append("phone", formData.phone);
-      formDataToSubmit.append("email", formData.email);
-      formDataToSubmit.append("streak", formData.streak);
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSubmit.append(key, value === "" ? null : value);
+      });
 
       if (avatar) {
-        formDataToSubmit.append("avatar", avatar); // Append the file if it's selected
+        formDataToSubmit.append("avatar", avatar);
       }
 
-      const res = await fetch("https://flex-it-out-backend-1.onrender.com/api/user/profile", {
+      const res = await fetch(`${API_URL}/api/user/profile`, {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formDataToSubmit,
       });
-      const data = await res.json();
 
-      if (data.message === "Profile updated successfully") {
-        setUser(data.user);
-        setIsEditing(false);
-        setError("");
-      } else {
-        setError("Failed to update profile. Try again later.");
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to update profile");
+
+      setProfile(data.profile);
+      setIsEditing(false);
+      setError("");
     } catch (err) {
-      setError("Failed to update profile. Try again later.");
+      setError(err.message);
     }
   };
 
@@ -118,93 +113,65 @@ const ProfilePage = () => {
       <Card className="max-w-md mx-auto">
         <CardHeader className="text-center">
           <Avatar sx={{ width: 96, height: 96, mx: "auto", mb: 2 }}>
-            <img src={user.avatar || "/placeholder.svg?height=96&width=96"} alt={user.name} />
+            <img src={profile.avatar || "/placeholder.svg"} alt={profile.name} />
           </Avatar>
-          <Typography variant="h5">{user.name}</Typography>
+          <Typography variant="h5">Name: {profile.name || "N/A"}</Typography>
+          <Typography variant="body2" color="textSecondary">Bio: {profile.bio || "N/A"}</Typography>
         </CardHeader>
+
         <CardContent>
           {isEditing ? (
             <form onSubmit={handleProfileUpdate} className="space-y-4">
-              <TextField
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                label="Name"
-                fullWidth
-                variant="outlined"
-              />
-              <TextField
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                label="Phone"
-                fullWidth
-                variant="outlined"
-              />
-              <TextField
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                label="Email"
-                fullWidth
-                variant="outlined"
-                type="email"
-              />
-              <TextField
-                name="streak"
-                value={formData.streak}
-                onChange={handleInputChange}
-                label="Calories Burned"
-                fullWidth
-                variant="outlined"
-                type="number"
-              />
-              <input
-                type="file"
-                onChange={handleAvatarChange}
-                accept="image/*"
-                className="hidden"
-                id="avatar-upload"
-              />
-              <label htmlFor="avatar-upload" className="btn btn-primary">
-                Choose Avatar
-              </label>
+              <TextField name="name" value={formData.name} onChange={handleInputChange} label="Name" fullWidth />
+              <TextField name="bio" value={formData.bio} onChange={handleInputChange} label="Bio" fullWidth multiline rows={3} />
+              <TextField name="age" value={formData.age} onChange={handleInputChange} label="Age" fullWidth type="number" />
+              <Select name="gender" value={formData.gender} onChange={handleInputChange} fullWidth>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+              </Select>
+              <TextField name="height" value={formData.height} onChange={handleInputChange} label="Height (cm)" fullWidth type="number" />
+              <TextField name="weight" value={formData.weight} onChange={handleInputChange} label="Weight (kg)" fullWidth type="number" />
+              <Select name="fitnessGoals" value={formData.fitnessGoals} onChange={handleInputChange} fullWidth>
+                <MenuItem value="weight_loss">Weight Loss</MenuItem>
+                <MenuItem value="muscle_gain">Muscle Gain</MenuItem>
+                <MenuItem value="endurance">Endurance</MenuItem>
+                <MenuItem value="flexibility">Flexibility</MenuItem>
+                <MenuItem value="general_fitness">General Fitness</MenuItem>
+              </Select>
+              <input type="file" onChange={handleAvatarChange} accept="image/*" className="hidden" id="avatar-upload" />
+              <label htmlFor="avatar-upload" className="btn btn-primary">Choose Avatar</label>
             </form>
           ) : (
             <div className="space-y-2">
-              <Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
-  <Phone className="mr-2" /> {user.phone}
-</Typography>
-<Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
-  <Mail className="mr-2" /> {user.email}
-</Typography>
-<Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
-  <Flame className="mr-2" /> {user.calories} calories burned
-</Typography>
-<Typography variant="body1" className="flex items-center" style={{ color: "black" }}>
-  <Calendar className="mr-2" /> Joined {new Date(user.createdAt).toLocaleDateString()}
-</Typography>
+              <Typography variant="body1"><Phone /> Phone: {profile.user.phone || "N/A"}</Typography>
+              <Typography variant="body1"><Mail /> Email: {profile.user.email || "N/A"}</Typography>
+              <Typography variant="body1"><Dumbbell /> Workouts Completed: {profile.workoutsCompleted || 0}</Typography>
+              <Typography variant="body1"><Flame /> Streak: {profile.streak || 0} days</Typography>
+              <Typography variant="body1"><Trophy /> Score: {profile.score || 0}</Typography>
+              <Typography variant="body1"><Calendar /> Joined: {profile.createdAt ? new Date(profile.createdAt).toLocaleDateString() : "N/A"}</Typography>
 
-
-
-
+              {/* Achievements Section */}
+              <Typography variant="h6"><Trophy /> Achievements:</Typography>
+              {profile.achievements && profile.achievements.length > 0 ? (
+                profile.achievements.map((ach, idx) => (
+                  <Typography key={idx} variant="body2">🏆 {ach.title} - {ach.date ? new Date(ach.date).toLocaleDateString() : "N/A"}</Typography>
+                ))
+              ) : (
+                <Typography variant="body2">No achievements yet</Typography>
+              )}
             </div>
           )}
         </CardContent>
+
         <CardActions className="flex justify-end space-x-2">
           {isEditing ? (
             <>
-              <Button variant="outlined" onClick={() => setIsEditing(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleProfileUpdate} variant="contained">
-                Save Changes
-              </Button>
+              <Button onClick={() => setIsEditing(false)}>Cancel</Button>
+              <Button onClick={handleProfileUpdate} variant="contained">Save</Button>
             </>
           ) : (
-            <Button onClick={() => setIsEditing(true)} fullWidth>
-              <Pencil className="mr-2 h-4 w-4" /> Edit Profile
-            </Button>
+            <Button onClick={() => setIsEditing(true)} fullWidth><Pencil /> Edit Profile</Button>
           )}
         </CardActions>
       </Card>

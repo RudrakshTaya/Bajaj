@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 
 export const AuthContext = createContext();
 
@@ -6,33 +6,33 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
-  const [membership, setMembership] = useState("");  // State to store membership
+  const [membership, setMembership] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedUsername = localStorage.getItem("username");
     const storedUserId = localStorage.getItem("userId");
-    const storedMembership = localStorage.getItem("membership");  // Retrieve membership info from localStorage
+    const storedMembership = localStorage.getItem("membership");
 
     if (token && storedUsername) {
       setIsLoggedIn(true);
       setUsername(storedUsername);
       setUserId(storedUserId);
-      setMembership(storedMembership);  // Set membership info from localStorage
+      setMembership(storedMembership);
     }
   }, []);
 
   const signIn = (token, user) => {
     if (user && user.name) {
       localStorage.setItem("token", token);
-      localStorage.setItem("username", user.name); // Store username
+      localStorage.setItem("username", user.name);
       localStorage.setItem("userId", user.id);
-      localStorage.setItem("membership", user.membership.plan);  // Store membership info
+      localStorage.setItem("membership", user.membership?.plan || "Free");
 
       setIsLoggedIn(true);
       setUsername(user.name);
       setUserId(user.id);
-      setMembership(user.membership.plan);  // Set membership info
+      setMembership(user.membership?.plan || "Free");
     } else {
       console.error("Error: Username is missing in the login response.");
     }
@@ -42,12 +42,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("userId");
-    localStorage.removeItem("membership");  // Remove membership info from localStorage
+    localStorage.removeItem("membership");
 
     setIsLoggedIn(false);
     setUsername("");
     setUserId("");
-    setMembership("");  // Clear membership info from state
+    setMembership("");
   };
 
   return (
@@ -56,3 +56,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+// ✅ Create and export the `useAuth` hook
+export const useAuth = () => useContext(AuthContext);
