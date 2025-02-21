@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaSearch, FaUserPlus, FaDumbbell } from "react-icons/fa";
+import { FaSearch, FaUserPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "./MultiplayerChallenges.css";
 
 const API_URL =
-  import.meta.env.VITE_API_URL_PRODUCTION && import.meta.env.VITE_API_URL_TESTING
-    ? (import.meta.env.MODE === "production"
-      ? import.meta.env.VITE_API_URL_PRODUCTION
-      : import.meta.env.VITE_API_URL_TESTING)
-    : "http://localhost:5001";
+  import.meta.env.MODE === "production"
+    ? import.meta.env.VITE_API_URL_PRODUCTION
+    : import.meta.env.VITE_API_URL_TESTING || "http://localhost:5001";
 
 const MultiplayerChallenges = () => {
   const userId = localStorage.getItem("userId");
@@ -16,17 +15,26 @@ const MultiplayerChallenges = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+  const navigate = useNavigate();
+
   const exercises = [
-    { id: "squat", name: "Squats" },
-    { id: "pushup", name: "Push-ups"},
-    { id: "highKnee", name: "High Knees"},
-    { id: "lunges", name: "Lunges"},
+    { id: "squat", name: "Squats", target: 15 },
+    { id: "pushup", name: "Push-ups", target: 20 },
+    { id: "highKnee", name: "High Knees", target: 30 },
+    { id: "lunges", name: "Lunges", target: 12 },
   ];
 
-  const fetchUsers = async () => {
-    if (searchTerm.length < 3) return;
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchTerm.length >= 3) {
+        fetchUsers();
+      }
+    }, 500); // Debounce API calls
 
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
+  const fetchUsers = async () => {
     setLoading(true);
     try {
       const response = await axios.get(`${API_URL}/api/users/search`, {
@@ -41,40 +49,45 @@ const MultiplayerChallenges = () => {
     }
   };
 
-  const handleSearch = () => {
-    fetchUsers();
-  };
-
-  const handleInvite = async (inviteeId, exerciseId) => {
+  const handleInvite = async (inviteeId, exerciseId ) => {
+    console.log(inviteeId, exerciseId)
+    console.log(userId)
+    
     try {
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/api/users/invite`,
         { inviterId: userId, inviteeId, exerciseId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      const { roomId, challengeType } = response.data;
       alert("Invitation sent!");
+      navigate(`/multiplayer-battle/${roomId}?exercise=${challengeType}`); 
     } catch (error) {
       console.error("Error sending invite:", error);
+      alert("Failed to send invite. Please try again.");
     }
   };
 
   return (
     <div className="multiplayer-container">
       <h2>Multiplayer Challenges</h2>
-  
+
       <div className="search-bar">
         <input
-          type="text"
+          type="te?xt"
           placeholder="Search users..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button onClick={handleSearch}><FaSearch /></button>
+        <button onClick={fetchUsers}>
+          <FaSearch />
+        </button>
       </div>
-  
+
       {loading && <p>Loading users...</p>}
       {users.length === 0 && !loading && searchTerm.length >= 3 && <p>No users found.</p>}
-  
+
       {users.length > 0 && (
         <div className="exercise-list">
           {exercises.map((exercise) => (
@@ -101,7 +114,7 @@ const MultiplayerChallenges = () => {
         </div>
       )}
     </div>
-  );  
+  );
 };
 
 export default MultiplayerChallenges;

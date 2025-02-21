@@ -22,6 +22,7 @@ import CommunityPage from "./Pages/CommunityPage";
 import GroupPage from "./Pages/GroupPage";
 import Leaderboard from "./Components/Leaderboard";
 import MultiPlayerChallenges from "./Pages/MultiplayerChallenges"
+import MultiBattle from './Components/MultiplayerBattle'
 
 function App() {
   const { membership} = useContext(AuthContext); 
@@ -58,6 +59,7 @@ function App() {
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/group/:id" element={<GroupPage />} />
         <Route path="/multiplayer-challenges" element={<MultiPlayerChallenges />} />
+        <Route path="/multiplayer-battle/:roomId" element={<MultiBattle />} />
       </Routes>
     </>
   );
