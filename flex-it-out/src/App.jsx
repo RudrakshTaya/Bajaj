@@ -44,7 +44,7 @@ function App() {
         />
      
         <Route
-            path="/pricing"
+            path="/community"
             element={ membership === "premium" ? <CommunityPage /> : <PricingPage/>}
         />
         <Route path="/leaderboard" element={<Leaderboard />} />
